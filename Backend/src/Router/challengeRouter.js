@@ -3,6 +3,9 @@ const {ChallengeController} = require('../Controller');
 const challengeRouter = Router();
 const challengeController = new ChallengeController();
 
-challengeRouter.get('/desafio', challengeController.add)
+challengeRouter
+    .post('/desafio', challengeController.add)
+    .get('/desafio/:id', challengeController.findOne)
+    .get('/desafio', challengeController.find)
 
 module.exports = challengeRouter;

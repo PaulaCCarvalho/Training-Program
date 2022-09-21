@@ -1,5 +1,5 @@
 const { Router } = require("express");
-const challengeRouter = require("./challenge");
+const challengeRouter = require("./challengeRouter");
 const memberRouter = require('./member');
 
 const router = Router();
