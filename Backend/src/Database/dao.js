@@ -15,6 +15,7 @@ module.exports = {
             const sql = `INSERT INTO ${table} SET ?`;
             connection.query(sql, paramsObj, (error, values) => {
                 if(error){
+                    console.log(error)
                     reject(error);
                 }
                 else {
