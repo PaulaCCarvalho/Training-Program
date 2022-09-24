@@ -1,8 +1,8 @@
-import { Dispatch, FormEvent } from 'react';
+import { FormEvent } from 'react';
 import { Link } from 'react-router-dom';
 import { Input } from '../components/Form/Input';
 
-export function Login() {
+export default function Login() {
 
     const onSubmit = (e: FormEvent) => {
         e.preventDefault();

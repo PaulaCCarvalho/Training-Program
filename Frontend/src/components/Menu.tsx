@@ -5,9 +5,9 @@ import { Link } from "react-router-dom";
 
 export function Menu() {
     return (
-        <nav className="bg-zinc-700">
-            <div className="mx-auto px-10 shadow-lg ">
-                <div className="relative flex h-16 items-center justify-between text-white">
+        <div className="bg-zinc-700 shadow-lg shadow-black/30">
+            <div className="mx-auto px-10 ">
+                <div className="relative flex h-16 items-center justify-between text-white ">
                     <div className="">
                         <span className="text-2xl">Training Program</span>
                     </div>
@@ -36,6 +36,6 @@ export function Menu() {
 
                 </div>
             </div>
-        </nav>
+        </div>
     )
 }
