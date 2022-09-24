@@ -2,11 +2,12 @@ const dao = require('../Database');
 
 class Challenge {
 
-    constructor(){
+    constructor() {
         this.db = dao;
     }
-    
-    insert({nome, descricao, nivel, tema, tags, imagens, capa}) {
+
+    insert({ nome, descricao, nivel, tema, tags, imagens, capa, id }) {
+        this.id = id;
         this.nome = nome;
         this.descricao = descricao;
         this.nivel = nivel;
@@ -16,20 +17,23 @@ class Challenge {
         this.capa = capa;
     }
 
-    async save(){
-        try {
-            return await this.db.add('challenges', this)
-        } catch (error) {
-            throw error;            
-        }
+    async save() {
+        return await this.db.add('challenges', this)
     }
 
-    async find(page = 1){
-        try {
-            return await this.db.find('challenges', {available: 1} , page)
-        } catch (error) {
-            throw error;            
-        }
+    async find(page = 1, trash = false) {
+        const params = {available: !trash}
+        if(this.id !== undefined) params.id = this.id;
+        return await this.db.find('challenges', params, page);
+    }
+
+    async alter() {
+        await this.db.alter('challenges', this);
+    }
+
+    async delete() {
+        console.log(this)
+        await this.db.delete('challenges', this.id);
     }
 }
 

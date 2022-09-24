@@ -7,5 +7,7 @@ challengeRouter
     .post('/desafio', challengeController.add)
     .get('/desafio/:id', challengeController.findOne)
     .get('/desafio', challengeController.find)
+    .put('/desafio/:id', challengeController.alter)
+    .delete('/desafio/:id', challengeController.delete)
 
 module.exports = challengeRouter;
