@@ -8,6 +8,7 @@ class ChallengeController {
             await challenge.save()
             res.status(204).send()
         } catch (error) {
+            console.log(error);
             res.status(400).send()
         }
     }

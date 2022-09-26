@@ -18,11 +18,17 @@ class Challenge {
     }
 
     async save() {
-        return await this.db.add('challenges', this)
+        const {insertId} = await this.db.add('challenges', this);
+        this.imagens.forEach(async image => {
+            await this.db.add('images', {path: image})
+        });
+        this.tags.forEach(async tag => {
+            await this.db.add('challenges_tags  ', {challenge_id: insertId, tag_id: tag})
+        });
     }
 
     async find(page = 1, trash = false) {
-        const params = {available: !trash}
+        const params = {available: !trash};
         if(this.id !== undefined) params.id = this.id;
         return await this.db.find('challenges', params, page);
     }

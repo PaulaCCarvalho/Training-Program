@@ -13,7 +13,7 @@ module.exports = {
                 paramsObj[key] = params[key]
             }
             const sql = `INSERT INTO ${table} SET ?`;
-            connection.query(sql, paramsObj, (error, values) => {
+            connection.query(sql, paramsObj, (error, values, fields) => {
                 if (error) {
                     reject(error);
                 }
