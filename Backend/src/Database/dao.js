@@ -24,10 +24,19 @@ module.exports = {
         })
     },
 
-    find(table, params, page) {
+    find(table, params, page = 1, limit = 10, join) {
         return new Promise((resolve, reject) => {
             const offset = (page - 1) * 10
-            const sql = `SELECT * FROM ${table} WHERE ${Object.keys(params).length === 1 ? 'available=?' : 'available=? AND id=?'} LIMIT ${offset},10`;
+            const formatedParamsList = [];
+            for(const key in params){
+                formatedParamsList.push(`${key}=${params[key]}`)            
+            }
+            const joinformated = ''
+            if(join !== undefined){
+                `JOIN ${join.table} as b on a.tag_id=b.id`
+            }
+            const formatedParams = formatedParamsList.join(' AND ');
+            const sql = `SELECT * FROM ${table} as a WHERE ${formatedParams} LIMIT ${offset},${limit}`;
             connection.query(sql, Object.values(params), (error, values) => {
                 if (error) {
                     reject(error);

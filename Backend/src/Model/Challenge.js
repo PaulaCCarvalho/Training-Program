@@ -30,7 +30,14 @@ class Challenge {
     async find(page = 1, trash = false) {
         const params = {available: !trash};
         if(this.id !== undefined) params.id = this.id;
-        return await this.db.find('challenges', params, page);
+        const challenges = await this.db.find('challenges', params, page);
+        for(const challenge of challenges){
+            const images = await this.db.find('images', {challenge_id: challenge.id}, 1, 5)
+            const img = images.map(image => image.path);
+            challenge.imagens = img;
+            const tags = await this.db.find('tags')
+        };
+        return challenges;
     }
 
     async alter() {
