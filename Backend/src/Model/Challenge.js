@@ -1,9 +1,9 @@
-const dao = require('../Database');
+const DAO = require('../Database');
 
 class Challenge {
 
     constructor() {
-        this.db = dao;
+        this.db = DAO;
     }
 
     insert({ nome, descricao, nivel, tema, tags, imagens, capa, id }) {
@@ -30,12 +30,12 @@ class Challenge {
     async find(page = 1, trash = false) {
         const params = {available: !trash};
         if(this.id !== undefined) params.id = this.id;
-        const challenges = await this.db.find('challenges', params, page);
+        const challenges = await this.db.find('challenges', page, params);
         for(const challenge of challenges){
-            const images = await this.db.find('images', {challenge_id: challenge.id}, 1, 5)
-            const img = images.map(image => image.path);
-            challenge.imagens = img;
-            const tags = await this.db.find('tags')
+            const images = await this.db.find('images', 1, {challenge_id: challenge.id}, 5);
+            challenge.imagens = images.map(image => image.path);
+            const tags = await this.db.find('challenges_tags', 1, {challenge_id: challenge.id}, 5, {table: 'tags', a: 'tag_id', b: 'id'});
+            challenge.tags = tags.map(tag => {return {id: tag.id, nome: tag.nome}});
         };
         return challenges;
     }
@@ -45,7 +45,6 @@ class Challenge {
     }
 
     async delete() {
-        console.log(this)
         await this.db.delete('challenges', this.id);
     }
 }

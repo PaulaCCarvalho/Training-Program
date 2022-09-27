@@ -1,3 +1,3 @@
-const dao = require('./dao');
+const DAO = require('./DAO');
 
-module.exports = dao;
+module.exports = DAO;

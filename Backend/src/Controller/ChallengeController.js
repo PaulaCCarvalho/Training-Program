@@ -20,6 +20,7 @@ class ChallengeController {
             const ObjClg = await challenge.find()
             res.json(ObjClg[0]);
         } catch (error) {
+            console.log(error);
             res.status(400).send();            
         }
     }
@@ -30,6 +31,7 @@ class ChallengeController {
             const challenges = await challenge.find(req.query.page)
             res.json(challenges);
         } catch (error) {
+            console.log(error);
             res.status(400).send();            
         }
     }

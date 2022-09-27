@@ -24,20 +24,23 @@ module.exports = {
         })
     },
 
-    find(table, params, page = 1, limit = 10, join) {
+    find(table, page = 1, params, limit = 10, join) {
         return new Promise((resolve, reject) => {
             const offset = (page - 1) * 10
-            const formatedParamsList = [];
+            let formatedParams = '';
+            if(params !== undefined) {
+                const formatedParamsList = [];
             for(const key in params){
                 formatedParamsList.push(`${key}=${params[key]}`)            
             }
-            const joinformated = ''
-            if(join !== undefined){
-                `JOIN ${join.table} as b on a.tag_id=b.id`
+            formatedParams = 'WHERE ' + formatedParamsList.join(' AND ');
             }
-            const formatedParams = formatedParamsList.join(' AND ');
-            const sql = `SELECT * FROM ${table} as a WHERE ${formatedParams} LIMIT ${offset},${limit}`;
-            connection.query(sql, Object.values(params), (error, values) => {
+            let joinformated = ''
+            if(join !== undefined){
+                joinformated += `JOIN ${join.table} as b on a.${join.a}=b.${join.b}`;
+            }
+            const sql = `SELECT * FROM ${table} as a ${joinformated} ${formatedParams} LIMIT ${offset},${limit}`;
+            connection.query(sql, (error, values) => {
                 if (error) {
                     reject(error);
                 }
@@ -75,6 +78,20 @@ module.exports = {
     delete(table, id) {
         return new Promise((resolve, reject) => {
             const sql = `UPDATE ${table} SET available=0 WHERE id=${id}`;
+            connection.query(sql, (error, values) => {
+                if (error) {
+                    reject(error);
+                }
+                else {
+                    resolve(values);
+                }
+            })
+        })
+    },
+     
+    destroy(table, id) {
+        return new Promise((resolve, reject) => {
+            const sql = `DELETE FROM ${table} WHERE id=${id}`;
             connection.query(sql, (error, values) => {
                 if (error) {
                     reject(error);

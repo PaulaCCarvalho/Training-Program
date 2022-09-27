@@ -1,6 +1,6 @@
 const {Router} = require('express');
 
-memberRouter = Router();
+const memberRouter = Router();
 memberRouter.get('/member', (req, res) => {
     res.send('<h1>Member</h1>');
 })
