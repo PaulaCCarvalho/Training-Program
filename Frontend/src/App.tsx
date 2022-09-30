@@ -3,9 +3,11 @@ import  Cadastro  from './screens/Cadastro';
 import Login  from './screens/Login';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import Ranking from './screens/Ranking';
-import CardDesafio from './components/CardDesafio';
 import Home from './screens/Home';
-import CadastrarDesafio from './components/CadastrarDesafio';
+import CadastrarDesafio from './screens/CadastrarDesafio';
+import SelectTags from './components/Form/SelectTags';
+import { Desafio } from './screens/Desafio';
+import { BotaoDesafio } from './components/BotaoDesafio';
 
 function App(){
     return (
@@ -16,6 +18,8 @@ function App(){
                 <Route path="/cadastro" element={<Cadastro/>}/>
                 <Route path="/ranking" element={<Ranking/>}/>
                 <Route path="/cadastro-desafio" element={<CadastrarDesafio/>}/>
+                <Route path="/Desafio/:id" element={<Desafio/>}/>
+                <Route path="/button" element={<BotaoDesafio/>}/>
             </Routes>
         </Router>
     )
