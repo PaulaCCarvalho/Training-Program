@@ -35,13 +35,27 @@ class Challenge {
             const images = await this.db.find('images', 1, {challenge_id: challenge.id}, 5);
             challenge.imagens = images.map(image => image.path);
             const tags = await this.db.find('challenges_tags', 1, {challenge_id: challenge.id}, 5, {table: 'tags', a: 'tag_id', b: 'id'});
-            challenge.tags = tags.map(tag => {return {id: tag.id, nome: tag.nome}});
+            challenge.tags = tags.map(tag => tag.nome);
+            delete challenge.available;
         };
         return challenges;
     }
 
     async alter() {
         await this.db.alter('challenges', this);
+        if(this.imagens !== undefined){
+            this.db.destroy('images', {challenge_id: this.id});
+            for(const image of this.imagens){
+                await this.db.add('images', {challenge_id: this.id, path: image});
+            }
+        }
+        if(this.tags !== undefined){
+            this.db.destroy('challenges_tags', {challenge_id: this.id});
+            for(const tag of this.tags){
+                await this.db.add('challenges_tags', {challenge_id: this.id, tag_id: tag})
+            }
+
+        }
     }
 
     async delete() {
