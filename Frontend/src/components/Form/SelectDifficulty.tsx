@@ -1,12 +1,33 @@
 import * as Select from '@radix-ui/react-select';
 import { CaretDown, CaretUp, Check } from 'phosphor-react';
+import { useState } from 'react';
 
-export default function SelectOption() {
+export default function SelectDifficulty({data, formData = 'Dificuldades'}: {data: Function, formData: any} ) {
+    const [ difficulty, setDifficulty] = useState(formData.nivel);
+
+    const changeValue = () => { 
+        if(formData.nivel === 'facil'){
+            return 'Fácil';
+        }
+
+        if(formData.nivel === 'medio' ){
+            return 'Médio';
+        }
+
+        if(formData.nivel === 'dificil'){
+            return 'Difícil';
+        }
+
+        return 'Dificuldades'
+    }
     return (
         <>
-           <Select.Root>
+           <Select.Root onValueChange={(val) => { data("nivel", val); setDifficulty(val); }} >
                 <Select.Trigger aria-label='nivel' className="inline-flex items-center w-[124px] rounded px-3 py-[14px] gap-2 bg-zinc-900 shadow-sm shadow-black/25  justify-center hover:bg-zinc-800">
-                    <Select.Value placeholder="Dificuldade" />
+                    <Select.Value>
+                        {changeValue()}
+                    </Select.Value>
+
                     <Select.Icon>
                         <CaretDown size={20} />
                     </Select.Icon>
@@ -50,6 +71,9 @@ export default function SelectOption() {
 
                 </Select.Content>
             </Select.Root>
+
+         
+
         </>
     )
 }

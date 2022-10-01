@@ -2,8 +2,7 @@
 import axios from "axios";
 import { MagnifyingGlass, Plus } from "phosphor-react";
 import { useEffect, useState } from "react";
-import { Link } from "react-router-dom";
-import CadastrarDesafio from "./CadastrarDesafio";
+import { Link, Navigate, useNavigate } from "react-router-dom";
 import { CardDesafio, CardDesafioProps } from "../components/CardDesafio";
 import { Menu } from "../components/Menu";
 import Footer from "../components/Footer";
@@ -12,6 +11,7 @@ interface Desafio extends CardDesafioProps { }
 
 export default function Home() {
     const [cards, setCards] = useState<Desafio[]>([]);
+    const navigate = useNavigate()
 
     useEffect(() => {
         axios.get('http://localhost:3333/api/desafio')
@@ -38,9 +38,9 @@ export default function Home() {
                         <input type="text" name="search" className="bg-[#4F545C] w-[800px] py-3 px-4 rounded-[14px] text-sm placeholder:text-zinc-400" placeholder="Pesquise um desafio" />
                         <MagnifyingGlass size={28} className="text-[#B9BBBE] right-3 -translate-x-11" />
 
-                        <Link to="/cadastro-desafio" className="bg-[#4F545C] text-white px-2 py-2 rounded-3xl hover:bg-slate-100 hover:text-[#4F545C] delay-200">
+                        <button onClick={() => navigate("/cadastrar-desafio" )} className="bg-[#4F545C] text-white px-2 py-2 rounded-3xl hover:bg-slate-100 hover:text-[#4F545C] delay-200">
                             <Plus size={32} />
-                        </Link>
+                        </button>
 
                     </div>
 
@@ -48,15 +48,12 @@ export default function Home() {
                         {
                             cards.map((card) => {
                                 return (
-                                    <Link to={"/Desafio/" + card.id} >
-                                        <CardDesafio key={card.id} data={card} />
-                                    </Link>
+                                    <button onClick={()=> navigate("/Desafio/" + card.id)} key={card.id} >
+                                        <CardDesafio  data={card} />
+                                    </button>
                                 )
                             })
                         }
-
-
-
                     </div>
                 </div>
             </div>

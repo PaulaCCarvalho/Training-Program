@@ -1,11 +1,12 @@
 
-import { Link, Navigate} from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { Input } from "../components/Form/Input";
-import { FormEvent, useState } from "react";
+import { ChangeEvent, FormEvent, useEffect, useState } from "react";
 import SelectDifficulty from "../components/Form/SelectDifficulty";
 import SelectTags from "../components/Form/SelectTags";
 import { Menu } from "../components/Menu";
-import { useForm } from "react-hook-form";
+import axios from "axios";
+import { number } from "yup/lib/locale";
 
 type UserSubmitForm = {
   nome: string;
@@ -13,22 +14,78 @@ type UserSubmitForm = {
   tema: string;
   imagens: string;
   nivel: string;
-  tags: [];
+  tags: Tag[] | string[] | number[];
 
 }
 
+type Tag = {
+  id: number;
+  nome: string;
+}
 
 export default function CadastrarDesafio() {
   //const [selectFile, setSelectFile] = useState<File>({}: Blob);
 
-  const { register, handleSubmit } = useForm<UserSubmitForm>();
+  const navigate = useNavigate();
 
-  const onSubmit = (data: UserSubmitForm) => {
-    console.log("Passei aqui!")
-    console.log(JSON.stringify(data, null, 2))
+  const [formData, setFormData] = useState<UserSubmitForm>({
+    nome: '',
+    descricao: '',
+    tema: '',
+    imagens: '',
+    nivel: '',
+    tags: ['']
+  });
 
-    //onFileUpload();
+
+  const handleAttribute = (attribute: string, event: ChangeEvent<{ value: any }>) => {
+    const newFormData = formData;
+    if (attribute === "descricao" ||
+      attribute === "nome" ||
+      attribute === "tema" ||
+      attribute === "imagens" ||
+      attribute === "nivel" ||
+      attribute === "tags") {
+      newFormData[attribute] = event.target.value;
+      setFormData(newFormData)
+    }
   }
+
+  const handleAttributeValue = (attribute: string, value: any) => {
+    const newFormData = formData;
+    if (attribute === "nivel" ||
+      attribute === "tags") {
+      newFormData[attribute] = value;
+      setFormData(newFormData)
+    }
+  }
+
+  const handleClick = () => {
+    const tags = []
+    for(let tag of formData.tags){
+      if(typeof tag !== 'string' && typeof tag !== 'number' ){
+        tags.push(tag.id)
+      }
+    }
+    formData.tags = tags
+    
+    axios.post('http://localhost:3333/api/desafio', formData)
+    .then((response) => {
+      console.log(response);
+    })
+    .catch((err) => {
+      console.error("ops! ocorreu um erro" + err);
+    });
+  
+    navigate('/');
+  }
+
+  /*  const onSubmit = (data: UserSubmitForm) => {
+      console.log("Passei aqui!")
+      console.log(JSON.stringify(data, null, 2))
+  
+      //onFileUpload();
+    } */
 
   const onFileChange = (e: any) => {
     /*setSelectFile(e.target.files[0]);*/
@@ -57,10 +114,10 @@ export default function CadastrarDesafio() {
             Cadastre um desafio
           </div>
 
-          <form action='' onSubmit={(e) => handleSubmit(onSubmit)} className="mt-8 flex flex-col gap-4">
+          <form className="mt-8 flex flex-col gap-4">
             <div className="flex flex-col gap-1">
               <label htmlFor="">Nome</label>
-              <Input id="nome" type="text" placeholder="nome do desafio"  {...register("nome")} />
+              <Input id="nome" type="text" placeholder="nome do desafio" data={handleAttribute} />
             </div>
 
             <div className="flex flex-col gap-1">
@@ -70,27 +127,28 @@ export default function CadastrarDesafio() {
                 rows={5}
                 cols={5}
                 placeholder="Descreva o desafio"
-                {...register("descricao")}
+                onChange={(event) => handleAttribute("descricao", event)}
               />
             </div>
 
             <div className="flex flex-col gap-1">
               <label htmlFor="">Tema</label>
-              <Input id="tema" type="text" placeholder="insira o tema do desafio"  {...register("tema")} />
+              <Input id="tema" type="text" placeholder="insira o tema do desafio" data={handleAttribute} />
             </div>
 
             <div className="flex flex-col gap-1">
               <label htmlFor="">Imagens</label>
-              <Input id="capa" type="file" placeholder="insira imagens do desafio" {...register("imagens")} />
+              <Input id="capa" type="file" placeholder="insira imagens do desafio" data={handleAttribute} />
             </div>
 
-           {/*  <div className="flex items-center gap-3">
+            <div className="flex items-center gap-3">
 
-              <SelectDifficulty />
+              <SelectDifficulty data={handleAttributeValue} formData={formData} />
+
               <div className="flex-1">
-                <SelectTags />
+                <SelectTags datas={handleAttributeValue} tags={formData}/>
               </div>
-            </div> */}
+            </div>
 
             <footer className="mt-4 flex gap-4 justify-between ">
               <Link to="/"
@@ -100,12 +158,15 @@ export default function CadastrarDesafio() {
                 Cancelar
               </Link>
 
-              <Link to="/"
-                type="submit"
+              {/* <Link to="/"> */}
+              <button
+                type="button"
+                onClick={handleClick}
                 className="bg-violet-500 px-5 h-12 rounded-md font-semibold flex items-center gap-3 hover:bg-violet-600"
               >
                 Salvar
-              </Link>
+              </button>
+              {/* </Link> */}
             </footer>
           </form>
 

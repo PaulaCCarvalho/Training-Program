@@ -39,6 +39,7 @@ class ChallengeController {
     async alter(req, res, next){
         try{
             const challenge = new Challenge();
+            console.log(req.body)
             challenge.insert({...req.body, id: req.params.id})
             challenge.alter()
             res.status(204).send()

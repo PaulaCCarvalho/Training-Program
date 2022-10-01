@@ -15,7 +15,7 @@ export default function Login() {
             <form action='' onSubmit={(e) => onSubmit(e)} className="mt-8 flex flex-col gap-4">
                 <div className="flex flex-col gap-1">
                     <label htmlFor="">Email</label>
-                    <Input id="email" type="email" placeholder="exemplo@gmail.com" />
+                    <Input id="email" type="email" placeholder="exemplo@gmail.com"/>
                 </div>
 
                 <div className="flex flex-col gap-1">

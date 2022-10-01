@@ -1,11 +1,13 @@
 import { InputHTMLAttributes } from "react";
 
-interface InputProps extends InputHTMLAttributes<HTMLInputElement>{}
+interface InputProps extends InputHTMLAttributes<HTMLInputElement>{data: Function}
 
 export function Input(props: InputProps){
+    const {data,...filteredProps} = props
     return (
         <input 
-        {...props} 
+        {...filteredProps} 
+        onChange={(event) => props.data(props.id, event)}
         className="bg-zinc-900 py-4 px-4 rounded text-sm placeholder:text-zinc-500 "
         />
     )

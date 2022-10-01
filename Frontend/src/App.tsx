@@ -8,18 +8,19 @@ import CadastrarDesafio from './screens/CadastrarDesafio';
 import SelectTags from './components/Form/SelectTags';
 import { Desafio } from './screens/Desafio';
 import { BotaoDesafio } from './components/BotaoDesafio';
+import EditarDesafio from './screens/EditarDesafio';
 
 function App(){
     return (
         <Router>
             <Routes>
-                <Route path="/" element={<Home/>}/>
+                <Route index element={<Home/>}/>
                 <Route path="/login" element={<Login/>}/>
                 <Route path="/cadastro" element={<Cadastro/>}/>
                 <Route path="/ranking" element={<Ranking/>}/>
-                <Route path="/cadastro-desafio" element={<CadastrarDesafio/>}/>
+                <Route path="/cadastrar-desafio" element={<CadastrarDesafio/>}/>
                 <Route path="/Desafio/:id" element={<Desafio/>}/>
-                <Route path="/button" element={<BotaoDesafio/>}/>
+                <Route path="/editar-desafio/:id" element={<EditarDesafio/>}/>
             </Routes>
         </Router>
     )

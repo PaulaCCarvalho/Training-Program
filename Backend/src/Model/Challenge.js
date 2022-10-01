@@ -19,9 +19,9 @@ class Challenge {
 
     async save() {
         const {insertId} = await this.db.add('challenges', this);
-        this.imagens.forEach(async image => {
+/*         this.imagens.forEach(async image => {
             await this.db.add('images', {path: image})
-        });
+        }); */
         this.tags.forEach(async tag => {
             await this.db.add('challenges_tags  ', {challenge_id: insertId, tag_id: tag})
         });
@@ -30,7 +30,7 @@ class Challenge {
     async find(page = 1, trash = false) {
         const params = {available: !trash};
         if(this.id !== undefined) params.id = this.id;
-        const challenges = await this.db.find('challenges', page, params);
+        const challenges = await this.db.find('challenges', page, params, 12);
         for(const challenge of challenges){
             const images = await this.db.find('images', 1, {challenge_id: challenge.id}, 5);
             challenge.imagens = images.map(image => image.path);

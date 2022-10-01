@@ -26,7 +26,7 @@ module.exports = {
 
     find(table, page = 1, params, limit = 10, join) {
         return new Promise((resolve, reject) => {
-            const offset = (page - 1) * 10
+            const offset = (page - 1) * limit
             let formatedParams = '';
             if(params !== undefined) {
                 const formatedParamsList = [];
