@@ -89,10 +89,10 @@ module.exports = {
         })
     },
      
-    destroy(table, id) {
+    destroy(table, param) {
         return new Promise((resolve, reject) => {
-            const sql = `DELETE FROM ${table} WHERE id=${id}`;
-            connection.query(sql, (error, values) => {
+            const sql = `DELETE FROM ${table} WHERE ?`;
+            connection.query(sql, param, (error, values) => {
                 if (error) {
                     reject(error);
                 }
