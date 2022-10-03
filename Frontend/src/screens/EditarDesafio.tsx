@@ -22,7 +22,7 @@ type UserSubmitForm = {
 type Tag = {
     id: number;
     nome: string;
-  }
+}
 
 export default function EditarDesafio() {
     //const [selectFile, setSelectFile] = useState<File>({}: Blob);
@@ -44,7 +44,7 @@ export default function EditarDesafio() {
         axios.get(`http://localhost:3333/api/desafio/${id}`)
             .then((response) => {
                 setFormData(response.data);
-                
+
             })
             .catch((err) => {
                 console.error("ops! ocorreu um erro" + err);
@@ -72,31 +72,30 @@ export default function EditarDesafio() {
             setFormData(newFormData)
         }
     }
-    
-    const handleClick = () => {
+
+    const handleClick = async () => {
         const tags = []
-        for(let tag of formData.tags){
-          if(typeof tag !== 'string' && typeof tag !== 'number' ){
-            tags.push(tag.id)
-          }
+        for (let tag of formData.tags) {
+            if (typeof tag !== 'string' && typeof tag !== 'number') {
+                tags.push(tag.id)
+            }
         }
         formData.tags = tags
-        axios.put(`http://localhost:3333/api/desafio/${formData.id}`, formData)
-            .then((response) => {
-                console.log(response);
-            })
-            .catch((err) => {
-                console.error("ops! ocorreu um erro" + err);
-            });
+        try {
+            await axios.put(`http://localhost:3333/api/desafio/${formData.id}`, formData)
 
-        navigate('/');
+        } catch (err) {
+            console.error("ops! ocorreu um erro" + err);
+        }
+
+        navigate(-1);
     }
-/*     const onSubmit = (data: UserSubmitForm) => {
-        console.log("Passei aqui!")
-        console.log(JSON.stringify(data, null, 2))
-
-        //onFileUpload();
-    } */
+    /*     const onSubmit = (data: UserSubmitForm) => {
+            console.log("Passei aqui!")
+            console.log(JSON.stringify(data, null, 2))
+    
+            //onFileUpload();
+        } */
 
     const onFileChange = (e: any) => {
         /*setSelectFile(e.target.files[0]);*/
@@ -158,7 +157,7 @@ export default function EditarDesafio() {
                             <SelectDifficulty data={handleAttributeValue} key={formData.id} formData={formData} />
 
                             <div className="flex-1">
-                                <SelectTags datas={handleAttributeValue} tags={formData} />
+                                <SelectTags datas={handleAttributeValue} formData={formData} />
                             </div>
                         </div>
 

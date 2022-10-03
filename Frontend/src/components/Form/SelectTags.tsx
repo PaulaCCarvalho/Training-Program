@@ -2,7 +2,6 @@ import Autocomplete from '@mui/material/Autocomplete';
 import Checkbox from '@mui/material/Checkbox';
 import TextField from '@mui/material/TextField';
 import { CheckSquare, Square } from 'phosphor-react';
-import '../../styles/tags.css';
 import { ThemeProvider, createTheme } from '@mui/material/styles'
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
@@ -13,20 +12,26 @@ interface TagsProp {
     nome: string;
 }
 
-export default function SelectTags({ datas, tags }: { datas: Function, tags: any }) {
+export default function SelectTags({ datas, formData }: { datas: Function, formData: any }) {
 
     const [tag, setTag] = useState<TagsProp[]>([]);
-    const [data, setData] = useState<TagsProp[]>(tag);
+    const [data, setData] = useState<TagsProp[]>(formData.tags);
+    
 
     useEffect(() => {
-        axios.get('http://localhost:3333/api/tags')
-            .then((response) => {
-                setTag(response.data);
-                //setData(tags.tags.slice(1, -1))
-            })
-            .catch((err) => {
-                console.error("ops! ocorreu um erro" + err);
-            });
+
+        async function getTags() {
+            try {
+                const response =  await axios.get('http://localhost:3333/api/tags')
+                setTag(response.data)
+                
+            } catch (error) {
+                console.error("ops! ocorreu um erro" + error);
+            }
+        }
+
+        getTags();
+
     }, []);
 
     const darkTheme = createTheme({
@@ -40,7 +45,7 @@ export default function SelectTags({ datas, tags }: { datas: Function, tags: any
 
             <ThemeProvider theme={darkTheme}>
                 <Autocomplete
-                    onChange={(event, data) => { setData(data) }}
+                    onChange={(event, data) => {  datas("tags", data); setData(data); }}
                     multiple={true}
                     id="checkboxes-tags-demo"
                     options={tag}
@@ -61,15 +66,13 @@ export default function SelectTags({ datas, tags }: { datas: Function, tags: any
                     renderInput={(params) => (
                         <TextField {...params} label="Tags" placeholder="Tags" className='border-white' />
                     )}
-                    value={data}
+                    value={formData.tags}
 
                     className="bg-zinc-900"
 
                 />
 
             </ThemeProvider>
-
-            {datas("tags", data)}
         </>
 
 

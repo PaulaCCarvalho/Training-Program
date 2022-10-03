@@ -26,15 +26,15 @@ export function BotaoDesafio({ idParam }: { idParam: any }) {
     const handleClose = () => {
         setAnchorEl(null);
     }
+    
+    const deletarDesafio = async () => {
+        try {
+            await axios.delete(`http://localhost:3333/api/desafio/${idParam}`);
+        } catch (err) {
+            console.error("ops! ocorreu um erro" + err);
 
-    const editarDesafio = () => {
-        alert("Cliquei no botão editar")
-    }
-
-    const deletarDesafio = () => {
-        axios.delete(`http://localhost:3333/api/desafio/${idParam}`);
-        navigate('/')
-
+        }
+        navigate(-1);
     }
 
 
@@ -71,7 +71,7 @@ export function BotaoDesafio({ idParam }: { idParam: any }) {
                 >
                     <div className='flex flex-col'>
                         <button className='hover:bg-zinc-600 ' onClick={() => navigate(`/editar-desafio/${idParam}`)}>
-                        <Typography sx={{ p: 2 }}>Editar desafio</Typography>
+                            <Typography sx={{ p: 2 }}>Editar desafio</Typography>
                         </button>
 
                     </div>
@@ -79,7 +79,7 @@ export function BotaoDesafio({ idParam }: { idParam: any }) {
                     <AlertDialog.Root>
 
                         <AlertDialog.Trigger className="hover:bg-zinc-600">
-                        <Typography sx={{ p: 2 }}>Deletar desafio</Typography>
+                            <Typography sx={{ p: 2 }}>Deletar desafio</Typography>
                         </AlertDialog.Trigger>
 
                         <AlertDialog.Portal>
@@ -94,23 +94,16 @@ export function BotaoDesafio({ idParam }: { idParam: any }) {
                                 </AlertDialog.Description>
 
                                 <footer className='mt-6 flex gap-4 justify-end '>
-                                    <AlertDialog.Cancel>
-                                        <button
-                                            className="bg-zinc-500 px-4 h-12  rounded-md font-semibold hover:bg-zinc-600 items-center flex"
-
-                                        >
-                                            Cancelar
-                                        </button>
+                                    <AlertDialog.Cancel className="bg-zinc-500 px-4 h-12  rounded-md font-semibold hover:bg-zinc-600 items-center flex">
+                                        Cancelar
                                     </AlertDialog.Cancel>
 
-                                    <AlertDialog.Action>
-                                        <button
-                                            type="submit"
-                                            onClick={() => deletarDesafio}
-                                            className="bg-violet-500 px-5 h-12 w-24 justify-center rounded-md font-semibold flex items-center gap-3 hover:bg-violet-600"
-                                        >
-                                            Salvar
-                                        </button>
+                                    <AlertDialog.Action
+                                        type="submit"
+                                        onClick={deletarDesafio}
+                                        className="bg-violet-500 px-5 h-12 w-24 justify-center rounded-md font-semibold flex items-center gap-3 hover:bg-violet-600">
+                                    
+                                        Deletar
 
                                     </AlertDialog.Action>
                                 </footer>

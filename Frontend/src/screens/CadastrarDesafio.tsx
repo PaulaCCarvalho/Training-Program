@@ -34,7 +34,7 @@ export default function CadastrarDesafio() {
     tema: '',
     imagens: '',
     nivel: '',
-    tags: ['']
+    tags: []
   });
 
 
@@ -60,24 +60,21 @@ export default function CadastrarDesafio() {
     }
   }
 
-  const handleClick = () => {
+  const handleClick = async () => {
     const tags = []
-    for(let tag of formData.tags){
-      if(typeof tag !== 'string' && typeof tag !== 'number' ){
+    for (let tag of formData.tags) {
+      if (typeof tag !== 'string' && typeof tag !== 'number') {
         tags.push(tag.id)
       }
     }
     formData.tags = tags
-    
-    axios.post('http://localhost:3333/api/desafio', formData)
-    .then((response) => {
-      console.log(response);
-    })
-    .catch((err) => {
+    try {
+      await axios.post('http://localhost:3333/api/desafio', formData)
+    } catch (err) {
       console.error("ops! ocorreu um erro" + err);
-    });
-  
-    navigate('/');
+    }
+
+    navigate(-1);
   }
 
   /*  const onSubmit = (data: UserSubmitForm) => {
@@ -146,7 +143,7 @@ export default function CadastrarDesafio() {
               <SelectDifficulty data={handleAttributeValue} formData={formData} />
 
               <div className="flex-1">
-                <SelectTags datas={handleAttributeValue} tags={formData}/>
+                <SelectTags datas={handleAttributeValue} formData={formData} />
               </div>
             </div>
 
