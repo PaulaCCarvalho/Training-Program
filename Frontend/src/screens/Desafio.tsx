@@ -6,6 +6,7 @@ import { BotaoDesafio } from "../components/BotaoDesafio";
 import { CardDesafioProps } from "../components/CardDesafio";
 import Footer from "../components/Footer";
 import { Menu } from "../components/Menu";
+import { useGlobal } from "../Context/globalContext";
 
 
 interface DesafioProps extends CardDesafioProps {
@@ -14,29 +15,29 @@ interface DesafioProps extends CardDesafioProps {
 
 export function Desafio() {
     const { id } = useParams();
-    const padrao = ['', null, undefined]
+    const padrao = ['', null, undefined];
 
     const [desafio, setDesafio] = useState<DesafioProps>();
 
     useEffect(() => {
 
-        async function getDesafio () {
+        async function getDesafio() {
             try {
                 const response = await axios.get(`http://localhost:3333/api/desafio/${id}`)
                 setDesafio(response.data);
                 console.log(response.data)
             } catch (error) {
                 console.error("ops! ocorreu um erro" + error);
-                
+
             }
         }
         getDesafio();
-        
+
 
     }, []);
 
     const renderTags = () => {
-        return (desafio?.tags.map((tag: {id: number, nome: string}) => {
+        return (desafio?.tags.map((tag: { id: number, nome: string }) => {
             return (
                 <div key={tag.id} className="px-6 py-1 border border-yellow-300 rounded-3xl gap-3 ">
                     <p className="text-yellow-300">{tag.nome}</p>
@@ -58,7 +59,7 @@ export function Desafio() {
         }
     }
 
-
+    const { isAdmin } = useGlobal()
     return (
         <>
             <Menu />
@@ -85,11 +86,14 @@ export function Desafio() {
                         </div>
                     </div>
                 </div>
-                <div className="inline-flex justify-end items-start p-3 ">
-                    <BotaoDesafio key={desafio?.id} idParam={id}/>
-                </div>
+                {isAdmin ?
+                    <div className="inline-flex justify-end items-start p-3 ">
+                        <BotaoDesafio key={desafio?.id} idParam={id} />
+                    </div>
+                    : null
+                }
             </div>
-            <Footer/>
+            <Footer />
         </>
 
 

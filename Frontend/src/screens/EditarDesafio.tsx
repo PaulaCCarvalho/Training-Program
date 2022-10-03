@@ -7,6 +7,7 @@ import { Menu } from "../components/Menu";
 import axios from "axios";
 import { number } from "yup/lib/locale";
 import { getBottomNavigationUtilityClass } from "@mui/material";
+import { useGlobal } from "../Context/globalContext";
 
 type UserSubmitForm = {
     id: number;
@@ -27,6 +28,7 @@ type Tag = {
 export default function EditarDesafio() {
     //const [selectFile, setSelectFile] = useState<File>({}: Blob);
     const { id } = useParams()
+
 
     const navigate = useNavigate();
 
@@ -83,12 +85,18 @@ export default function EditarDesafio() {
         formData.tags = tags
         try {
             await axios.put(`http://localhost:3333/api/desafio/${formData.id}`, formData)
+            setTimeout(() => {
+                navigate(`/desafio/${formData.id}`);
+            },3000);
+
+            navigate(`/loading`);
+            
 
         } catch (err) {
             console.error("ops! ocorreu um erro" + err);
         }
 
-        navigate(-1);
+       
     }
     /*     const onSubmit = (data: UserSubmitForm) => {
             console.log("Passei aqui!")

@@ -1,6 +1,7 @@
 import { ChangeEvent, FormEvent, useState } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { Input } from '../components/Form/Input';
+import { useGlobal } from '../Context/globalContext';
 
 type UserSubmitForm = {
     email: string;
@@ -9,6 +10,8 @@ type UserSubmitForm = {
 }
 
 export default function Login() {
+    const {setIsAdmin} = useGlobal();
+    const navigate = useNavigate()
 
     const onSubmit = (e: FormEvent) => {
         e.preventDefault();
@@ -18,6 +21,11 @@ export default function Login() {
         senha: ''
       });
     
+
+    const handleLogin = () => {
+        setIsAdmin(true);
+        navigate('/');
+    }
 
     const handleAttribute = (attribute: string, event: ChangeEvent<{ value: any }>) => {
         const newFormData = formData;
@@ -48,12 +56,12 @@ export default function Login() {
                         Cancelar
                     </Link>
 
-                    <Link to='/'
-                        type="submit"
+                    <button 
+                        onClick={handleLogin}
                         className="bg-violet-500 px-10 h-11 text-1xl rounded-md font-semibold flex items-center  hover:bg-violet-600"
                     >
                         Logar
-                    </Link>
+                    </button>
                 </footer>
             </form>
         </div>
