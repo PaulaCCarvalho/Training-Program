@@ -14,7 +14,7 @@ export function PaginationComponent({setPage}: {setPage: Function}) {
     return (
         <ThemeProvider theme={darkTheme} >
             <Stack spacing={2} >
-                <Pagination count={2} onChange={(event, page) => setPage(page)} shape="rounded" />
+                <Pagination count={4} onChange={(event, page) => setPage(page)} shape="rounded" />
                 
             </Stack>
         </ThemeProvider>

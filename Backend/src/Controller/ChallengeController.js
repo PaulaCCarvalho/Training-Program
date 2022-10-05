@@ -17,7 +17,7 @@ class ChallengeController {
         try {
             const challenge = new Challenge();
             challenge.insert(req.params);
-            const ObjClg = await challenge.find()
+            const ObjClg = await challenge.find(req.query)
             res.json(ObjClg[0]);
         } catch (error) {
             console.log(error);
@@ -28,8 +28,9 @@ class ChallengeController {
     async find(req, res, next){
         try {
             const challenge = new Challenge();
-            const challenges = await challenge.find(req.query.page)
-            res.json(challenges);
+            const challenges = await challenge.find(req.query);
+            const count = await challenge.count(req.query);
+            res.json({count, challenges});
         } catch (error) {
             console.log(error);
             res.status(400).send();            
@@ -39,7 +40,6 @@ class ChallengeController {
     async alter(req, res, next){
         try{
             const challenge = new Challenge();
-            console.log(req.body)
             challenge.insert({...req.body, id: req.params.id})
             challenge.alter()
             res.status(204).send()

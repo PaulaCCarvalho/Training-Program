@@ -69,6 +69,7 @@ export default function CadastrarDesafio() {
     }
     formData.tags = tags
     try {
+      console.log(formData)
       await axios.post('http://localhost:3333/api/desafio', formData)
     } catch (err) {
       console.error("ops! ocorreu um erro" + err);

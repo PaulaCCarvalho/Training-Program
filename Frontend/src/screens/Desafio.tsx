@@ -67,7 +67,7 @@ export function Desafio() {
             <div className="my-[7.6rem] max-w-xl flex flex-row mx-auto bg-zinc-700 text-white rounded-xl shadow-lg overflow-hidden xl:max-w-6xl " >
                 <div className="xl:flex w-full">
                     <div className="xl:shrink-0 relative">
-                        <img className="h-[480px] w-full object-cover xl:h-full xl:w-[480px] shadow-inner shadow-black" src={padrao.includes(desafio?.capa) ? '../../imgDesafio.jpg' : desafio?.capa} alt="" />
+                        <img className="h-[480px] w-full object-cover xl:h-full xl:w-[480px] shadow-inner shadow-black" src={/* padrao.includes(desafio?.capa) ?  */'../../imgDesafio.jpg' /* : desafio?.capa */} alt="" />
                         <img
                             className="absolute bottom-3 right-3"
                             src={desafio?.nivel ? iconLevel() : '../../default-icon.svg'}

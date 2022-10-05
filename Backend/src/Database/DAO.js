@@ -8,7 +8,8 @@ module.exports = {
                 if (
                     key === 'db'   ||
                     key === 'tags' ||
-                    key === 'imagens'
+                    key === 'imagens'||
+                    key === 'id'
                 ) continue;
                 paramsObj[key] = params[key]
             }
@@ -24,16 +25,45 @@ module.exports = {
         })
     },
 
+    getSum(table, params){
+        return new Promise((resolve, reject) => {
+            let formatedParams = '';
+            if(Object.keys(params).length !== 0) {
+                const formatedParamsList = [];
+                for(const key in params){
+                    formatedParamsList.push(
+                        typeof params[key] === 'string' ?
+                        `${key}='${params[key]}'` :
+                        `${key}=${params[key]}`
+                        );            
+                }
+                formatedParams = 'WHERE ' + formatedParamsList.join(' AND ');
+            }
+            const sql = `SELECT COUNT(*) as num FROM ${table} ${formatedParams}`;
+            connection.query(sql, (error, results) => {
+                if(error){
+                    reject(error);
+                } else {
+                    resolve(results)
+                }
+            })
+        })
+    },
+
     find(table, page = 1, params, limit = 10, join) {
         return new Promise((resolve, reject) => {
             const offset = (page - 1) * limit
             let formatedParams = '';
-            if(params !== undefined) {
+            if(Object.keys(params).length !== 0) {
                 const formatedParamsList = [];
-            for(const key in params){
-                formatedParamsList.push(`${key}=${params[key]}`)            
-            }
-            formatedParams = 'WHERE ' + formatedParamsList.join(' AND ');
+                for(const key in params){
+                    formatedParamsList.push(
+                        typeof params[key] === 'string' ?
+                        `${key}='${params[key]}'` :
+                        `${key}=${params[key]}`
+                        );            
+                }
+                formatedParams = 'WHERE ' + formatedParamsList.join(' AND ');
             }
             let joinformated = ''
             if(join !== undefined){
