@@ -17,10 +17,11 @@ class TagController {
     async find(req, res, next){
         try {
             const tag = new Tag();
-            const tags = await tag.find(req.page);
+            const tags = await tag.find();
             res.json(tags)
         } catch (error) {
-            res.send();
+            console.log(error)
+            res.status(400).send(error);
         }
     }
 

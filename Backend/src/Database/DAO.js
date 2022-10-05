@@ -70,6 +70,7 @@ module.exports = {
                 joinformated += `JOIN ${join.table} as b on a.${join.a}=b.${join.b}`;
             }
             const sql = `SELECT * FROM ${table} as a ${joinformated} ${formatedParams} LIMIT ${offset},${limit}`;
+            console.log(sql)
             connection.query(sql, (error, values) => {
                 if (error) {
                     reject(error);

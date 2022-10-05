@@ -12,7 +12,7 @@ class Tag {
     }
 
     find(page, params){
-        return this.db.find('tags', page, params) 
+        return this.db.find('tags', page, [], 5) 
     }
 
     async save(){
