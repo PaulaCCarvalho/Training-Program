@@ -27,9 +27,8 @@ class Challenge {
         });
     }
 
-    async find(query) {
-        const { page, trash, ...oQuery } = query;
-        const params = { available: !trash, ...oQuery };
+    async find(paramsQ, page, trash) {
+        const params = { available: !trash, ...paramsQ };
         if (this.id !== undefined) params.id = this.id;
         const challenges = await this.db.find('challenges', page, params, 12);
         for (const challenge of challenges) {
@@ -44,8 +43,7 @@ class Challenge {
         return challenges;
     }
 
-    async count(query) {
-        const {trash, ...params} = query
+    async count(params) {
         const result = await this.db.getSum('challenges', params);
         return result[0].num;
     }

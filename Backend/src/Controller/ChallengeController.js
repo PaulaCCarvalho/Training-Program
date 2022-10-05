@@ -28,8 +28,9 @@ class ChallengeController {
     async find(req, res, next){
         try {
             const challenge = new Challenge();
-            const challenges = await challenge.find(req.query);
-            const count = await challenge.count(req.query);
+            const {page, trash, ...params} = req.query
+            const challenges = await challenge.find(params, page, trash);
+            const count = await challenge.count(params);
             res.json({count, challenges});
         } catch (error) {
             console.log(error);
