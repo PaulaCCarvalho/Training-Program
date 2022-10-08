@@ -44,7 +44,7 @@ class ChallengeController {
         try{
             const challenge = new Challenge();
             challenge.insert({...req.body, id: req.params.id})
-            challenge.alter()
+            await challenge.alter()
             res.status(204).send()
         } catch(error){
             res.status(400).send();
