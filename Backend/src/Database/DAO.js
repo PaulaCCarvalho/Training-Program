@@ -1,5 +1,31 @@
 const connection = require('./connection');
 
+function diferentiateStrig(param, key, ref = 'a'){
+    return typeof param === 'string' ?
+                        `${ref}.${key}='${param}'` : 
+                        `${ref}.${key}=${param}`
+}
+
+function handleWhereClause(params) {
+    const formatedParamsList = [];
+        for(const key in params){
+            if(params[key] === undefined) continue;
+            if(key === 'tags') continue;
+            let output = '';
+            if(params[key] instanceof Array){
+                const outputArray = [];
+                for(const value of params[key]){
+                    outputArray.push(diferentiateStrig(value, key, key === 'nome'? 'c':null));
+                }
+                output += '(    ' + outputArray.join(' OR ') + ' )';
+            } else {
+                output += diferentiateStrig(params[key], key);
+            }          
+            formatedParamsList.push(output);
+        }
+    return formatedParamsList;
+}
+
 module.exports = {
     add(table, params) {
         return new Promise((resolve, reject) => {
@@ -29,14 +55,7 @@ module.exports = {
         return new Promise((resolve, reject) => {
             let formatedParams = '';
             if(Object.keys(params).length !== 0) {
-                const formatedParamsList = [];
-                for(const key in params){
-                    formatedParamsList.push(
-                        typeof params[key] === 'string' ?
-                        `${key}='${params[key]}'` :
-                        `${key}=${params[key]}`
-                        );            
-                }
+                const formatedParamsList = handleWhereClause(params);
                 formatedParams = 'WHERE ' + formatedParamsList.join(' AND ');
             }
             const sql = `SELECT COUNT(*) as num FROM ${table} ${formatedParams}`;
@@ -50,26 +69,27 @@ module.exports = {
         })
     },
 
-    find(table, page = 1, params, limit = 10, join) {
+    find(table, page = 1, params, limit = 10, join = false, distinct = false, retrieve = '*') {
         return new Promise((resolve, reject) => {
             const offset = (page - 1) * limit
             let formatedParams = '';
             if(Object.keys(params).length !== 0) {
-                const formatedParamsList = [];
-                for(const key in params){
-                    formatedParamsList.push(
-                        typeof params[key] === 'string' ?
-                        `${key}='${params[key]}'` :
-                        `${key}=${params[key]}`
-                        );            
-                }
+                const formatedParamsList = handleWhereClause(params);
                 formatedParams = 'WHERE ' + formatedParamsList.join(' AND ');
             }
-            let joinformated = ''
-            if(join !== undefined){
-                joinformated += `JOIN ${join.table} as b on a.${join.a}=b.${join.b}`;
+            let joinformated = '';
+            if(join !== false){
+                alphabet = 'bcdefghijklmnopqrstuvwxyz';
+                for(const i in join){
+
+                    joinformated += ` JOIN ${join[i].table} as ${alphabet[i]} on ${join[i].refTo}.${join[i].refKey}=${alphabet[i]}.${join[i].selfKey}`;
+                }
             }
-            const sql = `SELECT * FROM ${table} as a ${joinformated} ${formatedParams} LIMIT ${offset},${limit}`;
+            let distinctFormated = ''
+            if(distinct === true){
+                distinctFormated = 'DISTINCT';
+            }
+            const sql = `SELECT ${distinctFormated} ${retrieve} FROM ${table} as a ${joinformated} ${formatedParams} LIMIT ${offset},${limit}`;
             console.log(sql)
             connection.query(sql, (error, values) => {
                 if (error) {
@@ -123,6 +143,19 @@ module.exports = {
     destroy(table, param) {
         return new Promise((resolve, reject) => {
             const sql = `DELETE FROM ${table} WHERE ?`;
+            connection.query(sql, param, (error, values) => {
+                if (error) {
+                    reject(error);
+                }
+                else {
+                    resolve(values);
+                }
+            })
+        })
+    },
+     
+    query(sql) {
+        return new Promise((resolve, reject) => {
             connection.query(sql, param, (error, values) => {
                 if (error) {
                     reject(error);

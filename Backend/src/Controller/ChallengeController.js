@@ -28,7 +28,9 @@ class ChallengeController {
     async find(req, res, next){
         try {
             const challenge = new Challenge();
-            const {page, trash, ...params} = req.query
+            const {page, trash, nivel, tags, ...params} = req.query
+            if(nivel !== undefined) params.nivel = nivel.split(',');
+            if(tags !== undefined) params.nome = tags.split(',');
             const challenges = await challenge.find(params, page, trash);
             const count = await challenge.count(params);
             res.json({count, challenges});

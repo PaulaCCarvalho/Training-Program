@@ -13,28 +13,49 @@ class Challenge {
         this.nivel = nivel;
         this.tema = tema;
         this.tags = tags;
-        this.imagens = imagens;
         this.capa = capa;
     }
 
     async save() {
         const { insertId } = await this.db.add('challenges', this);
-        /*this.imagens.forEach(async image => {
-            await this.db.add('images', {path: image})
-        }); */
         this.tags.forEach(async tag => {
             await this.db.add('challenges_tags  ', { challenge_id: insertId, tag_id: tag })
         });
     }
 
-    async find(paramsQ, page, trash) {
+    async find(paramsQ, page, trash, retrieve) {
         const params = { available: !trash, ...paramsQ };
         if (this.id !== undefined) params.id = this.id;
-        const challenges = await this.db.find('challenges', page, params, 12);
-        for (const challenge of challenges) {
-            const images = await this.db.find('images', 1, { challenge_id: challenge.id }, 5);
-            challenge.imagens = images.map(image => image.path);
-            const tags = await this.db.find('challenges_tags', 1, { challenge_id: challenge.id }, 5, { table: 'tags', a: 'tag_id', b: 'id' });
+        const challenges = await this.db.find(
+            'challenges',
+            page,
+            params,
+            12,
+            [
+                {
+                    table: 'challenges_tags',
+                    refTo: 'a',
+                    refKey: 'id',
+                    selfKey: 'challenge_id',
+                },
+                {
+                    table: 'tags',
+                    refTo: 'b', 
+                    refKey: 'tag_id',
+                    selfKey: 'id'
+                }
+            ],
+            true,
+            'a.id AS id, a.nome AS nome, a.descricao AS descricao, a.nivel AS nivel, a.tema AS tema, a.capa AS capa'
+        );
+        for (const [i, challenge] of challenges.entries()) {
+            const tags = await this.db.find(
+                'challenges_tags',
+                1,
+                { challenge_id: challenge.id },
+                5,
+                [{ table: 'tags', refTo: 'a', refKey: 'tag_id', selfKey: 'id' }]
+);
             challenge.tags = tags.map(tag => {
                 return { id: tag.id, nome: tag.nome }
             });
@@ -44,18 +65,33 @@ class Challenge {
     }
 
     async count(params) {
-        const result = await this.db.getSum('challenges', params);
+        const result = await this.db.find(
+            'challenges',
+            1,
+            params,
+            1000,
+            [
+                {
+                    table: 'challenges_tags',
+                    refTo: 'a',
+                    refKey: 'id',
+                    selfKey: 'challenge_id',
+                },
+                {
+                    table: 'tags',
+                    refTo: 'b', 
+                    refKey: 'tag_id',
+                    selfKey: 'id'
+                }
+            ],
+            false,
+            'COUNT(*) as num'
+        );
         return result[0].num;
     }
 
     async alter() {
         await this.db.alter('challenges', this);
-        if (this.imagens !== undefined) {
-            this.db.destroy('images', { challenge_id: this.id });
-            for (const image of this.imagens) {
-                await this.db.add('images', { challenge_id: this.id, path: image });
-            }
-        }
         if (this.tags !== undefined) {
             await this.db.destroy('challenges_tags', { challenge_id: this.id });
             for (const tag of this.tags) {
