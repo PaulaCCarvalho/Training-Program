@@ -12,6 +12,7 @@ import FiltroPesquisa from './components/FiltroPesquisa';
 import EditarDesafio from './screens/EditarDesafio';
 import GlobalContextProvider from './Context/globalContext';
 import LoadingScreen from './screens/LoadingScreen';
+import Perfil from './screens/Perfil';
 
 function App() {
     return (
@@ -25,7 +26,7 @@ function App() {
                     <Route path="/cadastrar-desafio" element={<CadastrarDesafio />} />
                     <Route path="/Desafio/:id" element={<Desafio />} />
                     <Route path="/editar-desafio/:id" element={<EditarDesafio />} />
-                    <Route path="/aba" element={<FiltroPesquisa />} />
+                    <Route path="/perfil" element={<Perfil />} />
                     <Route path="/loading" element={<LoadingScreen/>}/>
                 </Routes>
             </Router>

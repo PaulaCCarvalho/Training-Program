@@ -4,7 +4,7 @@ import Pagination from '@mui/material/Pagination';
 import Stack from '@mui/material/Stack';
 
 
-export function PaginationComponent({setPage}: {setPage: Function}) {
+export function PaginationComponent({page,setPage, count}: {page: number,setPage: Function, count: number}) {
     const darkTheme = createTheme({
         palette: {
             mode: 'dark',
@@ -14,7 +14,7 @@ export function PaginationComponent({setPage}: {setPage: Function}) {
     return (
         <ThemeProvider theme={darkTheme} >
             <Stack spacing={2} >
-                <Pagination count={4} onChange={(event, page) => setPage(page)} shape="rounded" />
+                <Pagination defaultPage={page} count={count} onChange={(event, pageChange) => setPage(pageChange)} shape="rounded" />
                 
             </Stack>
         </ThemeProvider>

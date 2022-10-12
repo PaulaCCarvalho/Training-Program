@@ -1,32 +1,33 @@
-import { Checkbox, FormControl, FormControlLabel, FormLabel, Radio, RadioGroup } from "@mui/material";
+import { Checkbox, FormControl, FormControlLabel, FormGroup, FormLabel, Radio, RadioGroup } from "@mui/material";
 import { useState } from "react";
 import SelectTags from "./Form/SelectTags";
 
-type Tag = {
-    id: number;
-    nome: string;
-}
 
-export default function FiltroPesquisa() {
-    const [tags, setTags] = useState<Tag>({
-        id: -1,
-        nome: ''
 
-    });
+export default function FiltroPesquisa({search,setSearch}: {search: any, setSearch: Function}) {
 
-    const handleAttributeValue = (attribute: string, value: number | string) => {
-        const newFormData = tags;
-        if (attribute === "id" || attribute === "nome") {
-            // newFormData[attribute] = value;
-            setTags(newFormData)
+
+    const handleAttributeValue = (attribute: string, value: number | string | any) => {
+        const newFormData = search;
+        if (attribute === "tags"){
+            newFormData[attribute] = value;
+            setSearch(newFormData)
         }
     }
 
-    const [value, setValue] = useState('facil');
+    const [value, setValue] = useState({
+        facil: false,
+        medio: false,
+        dificil: false,
+    });
+
+    const { facil, medio, dificil } = value
 
     const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-        console.log("aaaaaa")
-        setValue(event.target.value);
+        setValue({
+            ...value,
+            [event.target.name]: event.target.checked,
+        });
     };
 
     const [checked, setChecked] = useState(true);
@@ -34,6 +35,28 @@ export default function FiltroPesquisa() {
     const handleChangeCheckbox = (event: React.ChangeEvent<HTMLInputElement>) => {
         setChecked(event.target.checked);
     }
+
+    function searchDificuldade(){
+        const aux = [];
+
+        if(facil === true){
+            aux.push('facil');
+        }
+
+        if(medio === true){
+            aux.push('medio')
+        }
+
+        if(dificil === true){
+            aux.push('dificil')
+        }
+
+        return aux
+
+   }
+
+    search.nivel = searchDificuldade();
+    search.respondidas = checked;
 
     return (
 
@@ -43,85 +66,75 @@ export default function FiltroPesquisa() {
                 Filtros
             </div>
 
-            <div className="my-1 flex items-center justify-center text-white h-20 py-3 px-3 bg-zinc-700">
-                <FormControl className="w-60 " >
+            <div className="my-1 flex items-start text-white h-20 py-3 px-3 bg-zinc-700">
+                <FormGroup className="w-60" >
+                    <p className="text-md font-medium">Dificuldade:</p>
 
-                    <p className="flex justify-start text-md font-medium">Dificuldade:</p>
-                    <RadioGroup
-                        row
-                        aria-labelledby="nivel-radio-button"
-                        name="row-radio-buttons-group"
-                        defaultValue='facil'
-                        sx={{width: 300}}
-                    >
+                    <div className="inline-flex">
                         <FormControlLabel
                             value="facil"
                             control={
-                                <Radio
-                                    checked={value === 'facil'}
+                                <Checkbox
+                                    checked={facil}
                                     onChange={(event) => handleChange(event)}
-                                    value="facil"
+                                    name="facil"
+                                    inputProps={{ 'aria-label': 'controlled' }}
                                     sx={{
                                         color: '#f97316',
                                         '&.Mui-checked': {
                                             color: '#f97316',
                                         },
-                                        ":hover": '#f97316',
-                                        '& .MuiSvgIcon-root': {
-                                            fontSize: 18,
-                                          },
+                                        '& .MuiSvgIcon-root': { fontSize: 18 },
                                         marginRight: -0.5,
 
                                     }}
-                                />}
+                                />
+                            }
                             label="Fácil"
-                            />
+                        />
 
                         <FormControlLabel
                             value="medio"
                             control={
-                                <Radio
-                                    checked={value === 'medio'}
+                                <Checkbox
+                                    checked={medio}
                                     onChange={(event) => handleChange(event)}
-                                    value="medio"
-                                    size="small"
+                                    name="medio"
+
+                                    inputProps={{ 'aria-label': 'controlled' }}
                                     sx={{
                                         color: '#f97316',
                                         '&.Mui-checked': {
                                             color: '#f97316',
                                         },
-                                        '& .MuiSvgIcon-root': {
-                                            fontSize: 18,
-                                          },
+                                        '& .MuiSvgIcon-root': { fontSize: 18 },
                                         marginRight: -0.5,
-                                    
                                     }}
                                 />}
                             label="Médio" />
+
                         <FormControlLabel
                             value="dificil"
                             control={
-                                <Radio
-                                    checked={value === 'dificil'}
+                                <Checkbox
+                                    checked={dificil}
                                     onChange={(event) => handleChange(event)}
-                                    value="dificil"
-                                    size="small"
+                                    name="dificil"
+                                    inputProps={{ 'aria-label': 'controlled' }}
                                     sx={{
                                         color: '#f97316',
                                         '&.Mui-checked': {
                                             color: '#f97316',
                                         },
-                                        '& .MuiSvgIcon-root': {
-                                            fontSize: 18,
-                                          },
+                                        '& .MuiSvgIcon-root': { fontSize: 18 },
                                         marginRight: -0.5,
-
                                     }}
                                 />}
-                            label="Difícil" />
+                            label="Difícil"
+                         />
 
-                    </RadioGroup>
-                </FormControl>
+                    </div>
+                </FormGroup>
             </div>
 
             <div className="gap-4 my-1.5 flex items-center justify-between text-white h-14 py-3 px-3 bg-zinc-700">
@@ -142,10 +155,10 @@ export default function FiltroPesquisa() {
             <div className="gap-4 mt-1.5 rounded-b-lg flex flex-col justify-start text-white py-3 px-3 bg-zinc-700">
                 <p className="flex justify-start text-md font-medium " > Tags: </p>
                 <div>
-                    <SelectTags datas={handleAttributeValue} formData={tags} />
+                    <SelectTags datas={handleAttributeValue} formData={search} />
                 </div>
 
             </div>
-        </div>
+        </div >
     )
 }

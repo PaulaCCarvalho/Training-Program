@@ -29,10 +29,12 @@ class ChallengeController {
         try {
             const challenge = new Challenge();
             const {page, trash, nivel, tags, ...params} = req.query
-            if(nivel !== undefined) params.nivel = nivel.split(',');
-            if(tags !== undefined) params.nome = tags.split(',');
+            console.log(tags !== '', tags !== undefined )
+            if(nivel !== '') params.nivel = nivel.split(',');
+            if(tags !== '') params.nome = tags.split(',');
             const challenges = await challenge.find(params, page, trash);
             const count = await challenge.count(params);
+            console.log(challenges);
             res.json({count, challenges});
         } catch (error) {
             console.log(error);

@@ -25,7 +25,6 @@ export function Desafio() {
             try {
                 const response = await axios.get(`http://localhost:3333/api/desafio/${id}`)
                 setDesafio(response.data);
-                console.log(response.data)
             } catch (error) {
                 console.error("ops! ocorreu um erro" + error);
 
