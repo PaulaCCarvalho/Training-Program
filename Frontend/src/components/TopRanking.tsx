@@ -25,7 +25,7 @@ export default function TopRanking() {
             {
                 usuarios.map((usuario, pos) => {
                     return(
-                        <div className="my-1 px-6 flex items-center justify-between text-white h-6 py-4">
+                        <div key={pos} className="my-1 px-6 flex items-center justify-between text-white h-6 py-4">
                             <span>{pos+1}. {usuario.nome} </span> <span>{usuario.pontuacao}</span>
                         </div>
                     )

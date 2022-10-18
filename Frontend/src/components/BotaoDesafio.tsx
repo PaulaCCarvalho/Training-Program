@@ -6,11 +6,9 @@ import { useEffect, useState } from 'react';
 import { createTheme, IconButton, ThemeProvider } from '@mui/material';
 
 import * as AlertDialog from '@radix-ui/react-alert-dialog';
-import { positions } from '@mui/system';
 import { useNavigate, useParams } from 'react-router-dom';
 import axios from 'axios';
 
-import { HiDotsHorizontal } from 'react-icons/hi'
 
 
 
@@ -54,7 +52,7 @@ export function BotaoDesafio({ idParam }: { idParam: any }) {
         <div>
             <ThemeProvider theme={darkTheme} >
                 <IconButton aria-describedby={id} onClick={handleClick} className="rounded-full hover:bg-zinc-600 p-2">
-                    <HiDotsHorizontal size={32} />
+                    <DotsThreeOutline size={32} />
                 </IconButton>
 
                 <Popover

@@ -6,7 +6,6 @@ import SelectDifficulty from "../components/Form/SelectDifficulty";
 import SelectTags from "../components/Form/SelectTags";
 import { Menu } from "../components/Menu";
 import axios from "axios";
-import { number } from "yup/lib/locale";
 
 type UserSubmitForm = {
   nome: string;
@@ -69,7 +68,6 @@ export default function CadastrarDesafio() {
     }
     formData.tags = tags
     try {
-      console.log(formData)
       await axios.post('http://localhost:3333/api/desafio', formData)
     } catch (err) {
       console.error("ops! ocorreu um erro" + err);
@@ -139,11 +137,14 @@ export default function CadastrarDesafio() {
               <Input id="capa" type="file" placeholder="insira imagens do desafio" data={handleAttribute} />
             </div>
 
-            <div className="flex items-center gap-3">
+            <div className="flex items-end gap-3 ">
+              <div className="flex flex-col gap-1">
+                <label htmlFor="">Dificuldade</label>
+                <SelectDifficulty data={handleAttributeValue} formData={formData} />
+              </div>
 
-              <SelectDifficulty data={handleAttributeValue} formData={formData} />
 
-              <div className="flex-1">
+              <div className="flex-1 ">
                 <SelectTags datas={handleAttributeValue} formData={formData} />
               </div>
             </div>

@@ -1,6 +1,7 @@
 const connection = require('./connection');
 
 function diferentiateStrig(param, key, ref = 'a'){
+    // if(param === '') return ''
     return typeof param === 'string' ?
                         `${ref}.${key}='${param}'` : 
                         `${ref}.${key}=${param}`
@@ -15,7 +16,7 @@ function handleWhereClause(params) {
             if(params[key] instanceof Array){
                 const outputArray = [];
                 for(const value of params[key]){
-                    outputArray.push(diferentiateStrig(value, key, key === 'nome'? 'c':null));
+                    outputArray.push(diferentiateStrig(value, key, key === 'nome'? 'c':'a'));
                 }
                 output += '(    ' + outputArray.join(' OR ') + ' )';
             } else {

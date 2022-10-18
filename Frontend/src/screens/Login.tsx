@@ -1,3 +1,4 @@
+import axios from 'axios';
 import { ChangeEvent, FormEvent, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { Input } from '../components/Form/Input';
@@ -23,8 +24,16 @@ export default function Login() {
     
 
     const handleLogin = () => {
-        setIsAdmin(true);
-        navigate('/');
+        axios.get(`http://localhost:3333/api/login`, {
+            params: formData})
+            .then((response: any) => {
+                console.log(response.data);
+            })
+            .catch((err: any) => {
+                console.error("ops! ocorreu um erro" + err);
+            }); 
+        // setIsAdmin(true);
+        // navigate('/');
     }
 
     const handleAttribute = (attribute: string, event: ChangeEvent<{ value: any }>) => {
@@ -42,13 +51,13 @@ export default function Login() {
 
             <form action='' onSubmit={(e) => onSubmit(e)} className="mt-8 flex flex-col gap-4">
                 <div className="flex flex-col gap-1">
-                    <label htmlFor="">Email</label>
-                    <Input id="email" type="email" placeholder="exemplo@gmail.com" data={handleAttribute}/>
+                    <label htmlFor="email">Email</label>
+                    <Input id="email" type="email" placeholder="exemplo@gmail.com" data={handleAttribute} required/>
                 </div>
 
                 <div className="flex flex-col gap-1">
-                    <label htmlFor="">Senha</label>
-                    <Input id="senha" type="password" data={handleAttribute}/>
+                    <label htmlFor="senha">Senha</label>
+                    <Input id="senha" type="password" data={handleAttribute} required/>
                 </div>
 
                 <footer className="mt-4 flex justify-between gap-4 items-center">

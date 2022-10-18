@@ -5,9 +5,7 @@ import SelectDifficulty from "../components/Form/SelectDifficulty";
 import SelectTags from "../components/Form/SelectTags";
 import { Menu } from "../components/Menu";
 import axios from "axios";
-import { number } from "yup/lib/locale";
-import { getBottomNavigationUtilityClass } from "@mui/material";
-import { useGlobal } from "../Context/globalContext";
+
 
 type UserSubmitForm = {
     id: number;
@@ -87,16 +85,16 @@ export default function EditarDesafio() {
             await axios.put(`http://localhost:3333/api/desafio/${formData.id}`, formData)
             setTimeout(() => {
                 navigate(`/desafio/${formData.id}`);
-            },3000);
+            }, 3000);
 
             navigate(`/loading`);
-            
+
 
         } catch (err) {
             console.error("ops! ocorreu um erro" + err);
         }
 
-       
+
     }
     /*     const onSubmit = (data: UserSubmitForm) => {
             console.log("Passei aqui!")
@@ -160,11 +158,14 @@ export default function EditarDesafio() {
                             <Input id="capa" type="file" defaultValue={formData.imagens} placeholder="insira imagens do desafio" data={handleAttribute} />
                         </div>
 
-                        <div className="flex items-center gap-3">
+                        <div className="flex items-end gap-3 ">
+                            <div className="flex flex-col gap-1">
+                                <label htmlFor="">Dificuldade</label>
+                                <SelectDifficulty data={handleAttributeValue} key={formData.id} formData={formData} />
+                            </div>
 
-                            <SelectDifficulty data={handleAttributeValue} key={formData.id} formData={formData} />
 
-                            <div className="flex-1">
+                            <div className="flex-1 ">
                                 <SelectTags datas={handleAttributeValue} formData={formData} />
                             </div>
                         </div>
