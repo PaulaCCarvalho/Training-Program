@@ -82,7 +82,7 @@ module.exports = {
                 alphabet = 'bcdefghijklmnopqrstuvwxyz';
                 for(const i in join){
 
-                    joinformated += ` JOIN ${join[i].table} as ${alphabet[i]} on ${join[i].refTo}.${join[i].refKey}=${alphabet[i]}.${join[i].selfKey}`;
+                     joinformated += ` LEFT JOIN ${join[i].table} as ${alphabet[i]} on ${join[i].refTo}.${join[i].refKey}=${alphabet[i]}.${join[i].selfKey}`;
                 }
             }
             let distinctFormated = ''
