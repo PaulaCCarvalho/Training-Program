@@ -68,8 +68,8 @@ class Challenge {
         const result = await this.db.find(
             'challenges',
             1,
-            params,
-            1000,
+            {...params, available: true},
+            1000000000,
             [
                 {
                     table: 'challenges_tags',
@@ -85,7 +85,7 @@ class Challenge {
                 }
             ],
             false,
-            'COUNT(*) as num'
+            'COUNT (DISTINCT a.id) as num'
         );
         return result[0].num;
     }
