@@ -6,9 +6,9 @@ class MemberController {
         try {
             const member = new Member();
             const token = await member.login(req.headers.username, req.headers.password);
-            console.log(token);
             res.json(token);
         } catch (error) {
+            console.log(error);
             res.status(400).send();
         }
     }

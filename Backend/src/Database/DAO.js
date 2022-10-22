@@ -36,11 +36,12 @@ module.exports = {
                     key === 'db'   ||
                     key === 'tags' ||
                     key === 'imagens'||
-                    key === 'id'
+                    (key === 'id' && typeof params[key] !== 'string')
                 ) continue;
                 paramsObj[key] = params[key]
             }
             const sql = `INSERT INTO ${table} SET ?`;
+            console.log(sql);
             connection.query(sql, paramsObj, (error, values, fields) => {
                 if (error) {
                     reject(error);
@@ -60,6 +61,7 @@ module.exports = {
                 formatedParams = 'WHERE ' + formatedParamsList.join(' AND ');
             }
             const sql = `SELECT COUNT(*) as num FROM ${table} ${formatedParams}`;
+            console.log(sql);
             connection.query(sql, (error, results) => {
                 if(error){
                     reject(error);
@@ -111,11 +113,13 @@ module.exports = {
                     params[key] === undefined ||
                     key === 'db'              ||
                     key === 'tags'            ||
-                    key === 'imagens'
+                    key === 'imagens'         ||
+                    key === 'id'
                 ) continue;
                     paramsObj[key] = params[key]
             }
-            const sql = `UPDATE ${table} SET ? WHERE id=${params.id}`;
+            const sql = `UPDATE ${table} SET ? WHERE id='${params.id}'`;
+            console.log(sql);
             connection.query(sql, paramsObj, (error, values) => {
                 if (error) {
                     reject(error);
@@ -130,6 +134,7 @@ module.exports = {
     delete(table, id) {
         return new Promise((resolve, reject) => {
             const sql = `UPDATE ${table} SET available=0 WHERE id=${id}`;
+            console.log(sql);
             connection.query(sql, (error, values) => {
                 if (error) {
                     reject(error);
@@ -144,6 +149,7 @@ module.exports = {
     destroy(table, param) {
         return new Promise((resolve, reject) => {
             const sql = `DELETE FROM ${table} WHERE ?`;
+            console.log(sql);
             connection.query(sql, param, (error, values) => {
                 if (error) {
                     reject(error);
@@ -157,6 +163,7 @@ module.exports = {
      
     query(sql) {
         return new Promise((resolve, reject) => {
+            console.log(sql);
             connection.query(sql, param, (error, values) => {
                 if (error) {
                     reject(error);
