@@ -18,7 +18,20 @@ class Member {
     }
 
     async find(params = {}) {
-        return await this.db.find('members', 1, params, 10)
+        const members = await this.db.find('members', 1, params, 10);
+        for(const member of members){
+            delete member.senha;
+            member.links = await this.db.find('links', 1, {member_id: member.id}, 10, false, false, 'titulo, url');
+        }
+        return members;
+    }
+
+    async alter(params, links = []){
+        await this.db.alter('members', params);
+        await this.db.destroy('links', {member_id: params.id})
+        for(const link of links){
+            await this.db.add('links', {...link, member_id: params.id});
+        }
     }
 
     async login(username, password) {

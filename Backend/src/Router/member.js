@@ -10,7 +10,7 @@ memberRouter
     .get('/usuario', memberController.find)
     .post('/usuario', memberController.add)
     .get('/usuario/:id', memberController.findOne)
-    // .put('/usuario/:id', memberController.alter)
+    .put('/usuario/', verifyToken, memberController.alter)
     // .delete('/usuario/:id', memberController.delete)
 
 module.exports = memberRouter;
