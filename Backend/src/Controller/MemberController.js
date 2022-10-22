@@ -17,7 +17,8 @@ class MemberController {
             const member = new Member();
             member.insert(req.body);
             await member.save();
-            res.status(204).send();
+            const token = await member.login(req.body.email, req.body.senha)
+            res.status(201).json(token);
         } catch (error) {
             res.status(400).send();
         }

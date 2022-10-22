@@ -29,7 +29,7 @@ class Member {
         const token = jwt.sign({exp: Math.floor(Date.now() / 1000) + (3600 * 24), data: 'foo'}, 'secret')
         const now = new Date();
         await this.db.add('tokens', {id: token, member_id: user.id, created_at: now})
-        return token
+        return {token, isAdm: user.isAdm}
     }
 }
 

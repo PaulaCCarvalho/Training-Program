@@ -14,7 +14,7 @@ type GlobalContextProviderProps = {
 }
 
 export default function GlobalContextProvider({ children }: GlobalContextProviderProps) {
-    const [isAdmin, setIsAdmin] = useState(true)
+    const [isAdmin, setIsAdmin] = useState(false)
     const [isMembro, setIsMembro] = useState(false)
 
     return (

@@ -1,11 +1,31 @@
 import { Crown, SignOut, UserCircle } from "phosphor-react";
-import { Dispatch } from "react";
+import { Dispatch, useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { useGlobal } from "../Context/globalContext";
 
 
 export function Menu() {
-    const { isAdmin, setIsAdmin } = useGlobal();
+    const { isAdmin, setIsAdmin, isMembro, setIsMembro } = useGlobal();
+
+    useEffect(() => {
+        const token = localStorage.getItem('token');
+
+        if (token !== null) {
+            setIsMembro(true)
+        }
+    }, [])
+
+    const handleLogout = () => {
+        if (isAdmin === true) {
+            setIsAdmin(false)
+        }
+
+        localStorage.removeItem('token');
+        setIsMembro(false);
+
+
+    }
+
     return (
         <div className="bg-zinc-700 shadow-lg shadow-black/30">
             <div className="mx-auto px-10 ">
@@ -24,19 +44,28 @@ export function Menu() {
                         </Link>
                     </div>
 
-                    {isAdmin ?
+                    {isAdmin &&
                         <div className="flex items-center gap-2">
                             <div className=" py-1 px-1 rounded-md">Olá, Administrador!</div>
 
                             <Crown size={40} className="flex rounded-md px-1 py-1 text-yellow-500" />
 
-                            <div onClick={() => setIsAdmin(false)} className="flex ml-3 rounded-md px-3 py-1 hover:bg-zinc-600">
+                            <div onClick={handleLogout} className="flex ml-3 rounded-md px-3 py-1 hover:bg-zinc-600">
                                 <SignOut size={24} />
                             </div>
 
 
                         </div>
+                    }
 
+                    {isMembro ?
+                        <div className="flex items-center">
+                            Você está Logado
+
+                            <div onClick={handleLogout} className="flex ml-3 rounded-md px-3 py-1 hover:bg-zinc-600">
+                                <SignOut size={24} />
+                            </div>
+                        </div>
                         :
                         <div className="flex items-center gap-6">
                             <Link to="/cadastro" className="hover:bg-zinc-600 py-1 px-2 rounded-md">Cadastrar</Link>

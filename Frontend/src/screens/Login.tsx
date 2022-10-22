@@ -7,11 +7,11 @@ import { useGlobal } from '../Context/globalContext';
 type UserSubmitForm = {
     email: string;
     senha: string;
-  
+
 }
 
 export default function Login() {
-    const {setIsAdmin} = useGlobal();
+    const { setIsAdmin } = useGlobal();
     const navigate = useNavigate()
 
     const onSubmit = (e: FormEvent) => {
@@ -20,30 +20,34 @@ export default function Login() {
     const [formData, setFormData] = useState<UserSubmitForm>({
         email: '',
         senha: ''
-      });
-    
+    });
 
-    const handleLogin = () => {
-        axios.get(`http://localhost:3333/api/login`, {
-            params: formData})
-            .then((response: any) => {
-                console.log(response.data);
+
+    const handleLogin = async () => {
+        try {
+            const {data: {token, isAdmin}} = await axios.get(`http://localhost:3333/api/login`, {
+                headers: {
+                    Username: formData.email,
+                    Password: formData.senha,
+                }
             })
-            .catch((err: any) => {
-                console.error("ops! ocorreu um erro" + err);
-            }); 
-        // setIsAdmin(true);
-        // navigate('/');
+            setIsAdmin(isAdmin);
+            localStorage.setItem('token', token);
+            navigate('/');
+        } catch (err) {
+            console.error("ops! ocorreu um erro" + err);
+            alert("Ops deu ruim!")
+        }
     }
 
     const handleAttribute = (attribute: string, event: ChangeEvent<{ value: any }>) => {
         const newFormData = formData;
         if (attribute === "email" ||
-          attribute === "senha") {
-          newFormData[attribute] = event.target.value;
-          setFormData(newFormData)
+            attribute === "senha") {
+            newFormData[attribute] = event.target.value;
+            setFormData(newFormData)
         }
-      }
+    }
 
     return (
         <div className="fixed bg-[#2A2634] py-8 px-10 text-white top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 rounded-lg w-[480px] shadow-lg shadow-black/25">
@@ -52,12 +56,12 @@ export default function Login() {
             <form action='' onSubmit={(e) => onSubmit(e)} className="mt-8 flex flex-col gap-4">
                 <div className="flex flex-col gap-1">
                     <label htmlFor="email">Email</label>
-                    <Input id="email" type="email" placeholder="exemplo@gmail.com" data={handleAttribute} required/>
+                    <Input id="email" type="email" placeholder="exemplo@gmail.com" data={handleAttribute} required />
                 </div>
 
                 <div className="flex flex-col gap-1">
                     <label htmlFor="senha">Senha</label>
-                    <Input id="senha" type="password" data={handleAttribute} required/>
+                    <Input id="senha" type="password" data={handleAttribute} required />
                 </div>
 
                 <footer className="mt-4 flex justify-between gap-4 items-center">
@@ -65,7 +69,7 @@ export default function Login() {
                         Cancelar
                     </Link>
 
-                    <button 
+                    <button
                         onClick={handleLogin}
                         className="bg-violet-500 px-10 h-11 text-1xl rounded-md font-semibold flex items-center  hover:bg-violet-600"
                     >
