@@ -19,7 +19,7 @@ class MemberController {
             await member.save();
             res.status(204).send();
         } catch (error) {
-            res.status(400).send();
+            res.status(400).send(error.message);
         }
     }
 
@@ -29,7 +29,7 @@ class MemberController {
             const members = await member.find()
             res.json(members);
         } catch (error) {
-            
+            res.status(400).send(error.message);
         }
     }
 
@@ -40,7 +40,18 @@ class MemberController {
             const {senha, ...memberformated} = memberResp[0]
             res.json(memberformated);
         } catch (error) {
-            
+            res.status(400).send(error.message);
+        }
+    }
+
+    async alter(req, res, next) {
+        try {
+            const {links, ...params} = req.body;
+            const member = new Member();
+            await member.alter(params, links)
+            res.status(204).end();
+        } catch (error) {
+            res.status(400).send(error.message);
         }
     }
 }
