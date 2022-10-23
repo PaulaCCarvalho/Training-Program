@@ -7,10 +7,10 @@ class TagController {
             const tag = new Tag();
             tag.insert(req.body);
             await tag.save();
-            res.status(204).send();
+            res.status(201).send();
         } catch (error) {
-            console.log(error);
-            res.status(400).send();
+            req.error = error;
+            next()
         }
     }
 
@@ -20,8 +20,8 @@ class TagController {
             const tags = await tag.find();
             res.json(tags)
         } catch (error) {
-            console.log(error)
-            res.status(400).send(error);
+            req.error = error;
+            next()
         }
     }
 
@@ -31,7 +31,8 @@ class TagController {
             const objTag = await tag.find(1, {id: req.params.id});
             res.json(objTag);
         } catch (error) {
-            res.status(400).send();
+            req.error = error;
+            next()
         }
     }
 

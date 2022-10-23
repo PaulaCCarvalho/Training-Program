@@ -1,5 +1,6 @@
 const DAO = require('../Database');
 const jwt = require('jsonwebtoken');
+const {LoginError, NotFoundError} = require('../Error')
 
 class Member {
 
@@ -19,6 +20,7 @@ class Member {
 
     async find(params = {}) {
         const members = await this.db.find('members', 1, params, 10);
+        if(members.length === 0) throw new NotFoundError('member');
         for(const member of members){
             delete member.senha;
             member.links = await this.db.find('links', 1, {member_id: member.id}, 10, false, false, 'titulo, url');
@@ -36,8 +38,9 @@ class Member {
 
     async login(username, password) {
         const [user] = await this.db.find('members', 1, {email: username});
+        if(user === undefined) throw new LoginError();
         if(user.senha !== password){
-            throw new Error('invalid Login');
+            throw new LoginError();
         }
         const token = jwt.sign({exp: Math.floor(Date.now() / 1000) + (3600 * 24), data: 'foo'}, 'secret')
         const now = new Date();
