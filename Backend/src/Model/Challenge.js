@@ -24,7 +24,7 @@ class Challenge {
         });
     }
 
-    async find(paramsQ, page, trash, retrieve) {
+    async find(paramsQ, page, trash, search) {
         const params = { available: !trash, ...paramsQ };
         if (this.id !== undefined) params.id = this.id;
         const challenges = await this.db.find(
@@ -47,7 +47,8 @@ class Challenge {
                 }
             ],
             true,
-            'a.id AS id, a.nome AS nome, a.descricao AS descricao, a.nivel AS nivel, a.tema AS tema, a.capa AS capa'
+            'a.id AS id, a.nome AS nome, a.descricao AS descricao, a.nivel AS nivel, a.tema AS tema, a.capa AS capa', 
+            search
         );
         if(challenges.length === 0) throw new NotFoundError('Challenge')
         for (const challenge of challenges) {
@@ -66,7 +67,7 @@ class Challenge {
         return challenges;
     }
 
-    async count(params) {
+    async count(params, search) {
         const result = await this.db.find(
             'challenges',
             1,
@@ -87,7 +88,8 @@ class Challenge {
                 }
             ],
             false,
-            'COUNT (DISTINCT a.id) as num'
+            'COUNT (DISTINCT a.id) as num',
+            search
         );
         return result[0].num;
     }

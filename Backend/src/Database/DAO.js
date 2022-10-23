@@ -7,7 +7,7 @@ function diferentiateStrig(param, key, ref = 'a'){
                         `${ref}.${key}=${param}`
 }
 
-function handleWhereClause(params) {
+function handleWhereClause(params, search) {
     const formatedParamsList = [];
         for(const key in params){
             if(params[key] === undefined) continue;
@@ -24,6 +24,7 @@ function handleWhereClause(params) {
             }          
             formatedParamsList.push(output);
         }
+        search && formatedParamsList.push(`a.nome LIKE '%${search}%'`);
     return formatedParamsList;
 }
 
@@ -72,12 +73,13 @@ module.exports = {
         })
     },
 
-    find(table, page = 1, params, limit = 10, join = false, distinct = false, retrieve = '*') {
+    find(table, page = 1, params, limit = 10, join = false, distinct = false, retrieve = '*', search) {
         return new Promise((resolve, reject) => {
             const offset = (page - 1) * limit
             let formatedParams = '';
-            if(Object.keys(params).length !== 0) {
-                const formatedParamsList = handleWhereClause(params);
+            const haveParams = Object.keys(params).length + search === undefined ? 0 : 1
+            if(haveParams !== 0) {
+                const formatedParamsList = handleWhereClause(params, search);
                 formatedParams = 'WHERE ' + formatedParamsList.join(' AND ');
             }
             let joinformated = '';

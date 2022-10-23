@@ -1,5 +1,5 @@
 import { Checkbox, FormControl, FormControlLabel, FormGroup, FormLabel, Radio, RadioGroup } from "@mui/material";
-import { useState } from "react";
+import { ChangeEvent, useState } from "react";
 import SelectTags from "./Form/SelectTags";
 
 
@@ -54,9 +54,11 @@ export default function FiltroPesquisa({ search, setSearch, setPage, req }: { se
         return aux
 
     }
+    function handleChangeInput(event: ChangeEvent<{ value: any }>) {
+        search.nome = event.target.value;
+    }
 
     function handleClick() {
-        console.log('abaicaxi')
         setPage(1)
         req()
     }
@@ -168,7 +170,7 @@ export default function FiltroPesquisa({ search, setSearch, setPage, req }: { se
 
             <div className="gap-4 mt-1.5  flex flex-col justify-start text-white py-3 px-3 bg-zinc-700 ">
                 <p className="flex justify-start text-md font-medium " > Pesquisa por nome: </p>
-                <input onChange={(event) => { handleChange(event) }} type="text" name="search" className="bg-zinc-900 py-4 px-4 rounded text-sm placeholder:text-zinc-500 " placeholder="nome do desafio" />
+                <input onChange={(event) => { handleChangeInput(event) }} type="text" name="nome" className="bg-zinc-900 py-4 px-4 rounded text-sm placeholder:text-zinc-500 " placeholder="nome do desafio" />
             </div>
 
             <div className="gap-4 mt-1.5 flex flex-col justify-start text-white py-3 px-3  ">

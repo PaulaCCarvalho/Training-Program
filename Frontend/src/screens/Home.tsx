@@ -10,6 +10,7 @@ import FiltroPesquisa from "../components/FiltroPesquisa";
 import TopRanking from "../components/TopRanking";
 import { PaginationComponent } from "../components/PaginationComponent";
 import { useGlobal } from "../Context/globalContext";
+import { Alert, Snackbar } from "@mui/material";
 
 interface Desafio extends CardDesafioProps { }
 
@@ -40,22 +41,30 @@ export default function Home() {
     const [page, setPage] = useState(1)
     const [pageCount, setPageCount] = useState(1)
     const { isAdmin } = useGlobal()
+    const [open, setOpen] = useState(false);
 
-    function requisicao(){
+    function requisicao() {
         axios.get(`http://localhost:3333/api/desafio?page=${page}`, {
             params: {
-                //nome: search.nome,
+                nome: search.nome,
                 nivel: search.nivel.toString(),
                 //respondidas: search.respondidas.toString(),
-                tags: formatTags()                    
-            }})
+                tags: formatTags()
+            }
+        })
             .then((response) => {
                 setCards(response.data.challenges);
-                setPageCount(Math.ceil(response.data.count/12));
+                setPageCount(Math.ceil(response.data.count / 12));
             })
             .catch((err) => {
-                console.error("ops! ocorreu um erro" + err);
-            }); 
+                console.log(err.code)
+                if(err.code === 404){
+                    setOpen(true)
+                }else{
+                    console.error("ops! ocorreu um erro" + err);
+                }
+                
+            });
     }
 
     useEffect(() => {
@@ -63,23 +72,20 @@ export default function Home() {
 
     }, [page]);
 
-    function handleChange(event: ChangeEvent<{ value: any }>) {
-        search.nome = event.target.value;
-    }
+    const handleClose = (event?: React.SyntheticEvent | Event, reason?: string) => {
+        if (reason === 'clickaway') {
+          return;
+        }
+        setOpen(false);
+    };
 
-    function formatTags(){
+    function formatTags() {
         const aux: string[] = []
-        search.tags.map((tag : any) => {
+        search.tags.map((tag: any) => {
             aux.push(String(tag.nome))
         })
 
         return aux.toString()
-    }
-
-    function handleClick() {
-        console.log('abaicaxi')
-        setPage(1)
-        requisicao()
     }
 
     return (
@@ -124,6 +130,12 @@ export default function Home() {
                         </div>
                         <PaginationComponent page={page} setPage={setPage} count={pageCount} />
                     </div>
+
+                    <Snackbar open={open} autoHideDuration={3000} onClose={handleClose} anchorOrigin={{ vertical: 'top', horizontal: 'left' }} >
+                        <Alert onClose={handleClose} severity="error" sx={{ width: '100%' }}>
+                            Nenhum desafio encontrado!
+                        </Alert>
+                    </Snackbar>
 
                 </div>
                 <Footer />

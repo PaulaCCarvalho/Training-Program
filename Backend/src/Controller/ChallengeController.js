@@ -28,11 +28,11 @@ class ChallengeController {
     async find(req, res, next){
         try {
             const challenge = new Challenge();
-            const {page, trash, nivel, tags, ...params} = req.query
+            const {nome, page, trash, nivel, tags, ...params} = req.query
             if(nivel !== '' && nivel !== undefined) params.nivel = nivel.split(',');
             if(tags !== '' && nivel !== undefined) params.nome = tags.split(',');
-            const challenges = await challenge.find(params, page, trash);
-            const count = await challenge.count(params);
+            const challenges = await challenge.find(params, page, trash, nome);
+            const count = await challenge.count(params, nome);
             res.json({count, challenges});
         } catch (error) {
             req.error = error;
