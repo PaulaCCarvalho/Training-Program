@@ -23,7 +23,7 @@ class Member {
         if(members.length === 0) throw new NotFoundError('member');
         for(const member of members){
             delete member.senha;
-            member.links = await this.db.find('links', 1, {member_id: member.id}, 10, false, false, 'titulo, url');
+            member.links = await this.db.find('links', 1, {member_id: member.id}, 10);
         }
         return members;
     }
@@ -45,7 +45,7 @@ class Member {
         const token = jwt.sign({exp: Math.floor(Date.now() / 1000) + (3600 * 24), data: 'foo'}, 'secret')
         const now = new Date();
         await this.db.add('tokens', {id: token, member_id: user.id, created_at: now})
-        return token
+        return {token, isAdm: user.isAdm, id: user.id}
     }
 }
 

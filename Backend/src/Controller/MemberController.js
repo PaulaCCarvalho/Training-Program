@@ -17,7 +17,8 @@ class MemberController {
             const member = new Member();
             member.insert(req.body);
             await member.save();
-            res.status(204).send();
+            const token = await member.login(req.body.email, req.body.senha)
+            res.status(201).json(token);
         } catch (error) {
             req.error = error;
             next()
@@ -52,6 +53,7 @@ class MemberController {
             const {links, ...params} = req.body;
             const member = new Member();
             await member.alter(params, links)
+            console.log(req.body)
             res.status(204).end();
         } catch (error) {
             req.error = error;

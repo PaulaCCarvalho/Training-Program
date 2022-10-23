@@ -1,45 +1,185 @@
 import { Avatar } from "@mui/material";
+import * as Dialog from '@radix-ui/react-dialog';
+import axios from "axios";
+import { useFormik } from "formik";
 import { Link } from "phosphor-react";
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import { useParams } from "react-router-dom";
+import DialogAddLink from "../components/DialogAddLink";
+import DialogEditPerfil from "../components/DialogEditPerfil";
 import Footer from "../components/Footer";
 import { Menu } from "../components/Menu";
 import { PaginationComponent } from "../components/PaginationComponent";
+import { useGlobal } from "../Context/globalContext";
 
 
+type link = {
+    id: number,
+    titulo: string,
+    url: string,
+}
+
+type member = {
+    id: number,
+    nome: string,
+    bio: string,
+    links: Array<link>,
+    email: string,
+}
 
 export default function Perfil() {
-
+    const { isMembro } = useGlobal()
     const [page, setPage] = useState(3)
+    const [change, setChange] = useState(0)
+    const [myPerfil, setMyPerfil] = useState(false)
+    const id = localStorage.getItem('id');
+    const idParam = useParams()
 
-    const links = [
-        { titulo: 'GitHub', url: 'https://github.com/' },
-        { titulo: 'Linkedin', url: 'https://www.linkedin.com/' },
+    const update = () => {
+        setChange(change + 1);
+    }
 
-    ]
+    const [membro, setMembro] = useState<member>(
+        {
+            id: 0,
+            nome: "Carregando...",
+            bio: `Carregando...`,
+            links: [],
+            email: "Carregando...",
+        }
+    )
+
+    const formikPerfil = useFormik({
+        initialValues: {
+            nome: membro.nome,
+            bio: membro.bio,
+            email: membro.email,
+        },
+        onSubmit: async (valuesPerfil) => {
+            
+            
+            const updatedMember = {...valuesPerfil, links: membro.links, id: membro.id};
+
+            setMembro(updatedMember)
+            await handleRequest(updatedMember)
+        },
+        enableReinitialize: true,
+    })
+
+
+    useEffect(() => {
+
+        if (idParam.id === id) {
+            setMyPerfil(true);
+        } else {
+            setMyPerfil(false);
+        }
+
+        axios.get(`http://localhost:3333/api/usuario/${idParam.id}`)
+            .then(({ data: membro }) => {
+                setMembro(membro)
+            })
+            .catch(() => console.log('Ops deu ruim!'))
+
+    }, [isMembro, change])
+
+
+
+    const handleRequest = async (updatedMember: member) => {
+        const token = localStorage.getItem("token");
+        try {
+            const response = await axios.put(`http://localhost:3333/api/usuario`,
+                updatedMember,
+                {
+                    headers: {
+                        Authorization: 'Bearer ' + token
+                    }
+                },
+                
+            )
+            
+            update()
+        } catch (err) {
+            console.log("Ops ocorreu um erro!");
+
+        }
+    }
+
+    const setLinks = (urls: link[]) => {
+        console.log(urls)
+        const newMember = membro
+        newMember.links = urls;
+        setMembro(newMember);
+    }
+
+
+    const formikLink = useFormik({
+        initialValues: {
+            id: 0,
+            titulo: "",
+            url: "",
+        },
+        onSubmit: async (values) => {
+            const validLink = new RegExp('^https{0,1}:\/\/')
+
+            formikLink.values.id = Math.floor(Math.random() * 1000)
+
+            if (!validLink.test(values.url)) {
+                values.url = 'https://' + values.url
+            }
+
+            if (values.titulo === '') {
+                values.titulo = values.url.split('//')[1]
+            }
+
+            console.log(values)
+
+
+            const newMember = membro
+            newMember.links.push(values)
+            setMembro(newMember);
+            await handleRequest(newMember);
+
+
+            const elements = document.querySelectorAll('input')
+
+            elements.forEach(element => {
+                element.value = ""
+            });
+
+            formikLink.values.titulo = ''
+
+
+
+        },
+    });
+
     return (
         <>
             <Menu />
 
             <div className=" w-[80%] h-full mx-auto flex flex-row text-white gap-5 m-8 justify-center">
-                <div className="bg-zinc-700 w-[30%] h-full col-start-1 col-end-2 flex flex-col items-center justify-center py-12 rounded-md">
-                    <Avatar alt="Amanda Souza" src="profile.jpg" sx={{ width: 200, height: 200 }} />
 
-                    <p className="my-8 font-medium text-3xl ">Amanda Souza</p>
+                <section className="relative bg-zinc-700 w-[30%] h-full col-start-1 col-end-2 flex flex-col items-center justify-center py-12 rounded-md">
+
+                    {myPerfil && <DialogEditPerfil formik={formikPerfil} membro={membro} setMembro={setMembro} />}
+
+                    <Avatar alt="Amanda Souza" src="/profile.jpg" sx={{ width: '15vw', height: '15vw', bgcolor: '#F68B1F', fontSize: '5vw' }} />
+
+                    <p className="my-8 font-medium text-3xl px-4 text-center">{membro.nome}</p>
 
                     <p className="px-10 text-justify text-md">
-                        Lorem ipsum, dolor sit amet consectetur adipisicing elit. Sunt cumque ipsum optio magnam, distinctio
-                        voluptatum explicabo, consequuntur odio aliquid corrupti, quas non. Rerum quibusdam cumque, culpa voluptate
-                        saepe mollitia. Molestiae.
+                        {membro.bio}
                     </p>
 
-                    <p className="px-10 my-6 font-medium text-justify text-lg">amandasouza@gmail.com</p>
+                    <p className="px-10 my-6 font-medium text-justify text-lg">{membro.email}</p>
 
 
                     {
-                        links.map((link, index) => {
+                        membro.links.map((link) => {
                             return (
                                 <a
-                                    key={index}
+                                    key={link.id}
                                     href={link.url}
                                     target={"_blank"}
                                     className="flex flex-col px-10 py-2  font-medium text-justify text-xl hover:text-violet-400"
@@ -48,15 +188,12 @@ export default function Perfil() {
                         })
                     }
 
-                    <button className="bg-violet-600 hover:bg-violet-700 py-3 px-6 flex items-center transition text-md gap-2 rounded-lg font-bold my-6 justify-center">
-                        <Link size={24} />
-                        Adicionar Link
-                    </button>
+                    {myPerfil && <DialogAddLink formik={formikLink} />}
 
-                </div>
+                </section>
 
                 <div className="flex flex-col w-[60%] gap-4">
-                    <div className="bg-zinc-700 rounded-md flex flex-row gap-8 justify-center text-center font-black text-xl px-6 py-10">
+                    <section className="bg-zinc-700 rounded-md flex flex-row gap-8 justify-center text-center font-black text-xl px-6 py-10">
                         <div className="w-[28%]">
                             <p>Desafios resolvidos</p>
                             <p>12</p>
@@ -64,32 +201,32 @@ export default function Perfil() {
 
                         <div className="w-[28%]">
                             <p>Posição no ranking</p>
-                            <p>124°</p>
+                            <p>1025°</p>
                         </div>
 
-                        <div className="relative flex flex-col items-center w-[28%] ">
-                            <p>Posição total</p>
-                            <div className="absolute flex items-center bottom-0">
-                                <p>1245</p>
+                        <div className=" flex flex-col items-center w-[28%] ">
+                            <p>Pontuação total</p>
+                            <div className="flex items-center bottom-0 ">
+                                <p>5420</p>
                                 <img
-                                    src="duck.png"
+                                    src="/duck.png"
                                     alt="logo pontuação"
                                     className="w-10" />
                             </div>
                         </div>
-                    </div>
+                    </section>
 
-                    <div className=" bg-zinc-700 rounded-md h-full flex flex-col items-center">
+                    <section className=" bg-zinc-700 rounded-md h-full flex flex-col items-center">
                         <p className="text-3xl text-center font-black p-3">Desafios solucionados</p>
 
                         <div className="h-[85%] p-4">
                             Cards
                         </div>
-                        <div className="">
+                        <div className="p-5">
                             <PaginationComponent page={page} setPage={setPage} count={page} />
                         </div>
 
-                    </div>
+                    </section>
 
                 </div>
 
