@@ -7,13 +7,15 @@ import { useGlobal } from "../Context/globalContext";
 
 type user = {
     nome: string
+    foto: string
 }
 
 export function Menu() {
     const { isAdmin, setIsAdmin, isMembro, setIsMembro } = useGlobal();
     const id = localStorage.getItem('id');
     const [user, setUser] = useState<user>({
-        nome: 'User'
+        nome: 'User',
+        foto: ''
     })
 
     useEffect(() => {
@@ -47,7 +49,7 @@ export function Menu() {
                         <span className="text-2xl">Training Program</span>
                     </div>
 
-                    <div className="flex flex-row gap-4 text-xl text-white -translate-x-1/4">
+                    <div className="flex flex-row gap-4 text-xl text-white ">
                         <Link to="/" className="hover:bg-zinc-600 px-4 py-1 rounded-md">
                             Desafios
                         </Link>
@@ -75,7 +77,7 @@ export function Menu() {
                         <div className="flex items-center text-lg gap-4">
                             <p>Bem-vindo(a), {user.nome.split(' ',1)}! </p>
                             <Link to={'/perfil/' + id}>
-                                <Avatar alt={user.nome} src="/profile.jpg" sx={{ width: '6.5vh', height: '6.5vh' }} />
+                                <Avatar alt={user.nome} src={user.foto} sx={{ width: '6.5vh', height: '6.5vh', bgcolor: '#C0C0C0'}} />
                             </Link>
 
                             <div onClick={handleLogout} className="flex rounded-md px-3 py-1 hover:bg-zinc-600">

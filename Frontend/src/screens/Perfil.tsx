@@ -25,6 +25,7 @@ type member = {
     bio: string,
     links: Array<link>,
     email: string,
+    foto: string,
 }
 
 export default function Perfil() {
@@ -46,6 +47,7 @@ export default function Perfil() {
             bio: `Carregando...`,
             links: [],
             email: "Carregando...",
+            foto: ''
         }
     )
 
@@ -58,7 +60,7 @@ export default function Perfil() {
         onSubmit: async (valuesPerfil) => {
             
             
-            const updatedMember = {...valuesPerfil, links: membro.links, id: membro.id};
+            const updatedMember = {...valuesPerfil, links: membro.links, id: membro.id, foto: membro.foto};
 
             setMembro(updatedMember)
             await handleRequest(updatedMember)
@@ -141,17 +143,23 @@ export default function Perfil() {
             await handleRequest(newMember);
 
 
-            const elements = document.querySelectorAll('input')
+            // const elements = document.querySelectorAll('input')
 
-            elements.forEach(element => {
-                element.value = ""
-            });
+            // elements.forEach(element => {
+            //     element.value = ""
+            // });
 
-            formikLink.values.titulo = ''
-
-
+            //formikLink.values.titulo = ''
+            formikLink.resetForm({
+                values: {
+                    id: 0,
+                    titulo: "",
+                    url: "",
+                } 
+            })
 
         },
+        enableReinitialize: true,
     });
 
     return (
@@ -164,7 +172,7 @@ export default function Perfil() {
 
                     {myPerfil && <DialogEditPerfil formik={formikPerfil} membro={membro} setMembro={setMembro} />}
 
-                    <Avatar alt="Amanda Souza" src="/profile.jpg" sx={{ width: '15vw', height: '15vw', bgcolor: '#F68B1F', fontSize: '5vw' }} />
+                    <Avatar alt={membro.nome} src={membro.foto} sx={{ width: '15vw', height: '15vw', bgcolor: '#C0C0C0', fontSize: '5vw' }} />
 
                     <p className="my-8 font-medium text-3xl px-4 text-center">{membro.nome}</p>
 

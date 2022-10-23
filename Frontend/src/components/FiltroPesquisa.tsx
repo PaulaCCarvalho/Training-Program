@@ -4,12 +4,12 @@ import SelectTags from "./Form/SelectTags";
 
 
 
-export default function FiltroPesquisa({search,setSearch}: {search: any, setSearch: Function}) {
+export default function FiltroPesquisa({ search, setSearch, setPage, req }: { search: any, setSearch: Function, setPage: Function, req: Function }) {
 
 
     const handleAttributeValue = (attribute: string, value: number | string | any) => {
         const newFormData = search;
-        if (attribute === "tags"){
+        if (attribute === "tags") {
             newFormData[attribute] = value;
             setSearch(newFormData)
         }
@@ -36,24 +36,30 @@ export default function FiltroPesquisa({search,setSearch}: {search: any, setSear
         setChecked(event.target.checked);
     }
 
-    function searchDificuldade(){
+    function searchDificuldade() {
         const aux = [];
 
-        if(facil === true){
+        if (facil === true) {
             aux.push('facil');
         }
 
-        if(medio === true){
+        if (medio === true) {
             aux.push('medio')
         }
 
-        if(dificil === true){
+        if (dificil === true) {
             aux.push('dificil')
         }
 
         return aux
 
-   }
+    }
+
+    function handleClick() {
+        console.log('abaicaxi')
+        setPage(1)
+        req()
+    }
 
     search.nivel = searchDificuldade();
     search.respondidas = checked;
@@ -131,7 +137,7 @@ export default function FiltroPesquisa({search,setSearch}: {search: any, setSear
                                     }}
                                 />}
                             label="Difícil"
-                         />
+                        />
 
                     </div>
                 </FormGroup>
@@ -157,6 +163,19 @@ export default function FiltroPesquisa({search,setSearch}: {search: any, setSear
                 <div>
                     <SelectTags datas={handleAttributeValue} formData={search} />
                 </div>
+
+            </div>          
+
+            <div className="gap-4 mt-1.5  flex flex-col justify-start text-white py-3 px-3 bg-zinc-700 ">
+                <p className="flex justify-start text-md font-medium " > Pesquisa por nome: </p>
+                <input onChange={(event) => { handleChange(event) }} type="text" name="search" className="bg-zinc-900 py-4 px-4 rounded text-sm placeholder:text-zinc-500 " placeholder="nome do desafio" />
+            </div>
+
+            <div className="gap-4 mt-1.5 flex flex-col justify-start text-white py-3 px-3  ">
+
+                <button onClick={handleClick} className="bg-violet-500 px-7 h-11 text-1xl rounded-md font-semibold flex items-center gap-3 hover:bg-violet-600 justify-center">
+                    Pesquisar
+                </button>
 
             </div>
         </div >

@@ -43,11 +43,14 @@ export default function Cadastro() {
 
 
     async function handleSubmit() {
-        if (formData.senha !== formData.confirmarSenha) {
-            const element = document.getElementById("alert");
-            createRoot(element as HTMLElement).render(
+        const element = document.getElementById("alert");
+        const root = createRoot(element as HTMLElement)
+        if (formData.senha !== formData.confirmarSenha) {   
+            root.render(
                 <Alert severity="error">Erro: senhas diferentes. Digite a mesma senha em ambos os campos de senha!</Alert>
             );
+        }else{
+            root.render(<></>)
         }
 
         try {

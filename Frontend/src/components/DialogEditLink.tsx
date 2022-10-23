@@ -1,15 +1,9 @@
-import { Alert, Snackbar } from '@mui/material';
-import { AlertDialog, AlertDialogAction } from '@radix-ui/react-alert-dialog';
-import * as Dialog from '@radix-ui/react-dialog';
-import { useFormik, validateYupSchema } from 'formik';
-import { Link, X } from "phosphor-react";
+import { useFormik } from 'formik';
 import { ElementType, useState } from 'react';
-import { Navigate } from 'react-router-dom';
-import { Input } from './Form/Input';
+
 
 
 export default function DialogEditLink({ stateLink, setStateLink, membro,  }: { stateLink: any, setStateLink: Function, membro: any }) {
-    const [open, setOpen] = useState(false);
 
     const formik = useFormik({
         initialValues: {
@@ -24,23 +18,12 @@ export default function DialogEditLink({ stateLink, setStateLink, membro,  }: { 
                 titulo: values.titulo,
                 link: values.link,
             }
+
+            setStateLink(stateLink.isSelected = false)
    
-            console.log(membro.links); 
+            
         }
     })
-
-    const handleClick = () => {
-
-        setOpen(true);
-    };
-
-    const handleClose = (event?: React.SyntheticEvent | Event, reason?: string) => {
-        if (reason === 'clickaway') {
-            return;
-        }
-
-        setOpen(false);
-    };
 
     return (
         <div className="absolute top-0 left-0 w-[880px] h-full bg-black bg-opacity-60 rounded-lg">
@@ -86,7 +69,6 @@ export default function DialogEditLink({ stateLink, setStateLink, membro,  }: { 
 
                         <button
                             type="submit"
-                            onClick={handleClick}
                             className="bg-violet-500 px-5 h-12 rounded-md font-semibold flex items-center gap-3 hover:bg-violet-600"
                         >
                             Salvar
@@ -97,11 +79,6 @@ export default function DialogEditLink({ stateLink, setStateLink, membro,  }: { 
 
                 </form>
 
-                {/* <Snackbar open={open} autoHideDuration={6000} onClose={handleClose} anchorOrigin={{ vertical: 'top', horizontal: 'right' }}>
-                    <Alert onClose={handleClose} severity="success" sx={{ width: '100%' }}>
-                        Link criado com sucesso!
-                    </Alert>
-                </Snackbar> */}
             </div>
         </div>
     )

@@ -1,28 +1,38 @@
 import { Alert, Snackbar } from '@mui/material';
 import * as Dialog from '@radix-ui/react-dialog';
+import { validateYupSchema } from 'formik';
 import { Link, X } from "phosphor-react";
 import { useState } from 'react';
+import { createRoot } from 'react-dom/client';
 
 export default function DialogAddLink({ formik }: { formik: any }) {
     const [open, setOpen] = useState(false);
+    
 
     const handleClick = () => {
-            
-        setOpen(true);
-    };
-
-    const handleClose = (event?: React.SyntheticEvent | Event, reason?: string) => {
-        if (reason === 'clickaway') {
-            return;
+        const element = document.getElementById("alert");
+        const root = createRoot(element as HTMLElement);
+        console.log(formik.values)
+        if (formik.values.url === '' ) {
+            root.render(
+                <Alert severity="error">Preencha os campos acima para adicionar um link!</Alert>
+            );
+            setOpen(false);
+        }else{
+            root.render(<></>);
+            setOpen(true);
         }
-
-        setOpen(false);
+        
     };
+
+    const handleContinueEditing = () => {
+        setOpen(false)
+    }
 
     return (
         <Dialog.Root>
 
-            <Dialog.Trigger title='Adicionar um novo link' className="bg-violet-600 hover:bg-violet-700 py-3 px-6 flex items-center transition text-md gap-2 rounded-lg font-bold my-6 justify-center">
+            <Dialog.Trigger onClick={() => { setOpen(false) }} title='Adicionar um novo link' className="bg-violet-600 hover:bg-violet-700 py-3 px-6 flex items-center transition text-md gap-2 rounded-lg font-bold my-6 justify-center">
                 <Link size={24} />
                 Adicionar Link
             </Dialog.Trigger>
@@ -60,12 +70,14 @@ export default function DialogAddLink({ formik }: { formik: any }) {
                                 id="url"
                                 name="url"
                                 type="text"
-                                placeholder="https://google.com"
+                                placeholder="https://linkdesejado.com"
                                 onChange={formik.handleChange}
                                 required
                                 className="bg-zinc-900 py-4 px-4 rounded text-sm placeholder:text-zinc-500"
                             />
                         </div>
+
+                        <div id="alert" className='my-4'></div>
 
                         <footer className="mt-4 flex gap-4 justify-between ">
                             <Dialog.Close className="bg-zinc-500 px-5 h-12 rounded-md font-semibold hover:bg-zinc-600 items-center flex">
@@ -83,15 +95,45 @@ export default function DialogAddLink({ formik }: { formik: any }) {
 
                         </footer>
 
+                        
+
                     </form>
+
+                    {open &&
+                        <div className="absolute top-0 left-0 w-[480px] h-full bg-black bg-opacity-60 rounded-lg">
+                            <div className="fixed bg-[#2A2634] py-8 px-10 text-white top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 rounded-lg w-[480px] shadow-lg shadow-black/25 ">
+                                <p className="relative text-2xl font-black text-center mb-4">
+                                    Seu Link está sendo adicionado!
+                                </p>
+
+                                <span className="my-4 text-lg font-light text-justify">
+                                    Deseja deseja adicionar outro link?
+                                </span>
+
+                                <footer className="mt-4 flex gap-4 justify-between ">
+                                    <Dialog.Close className="bg-zinc-500 px-5 h-12 rounded-md font-semibold hover:bg-zinc-600 items-center flex">
+                                        Não
+                                    </Dialog.Close>
+
+                                    <button
+
+                                        type="submit"
+                                        onClick={handleContinueEditing}
+                                        className="bg-violet-500 px-5 h-12 rounded-md font-semibold flex items-center gap-3 hover:bg-violet-600"
+                                    >
+                                        Sim
+
+                                    </button>
+                                </footer>
+                            </div>
+
+                        </div>
+
+                    }
 
                 </Dialog.Content>
 
-                <Snackbar open={open} autoHideDuration={6000} onClose={handleClose} anchorOrigin={{ vertical: 'top', horizontal: 'right' }}>
-                    <Alert onClose={handleClose} severity="success" sx={{ width: '100%' }}>
-                        Link criado com sucesso!
-                    </Alert>
-                </Snackbar>
+
             </Dialog.Portal>
         </Dialog.Root >
     )

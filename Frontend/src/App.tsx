@@ -13,6 +13,8 @@ import EditarDesafio from './screens/EditarDesafio';
 import GlobalContextProvider from './Context/globalContext';
 import LoadingScreen from './screens/LoadingScreen';
 import Perfil from './screens/Perfil';
+import DialogEditPerfil from './components/DialogEditPerfil';
+import ChoiceAvatar from './components/avatars/ChoiceAvatar';
 
 function App() {
     return (
