@@ -6,10 +6,10 @@ class ChallengeController {
             const challenge = new Challenge();
             challenge.insert(req.body)
             await challenge.save()
-            res.status(204).send()
+            res.status(201).send()
         } catch (error) {
-            console.log(error);
-            res.status(400).send()
+            req.error = error;
+            next()
         }
     }
 
@@ -20,8 +20,8 @@ class ChallengeController {
             const ObjClg = await challenge.find(req.query)
             res.json(ObjClg[0]);
         } catch (error) {
-            console.log(error);
-            res.status(400).send();            
+            req.error = error;
+            next()            
         }
     }
 
@@ -35,8 +35,8 @@ class ChallengeController {
             const count = await challenge.count(params);
             res.json({count, challenges});
         } catch (error) {
-            console.log(error);
-            res.status(400).send();            
+            req.error = error;
+            next()            
         }
     }
 
@@ -47,7 +47,8 @@ class ChallengeController {
             await challenge.alter()
             res.status(204).send()
         } catch(error){
-            res.status(400).send();
+            req.error = error;
+            next()
         }
     }
 
@@ -58,7 +59,8 @@ class ChallengeController {
             await challenge.delete();            
             res.status(204).send();
         } catch (error) {
-            res.status(400).send(error);
+            req.error = error;
+            next()
         }
     }
 }

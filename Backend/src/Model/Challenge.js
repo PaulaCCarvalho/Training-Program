@@ -1,4 +1,5 @@
 const DAO = require('../Database');
+const { NotFoundError } = require('../Error');
 
 class Challenge {
 
@@ -48,7 +49,8 @@ class Challenge {
             true,
             'a.id AS id, a.nome AS nome, a.descricao AS descricao, a.nivel AS nivel, a.tema AS tema, a.capa AS capa'
         );
-        for (const [i, challenge] of challenges.entries()) {
+        if(challenges.length === 0) throw new NotFoundError('Challenge')
+        for (const challenge of challenges) {
             const tags = await this.db.find(
                 'challenges_tags',
                 1,

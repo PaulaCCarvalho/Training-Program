@@ -8,8 +8,8 @@ class MemberController {
             const token = await member.login(req.headers.username, req.headers.password);
             res.json(token);
         } catch (error) {
-            console.log(error);
-            res.status(400).send();
+            req.error = error;
+            next()
         }
     }
     async add(req, res, next) {
@@ -20,7 +20,8 @@ class MemberController {
             const token = await member.login(req.body.email, req.body.senha)
             res.status(201).json(token);
         } catch (error) {
-            res.status(400).send(error.message);
+            req.error = error;
+            next()
         }
     }
 
@@ -30,7 +31,8 @@ class MemberController {
             const members = await member.find()
             res.json(members);
         } catch (error) {
-            res.status(400).send(error.message);
+            req.error = error;
+            next()
         }
     }
 
@@ -41,7 +43,8 @@ class MemberController {
             const {senha, ...memberformated} = memberResp[0]
             res.json(memberformated);
         } catch (error) {
-            res.status(400).send(error.message);
+            req.error = error;
+            next()
         }
     }
 
@@ -53,7 +56,8 @@ class MemberController {
             console.log(req.body)
             res.status(204).end();
         } catch (error) {
-            res.status(400).send(error.message);
+            req.error = error;
+            next()
         }
     }
 }
