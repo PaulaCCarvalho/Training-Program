@@ -1,12 +1,7 @@
 import { Alert, Snackbar } from '@mui/material';
-import { AlertDialog, AlertDialogAction } from '@radix-ui/react-alert-dialog';
 import * as Dialog from '@radix-ui/react-dialog';
-import { useFormik } from 'formik';
 import { Link, X } from "phosphor-react";
-import { ElementType, useState } from 'react';
-import { Navigate } from 'react-router-dom';
-import { Input } from './Form/Input';
-
+import { useState } from 'react';
 
 export default function DialogAddLink({ formik }: { formik: any }) {
     const [open, setOpen] = useState(false);
@@ -60,10 +55,10 @@ export default function DialogAddLink({ formik }: { formik: any }) {
                                 className="bg-zinc-900 py-4 px-4 rounded text-sm placeholder:text-zinc-500 "
                             />
 
-                            <label htmlFor="link" aria-required className='pt-3'>Url do link</label>
+                            <label htmlFor="url" aria-required className='pt-3'>Url do link</label>
                             <input
-                                id="link"
-                                name="link"
+                                id="url"
+                                name="url"
                                 type="text"
                                 placeholder="https://google.com"
                                 onChange={formik.handleChange}

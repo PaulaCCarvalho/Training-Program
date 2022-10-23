@@ -51,7 +51,7 @@ export default function Cadastro() {
         }
 
         try {
-            const {data: {token, isAdmin}} = await axios.post('http://localhost:3333/api/usuario', {
+            const {data: {token, isAdmin, id}} = await axios.post('http://localhost:3333/api/usuario', {
                 nome: formData.nome,
                 email: formData.email,
                 senha: formData.senha,
@@ -59,6 +59,8 @@ export default function Cadastro() {
 
             setOpen(true);
             localStorage.setItem('token', token);
+            localStorage.setItem('id', id);
+
 
         } catch (err) {
             console.error("ops! ocorreu um erro" + err);

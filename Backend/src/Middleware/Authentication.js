@@ -2,10 +2,15 @@ const DAO = require('../Database');
 
 module.exports = {
     verifyToken: async (req, res, next) => {
-        if(req.headers.authorization === undefined) return res.status(403).end();
+        if(req.headers.authorization === undefined){ 
+            console.log("No token");
+            return res.status(403).end()
+            
+        };
         const tokenId = req.headers.authorization.split(' ')[1];
         const token = await DAO.find('tokens', 1, {id: tokenId});
         if(token.length === 0){
+            console.log("short Token")
             return res.status(403).end();
         }
         const user = await DAO.find('members', 1, {id: token[0].member_id});
@@ -14,6 +19,7 @@ module.exports = {
             next();
         } else {
             res.status(403).end();
+            console.log("wrong Token")
         } 
     }
 }

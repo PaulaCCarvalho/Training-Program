@@ -8,26 +8,24 @@ import { Navigate } from 'react-router-dom';
 import { Input } from './Form/Input';
 
 
-export default function DialogEditLink({ stateLink, setStateLink, links, setLinks }: { stateLink: any, setStateLink: Function, links: any, setLinks: Function }) {
+export default function DialogEditLink({ stateLink, setStateLink, membro,  }: { stateLink: any, setStateLink: Function, membro: any }) {
     const [open, setOpen] = useState(false);
 
     const formik = useFormik({
         initialValues: {
             id: stateLink.link.id,
             titulo: stateLink.link.titulo,
-            link: stateLink.link.link,
+            link: stateLink.link.url,
         },
         onSubmit: values => {
-            const index = links.findIndex((link: any) => values.id === link.id)
-            links[index] = {
+            const index = membro.links.findIndex((link: any) => values.id === link.id)
+            membro.links[index] = {
                 id: values.id,
                 titulo: values.titulo,
                 link: values.link,
             }
    
-            console.log(links)
-            
-            
+            console.log(membro.links); 
         }
     })
 
@@ -48,11 +46,11 @@ export default function DialogEditLink({ stateLink, setStateLink, links, setLink
         <div className="absolute top-0 left-0 w-[880px] h-full bg-black bg-opacity-60 rounded-lg">
             <div className="fixed bg-[#2A2634] py-8 px-10 text-white top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 rounded-lg w-[480px] shadow-lg shadow-black/25 ">
                 <div className="relative text-2xl font-black text-center">
-                    Adicionar Links no seu perfil
+                    Edite o link do seu perfil
                 </div>
 
                 <span className="py-4 text-sm font-light text-justify">
-                    Preencha os campos abaixo para modificá-los um link no seu perfil.
+                    Preencha os campos abaixo para modificar o link abaixo no seu perfil.
                 </span>
 
                 <form onSubmit={formik.handleSubmit} className="mt-2 flex flex-col">
@@ -99,11 +97,11 @@ export default function DialogEditLink({ stateLink, setStateLink, links, setLink
 
                 </form>
 
-                <Snackbar open={open} autoHideDuration={6000} onClose={handleClose} anchorOrigin={{ vertical: 'top', horizontal: 'right' }}>
+                {/* <Snackbar open={open} autoHideDuration={6000} onClose={handleClose} anchorOrigin={{ vertical: 'top', horizontal: 'right' }}>
                     <Alert onClose={handleClose} severity="success" sx={{ width: '100%' }}>
                         Link criado com sucesso!
                     </Alert>
-                </Snackbar>
+                </Snackbar> */}
             </div>
         </div>
     )

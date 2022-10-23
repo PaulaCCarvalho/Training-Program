@@ -50,6 +50,7 @@ class MemberController {
             const {links, ...params} = req.body;
             const member = new Member();
             await member.alter(params, links)
+            console.log(req.body)
             res.status(204).end();
         } catch (error) {
             res.status(400).send(error.message);

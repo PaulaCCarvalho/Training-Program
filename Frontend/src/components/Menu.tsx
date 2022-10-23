@@ -1,18 +1,29 @@
+import { Avatar } from "@mui/material";
+import axios from "axios";
 import { Crown, SignOut, UserCircle } from "phosphor-react";
 import { Dispatch, useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { useGlobal } from "../Context/globalContext";
 
+type user = {
+    nome: string
+}
 
 export function Menu() {
     const { isAdmin, setIsAdmin, isMembro, setIsMembro } = useGlobal();
+    const id = localStorage.getItem('id');
+    const [user, setUser] = useState<user>({
+        nome: 'User'
+    })
 
     useEffect(() => {
-        const token = localStorage.getItem('token');
-
-        if (token !== null) {
+        if (id !== null) {
             setIsMembro(true)
         }
+
+        axios.get(`http://localhost:3333/api/usuario/${id}`)
+            .then((response: any) => setUser(response.data))
+            .catch((err) => console.error("Ops algo de errado aconteceu!"))
     }, [])
 
     const handleLogout = () => {
@@ -21,6 +32,8 @@ export function Menu() {
         }
 
         localStorage.removeItem('token');
+        localStorage.removeItem('id');
+
         setIsMembro(false);
 
 
@@ -59,10 +72,13 @@ export function Menu() {
                     }
 
                     {isMembro ?
-                        <div className="flex items-center">
-                            Você está Logado
+                        <div className="flex items-center text-lg gap-4">
+                            <p>Bem-vindo(a), {user.nome.split(' ',1)}! </p>
+                            <Link to={'/perfil/' + id}>
+                                <Avatar alt={user.nome} src="/profile.jpg" sx={{ width: '6.5vh', height: '6.5vh' }} />
+                            </Link>
 
-                            <div onClick={handleLogout} className="flex ml-3 rounded-md px-3 py-1 hover:bg-zinc-600">
+                            <div onClick={handleLogout} className="flex rounded-md px-3 py-1 hover:bg-zinc-600">
                                 <SignOut size={24} />
                             </div>
                         </div>

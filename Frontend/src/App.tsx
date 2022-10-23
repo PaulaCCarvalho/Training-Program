@@ -26,7 +26,7 @@ function App() {
                     <Route path="/cadastrar-desafio" element={<CadastrarDesafio />} />
                     <Route path="/Desafio/:id" element={<Desafio />} />
                     <Route path="/editar-desafio/:id" element={<EditarDesafio />} />
-                    <Route path="/perfil" element={<Perfil />} />
+                    <Route path='/perfil/:id' element={<Perfil />}/>  
                     <Route path="/loading" element={<LoadingScreen/>}/>
                 </Routes>
             </Router>

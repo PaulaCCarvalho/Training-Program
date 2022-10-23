@@ -25,7 +25,7 @@ export default function Login() {
 
     const handleLogin = async () => {
         try {
-            const {data: {token, isAdmin}} = await axios.get(`http://localhost:3333/api/login`, {
+            const {data: {token, isAdmin, id}} = await axios.get(`http://localhost:3333/api/login`, {
                 headers: {
                     Username: formData.email,
                     Password: formData.senha,
@@ -33,6 +33,9 @@ export default function Login() {
             })
             setIsAdmin(isAdmin);
             localStorage.setItem('token', token);
+            localStorage.setItem('id', id);
+
+
             navigate('/');
         } catch (err) {
             console.error("ops! ocorreu um erro" + err);
