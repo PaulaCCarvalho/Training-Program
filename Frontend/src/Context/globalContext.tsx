@@ -5,6 +5,9 @@ type GlobalData = {
     setIsAdmin: Function;
     isMembro: boolean;
     setIsMembro: Function;
+    change: number;
+    update: Function;
+
 }
 
 export const GlobalContext = createContext({} as GlobalData);
@@ -16,6 +19,10 @@ type GlobalContextProviderProps = {
 export default function GlobalContextProvider({ children }: GlobalContextProviderProps) {
     const [isAdmin, setIsAdmin] = useState(false)
     const [isMembro, setIsMembro] = useState(false)
+    const [change, setChange] = useState(0)
+    const update = () => {
+        setChange(change + 1);
+    }
 
     return (
         <GlobalContext.Provider value={{
@@ -23,6 +30,8 @@ export default function GlobalContextProvider({ children }: GlobalContextProvide
             setIsAdmin,
             isMembro,
             setIsMembro,
+            change,
+            update,
         }}>
             {children}
         </GlobalContext.Provider>

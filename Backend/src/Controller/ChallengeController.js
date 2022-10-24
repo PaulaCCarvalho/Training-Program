@@ -4,9 +4,12 @@ class ChallengeController {
     async add(req, res, next){
         try {
             const challenge = new Challenge();
-            challenge.insert(req.body)
-            await challenge.save()
-            res.status(201).send()
+            req.body.tags = JSON.parse(req.body.tags)
+            console.log(req.body)
+            req.body.capa = req.file.filename;
+            challenge.insert(req.body);
+            await challenge.save();
+            res.status(201).send();
         } catch (error) {
             req.error = error;
             next()

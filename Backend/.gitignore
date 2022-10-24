@@ -3,3 +3,4 @@ yarn.lock
 .env
 databaseTP
 package-lock.json
+src/Database/uploads

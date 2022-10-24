@@ -77,7 +77,7 @@ module.exports = {
         return new Promise((resolve, reject) => {
             const offset = (page - 1) * limit
             let formatedParams = '';
-            const haveParams = Object.keys(params).length + search === undefined ? 0 : 1
+            const haveParams = Object.keys(params).length + (search === undefined ? 0 : 1)
             if(haveParams !== 0) {
                 const formatedParamsList = handleWhereClause(params, search);
                 formatedParams = 'WHERE ' + formatedParamsList.join(' AND ');

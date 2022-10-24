@@ -11,7 +11,7 @@ type UserSubmitForm = {
   nome: string;
   descricao: string;
   tema: string;
-  imagens: string;
+  capa: string;
   nivel: string;
   tags: Tag[] | string[] | number[];
 
@@ -23,7 +23,7 @@ type Tag = {
 }
 
 export default function CadastrarDesafio() {
-  //const [selectFile, setSelectFile] = useState<File>({}: Blob);
+  const [selectFile, setSelectFile] = useState<any>();
 
   const navigate = useNavigate();
 
@@ -31,22 +31,25 @@ export default function CadastrarDesafio() {
     nome: '',
     descricao: '',
     tema: '',
-    imagens: '',
+    capa: '',
     nivel: '',
     tags: []
   });
 
 
-  const handleAttribute = (attribute: string, event: ChangeEvent<{ value: any }>) => {
+
+  const handleAttribute = (attribute: string, event: ChangeEvent<{ value: any,  files: any } > ) => {
     const newFormData = formData;
     if (attribute === "descricao" ||
       attribute === "nome" ||
       attribute === "tema" ||
-      attribute === "imagens" ||
       attribute === "nivel" ||
       attribute === "tags") {
       newFormData[attribute] = event.target.value;
       setFormData(newFormData)
+    }else if(attribute === "capa"){
+      setSelectFile(event.target.files[0]);
+
     }
   }
 
@@ -60,6 +63,15 @@ export default function CadastrarDesafio() {
   }
 
   const handleClick = async () => {
+    const data = new FormData()
+
+    data.append('nome', formData.nome);
+    data.append('descricao', formData.descricao);
+    data.append('tema', formData.tema);
+    data.append('nivel', formData.nivel);
+    data.append('capa', selectFile);
+    
+    
     const tags = []
     for (let tag of formData.tags) {
       if (typeof tag !== 'string' && typeof tag !== 'number') {
@@ -67,8 +79,17 @@ export default function CadastrarDesafio() {
       }
     }
     formData.tags = tags
+
+    data.append('tags', JSON.stringify(formData.tags));
+
     try {
-      await axios.post('http://localhost:3333/api/desafio', formData)
+      await axios.post('http://localhost:3333/api/desafio', 
+      data,
+      {
+        headers: {
+          Authorization: "Bearer " + localStorage.getItem('token')  
+        }
+      })
     } catch (err) {
       console.error("ops! ocorreu um erro" + err);
     }
@@ -76,29 +97,7 @@ export default function CadastrarDesafio() {
     navigate(-1);
   }
 
-  /*  const onSubmit = (data: UserSubmitForm) => {
-      console.log("Passei aqui!")
-      console.log(JSON.stringify(data, null, 2))
   
-      //onFileUpload();
-    } */
-
-  const onFileChange = (e: any) => {
-    /*setSelectFile(e.target.files[0]);*/
-  }
-
-  const onFileUpload = () => {
-    /*     const formData = new FormData();
-    
-        formData.append(
-          "myFile",
-          selectFile,
-        )
-    
-        const url = URL.createObjectURL(selectFile)
-        console.log(url); */
-
-  }
   return (
     <>
       <Menu />
@@ -110,7 +109,7 @@ export default function CadastrarDesafio() {
             Cadastre um desafio
           </div>
 
-          <form className="mt-8 flex flex-col gap-4">
+          <form className="mt-8 flex flex-col gap-4" >
             <div className="flex flex-col gap-1">
               <label htmlFor="">Nome</label>
               <Input id="nome" type="text" placeholder="nome do desafio" data={handleAttribute} />
@@ -123,7 +122,7 @@ export default function CadastrarDesafio() {
                 rows={5}
                 cols={5}
                 placeholder="Descreva o desafio"
-                onChange={(event) => handleAttribute("descricao", event)}
+                onChange={(event: ChangeEvent) => handleAttribute("descricao", event)}
               />
             </div>
 
@@ -134,7 +133,7 @@ export default function CadastrarDesafio() {
 
             <div className="flex flex-col gap-1">
               <label htmlFor="">Imagens</label>
-              <Input id="capa" type="file" placeholder="insira imagens do desafio" data={handleAttribute} />
+              <Input id="capa" type="file" name="file" placeholder="insira imagens do desafio" data={handleAttribute} />
             </div>
 
             <div className="flex items-end gap-3 ">

@@ -9,15 +9,22 @@ export default function DialogEditLink({ stateLink, setStateLink, membro,  }: { 
         initialValues: {
             id: stateLink.link.id,
             titulo: stateLink.link.titulo,
-            link: stateLink.link.url,
+            url: stateLink.link.url,
         },
         onSubmit: values => {
             const index = membro.links.findIndex((link: any) => values.id === link.id)
+            const validLink = new RegExp('^https{0,1}:\/\/')
+
+            if (!validLink.test(values.url)) {
+                values.url = 'https://' + values.url
+            }
+
             membro.links[index] = {
                 id: values.id,
                 titulo: values.titulo,
-                link: values.link,
+                url: values.url,
             }
+            console.log(membro.links[index])
 
             setStateLink(stateLink.isSelected = false)
    
@@ -49,14 +56,14 @@ export default function DialogEditLink({ stateLink, setStateLink, membro,  }: { 
                             className="bg-zinc-900 py-4 px-4 rounded text-sm placeholder:text-zinc-500 "
                         />
 
-                        <label htmlFor="link" aria-required className='pt-3'>Url do link</label>
+                        <label htmlFor="url" aria-required className='pt-3'>Url do link</label>
                         <input
-                            id="link"
-                            name="link"
+                            id="url"
+                            name="url"
                             type="text"
                             placeholder="https://google.com"
                             onChange={formik.handleChange}
-                            defaultValue={formik.values.link}
+                            defaultValue={formik.values.url}
                             required
                             className="bg-zinc-900 py-4 px-4 rounded text-sm placeholder:text-zinc-500"
                         />

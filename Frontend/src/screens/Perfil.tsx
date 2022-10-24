@@ -29,16 +29,13 @@ type member = {
 }
 
 export default function Perfil() {
-    const { isMembro } = useGlobal()
+    const { isMembro, update, change } = useGlobal()
     const [page, setPage] = useState(3)
-    const [change, setChange] = useState(0)
     const [myPerfil, setMyPerfil] = useState(false)
     const id = localStorage.getItem('id');
     const idParam = useParams()
 
-    const update = () => {
-        setChange(change + 1);
-    }
+  
 
     const [membro, setMembro] = useState<member>(
         {
