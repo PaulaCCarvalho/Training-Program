@@ -64,6 +64,7 @@ class MemberController {
     async delete(req, res, next){
         try{
             const {id} = req.params;
+            console.log('id: ', id)
             const member = new Member();
             await member.delete(id)
             res.status(204).end();

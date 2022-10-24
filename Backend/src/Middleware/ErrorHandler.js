@@ -2,6 +2,10 @@ const {ApplicationError} = require('../Error');
 
 module.exports = (req, res, next) => {
     const error = req.error;
+    if(error === undefined)
+    {
+        return res.status(500).end();
+    }
     console.log(error)
     if(error instanceof ApplicationError){
         return res.status(error.code).send(error.message);

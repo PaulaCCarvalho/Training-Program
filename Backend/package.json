@@ -12,7 +12,8 @@
     "mysql2": "^2.3.3"
   },
   "scripts": {
-    "dev": "nodemon -r dotenv/config index.js"
+    "dev": "nodemon -r dotenv/config index.js",
+    "start": "node -r dotenv/config index.js"
   },
   "devDependencies": {
     "nodemon": "^2.0.20"

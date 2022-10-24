@@ -11,6 +11,6 @@ memberRouter
     .post('/usuario', memberController.add)
     .get('/usuario/:id', memberController.findOne)
     .put('/usuario/', verifyToken, memberController.alter)
-    .delete('/usuario/:id',verifyToken, memberController.delete)
+    .delete('/usuario/:id', verifyToken, memberController.delete)
 
 module.exports = memberRouter;
