@@ -47,6 +47,10 @@ class Member {
         await this.db.add('tokens', {id: token, member_id: user.id, created_at: now})
         return {token, isAdm: user.isAdm, id: user.id}
     }
+
+    async delete(id){
+        await this.db.destroy('members', {id});
+    }
 }
 
 module.exports = Member;

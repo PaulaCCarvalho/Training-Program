@@ -2,9 +2,10 @@ import { Avatar } from "@mui/material";
 import * as Dialog from '@radix-ui/react-dialog';
 import axios from "axios";
 import { useFormik } from "formik";
-import { Link } from "phosphor-react";
+import { Link, Trash } from "phosphor-react";
 import { useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
+import { Navigate, useNavigate, useParams } from "react-router-dom";
+import { CardPerfil } from "../components/CardPerfil";
 import DialogAddLink from "../components/DialogAddLink";
 import DialogEditPerfil from "../components/DialogEditPerfil";
 import Footer from "../components/Footer";
@@ -29,13 +30,25 @@ type member = {
 }
 
 export default function Perfil() {
-    const { isMembro, update, change } = useGlobal()
+    const { isMembro, update, change, setIsMembro } = useGlobal()
     const [page, setPage] = useState(3)
     const [myPerfil, setMyPerfil] = useState(false)
     const id = localStorage.getItem('id');
     const idParam = useParams()
+    const [open, setOpen] = useState(false)
+    const navigate = useNavigate()
+    const [cards, setCards] = useState({
+        id: 0,
+        nome: '',
+        descricao: '',
+        nivel: '',
+        tema: '',
+        capa: '',
+        availabel: 0,
+        tags: [],
+        imagens: [],
+    })
 
-  
 
     const [membro, setMembro] = useState<member>(
         {
@@ -55,9 +68,9 @@ export default function Perfil() {
             email: membro.email,
         },
         onSubmit: async (valuesPerfil) => {
-            
-            
-            const updatedMember = {...valuesPerfil, links: membro.links, id: membro.id, foto: membro.foto};
+
+
+            const updatedMember = { ...valuesPerfil, links: membro.links, id: membro.id, foto: membro.foto };
 
             setMembro(updatedMember)
             await handleRequest(updatedMember)
@@ -80,6 +93,12 @@ export default function Perfil() {
             })
             .catch(() => console.log('Ops deu ruim!'))
 
+        axios.get(`http://localhost:3333/api/desafio/3`)
+            .then((response) => {
+                setCards(response.data)
+            })
+            .catch(() => console.log('Ops deu ruim!'))
+
     }, [isMembro, change])
 
 
@@ -94,9 +113,9 @@ export default function Perfil() {
                         Authorization: 'Bearer ' + token
                     }
                 },
-                
+
             )
-            
+
             update()
         } catch (err) {
             console.log("Ops ocorreu um erro!");
@@ -152,12 +171,29 @@ export default function Perfil() {
                     id: 0,
                     titulo: "",
                     url: "",
-                } 
+                }
             })
 
         },
         enableReinitialize: true,
     });
+    const handleRemove = async () => {
+        try {
+            await axios.delete('http://localhost:3333/usuario' + id,
+                {
+                    headers: {
+                        Authorization: 'Bearer ' + localStorage.getItem('token')
+                    }
+                }
+            )
+        } catch (error: any) {
+            console.log(error.response.data);
+        }
+        setOpen(false)
+        localStorage.clear();
+        setIsMembro(false);
+        navigate('/');
+    }
 
     return (
         <>
@@ -194,6 +230,14 @@ export default function Perfil() {
                     }
 
                     {myPerfil && <DialogAddLink formik={formikLink} />}
+                    {myPerfil &&
+                        (
+                            <button onClick={() => setOpen(true)} title='Adicionar um novo link' className="bg-zinc-900 hover:bg-zinc-800 py-3 px-6 flex items-center transition text-md gap-2 rounded-lg font-bold my-1 justify-center text-red-400">
+                                <Trash size={24} />
+                                Excluir meu perfil
+                            </button>
+                        )
+                    }
 
                 </section>
 
@@ -225,7 +269,7 @@ export default function Perfil() {
                         <p className="text-3xl text-center font-black p-3">Desafios solucionados</p>
 
                         <div className="h-[85%] p-4">
-                            Cards
+                            <CardPerfil data={cards} />
                         </div>
                         <div className="p-5">
                             <PaginationComponent page={page} setPage={setPage} count={page} />
@@ -236,6 +280,38 @@ export default function Perfil() {
                 </div>
 
             </div>
+
+            {open &&
+
+                <div className="fixed bg-[#2A2634] py-8 px-10 text-white top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 rounded-lg w-[480px] shadow-lg shadow-black/25 ">
+                    <p className="relative text-2xl font-black text-center mb-4">
+                        Tem certeza que deseja excluir seu perfil?
+                    </p>
+
+                    <span className="my-4 text-lg font-light text-justify">
+                        Esta alteração é permanente
+                    </span>
+
+                    <footer className="mt-4 flex gap-4 justify-between ">
+                        <button onClick={() => setOpen(false)} className=" bg-violet-500  px-5 h-12 rounded-md font-semibold items-center flex hover:bg-violet-600">
+                            Não
+                        </button>
+
+                        <button
+
+                            type="submit"
+                            onClick={handleRemove}
+                            className="bg-zinc-500 px-5 h-12 rounded-md font-semibold flex items-center gap-3 hover:bg-zinc-600  "
+                        >
+                            Sim
+
+                        </button>
+                    </footer>
+                </div>
+
+
+
+            }
 
             <div className="overflow-hidden">
                 <Footer />

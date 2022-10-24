@@ -60,6 +60,18 @@ class MemberController {
             next()
         }
     }
+
+    async delete(req, res, next){
+        try{
+            const {id} = req.params;
+            const member = new Member();
+            await member.delete(id)
+            res.status(204).end();
+        }catch(error){
+            req.error = error;
+            next()
+        }
+    }
 }
 
 module.exports = MemberController;
