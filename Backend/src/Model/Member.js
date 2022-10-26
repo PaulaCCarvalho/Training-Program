@@ -1,6 +1,6 @@
 const DAO = require('../Database');
 const jwt = require('jsonwebtoken');
-const {LoginError, NotFoundError} = require('../Error')
+const {LoginError, NotFoundError, ApplicationError, ConflictError} = require('../Error')
 
 class Member {
 
@@ -15,7 +15,14 @@ class Member {
     }
 
     async save() {
-        await this.db.add('members', this);
+        try {
+            await this.db.add('members', this);
+        } catch (error) {
+            if(error.errno == 1062)
+                throw new ConflictError();
+            else 
+            throw new ApplicationError();
+        }
     }
 
     async find(params = {}) {

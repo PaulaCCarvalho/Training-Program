@@ -1,4 +1,4 @@
-import { Alert, Snackbar } from '@mui/material';
+import { Alert, AlertColor, Snackbar } from '@mui/material';
 import axios from 'axios';
 import { ChangeEvent, FormEvent, useState } from 'react';
 import { createRoot } from 'react-dom/client';
@@ -15,7 +15,11 @@ type UserSubmitForm = {
 }
 
 export default function Cadastro() {
-    const [open, setOpen] = useState(false);
+    const [openAlert, setOpenAlert] = useState({
+        isOpen: false,
+        type: 'success',
+        msg: 'Usuário cadastrado com sucesso!'
+    });
     const navigate = useNavigate()
 
     const [formData, setFormData] = useState<UserSubmitForm>({
@@ -45,10 +49,12 @@ export default function Cadastro() {
     async function handleSubmit() {
         const element = document.getElementById("alert");
         const root = createRoot(element as HTMLElement)
-        if (formData.senha !== formData.confirmarSenha) {   
-            root.render(
-                <Alert severity="error">Erro: senhas diferentes. Digite a mesma senha em ambos os campos de senha!</Alert>
-            );
+        if (formData.senha !== formData.confirmarSenha) {  
+            // root.render(
+            //     <Alert severity="error">Erro: senhas diferentes. Digite a mesma senha em ambos os campos de senha!</Alert>
+            // );
+
+            return;
         }else{
             root.render(<></>)
         }
@@ -59,20 +65,35 @@ export default function Cadastro() {
                 email: formData.email,
                 senha: formData.senha,
             })
-
-            setOpen(true);
+            const alertPopup = {
+                isOpen: true,
+                type: 'success',
+                msg: 'Usuário cadastrado com sucesso!'
+            }
+            setOpenAlert(alertPopup);
             localStorage.setItem('token', token);
             localStorage.setItem('id', id);
+            navigate('/');
 
 
-        } catch (err) {
-            console.error("ops! ocorreu um erro" + err);
+        } catch (err: any) {
+
+            const alertPopup = {isOpen: true, type: 'error', msg: 'Erro no servidor, tente novamente mais tarde.'}
+            if(err.response.status === 409){
+                alertPopup.isOpen = true,
+                alertPopup.type = 'error',
+                alertPopup.msg ='Usuário já cadastrado!'
+                setOpenAlert(alertPopup);
+            }else{
+                setOpenAlert(alertPopup);
+                console.error(err.response.status, err.response.data);
+            } 
+           
         }
     }
 
     const handleClose = (event?: React.SyntheticEvent | Event, reason?: string) => {    
-        setOpen(false);
-        navigate('/');
+        setOpenAlert({...openAlert, isOpen: false});
         
     };
 
@@ -125,11 +146,12 @@ export default function Cadastro() {
 
 
             </div>
-            <Snackbar open={open} autoHideDuration={4000} onClose={handleClose} anchorOrigin={{ vertical: 'top', horizontal: 'right' }}>
-                <Alert onClose={handleClose} severity="success" sx={{ width: '100%' }}>
-                    Usuário cadastrado com sucesso!
+            <Snackbar open={openAlert.isOpen} autoHideDuration={4000} onClose={handleClose} anchorOrigin={{ vertical: 'top', horizontal: 'right' }}>
+                <Alert onClose={handleClose} severity={openAlert.type as AlertColor } sx={{ width: '100%' }}>
+                    {openAlert.msg}
                 </Alert>
             </Snackbar>
+
         </>
     )
 }

@@ -31,7 +31,7 @@ type member = {
 
 export default function Perfil() {
     const { isMembro, update, change, setIsMembro } = useGlobal()
-    const [page, setPage] = useState(3)
+    const [page, setPage] = useState(1)
     const [myPerfil, setMyPerfil] = useState(false)
     const id = localStorage.getItem('id');
     const idParam = useParams()
@@ -179,7 +179,7 @@ export default function Perfil() {
     });
     const handleRemove = async () => {
         try {
-            await axios.delete('http://localhost:3333/usuario' + id,
+            await axios.delete('http://localhost:3333/api/usuario/' + id,
                 {
                     headers: {
                         Authorization: 'Bearer ' + localStorage.getItem('token')
