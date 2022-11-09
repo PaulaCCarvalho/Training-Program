@@ -45,7 +45,6 @@ export default function Cadastro() {
     }
 
 
-
     async function handleSubmit() {
         const element = document.getElementById("alert");
         const root = createRoot(element as HTMLElement)

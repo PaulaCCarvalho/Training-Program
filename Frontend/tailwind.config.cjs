@@ -8,6 +8,7 @@ module.exports = {
     extend: {
       backgroundImage:{
         galaxy: "url('/background-galaxy.png')",
+        'desafio-gradient': 'linear-gradient(175deg, rgba(0,0,0,0) 0%, rgba(0,0,0,0.8) 89.88%)'
       },
       
     },
