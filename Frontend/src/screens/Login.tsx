@@ -4,6 +4,7 @@ import { ChangeEvent, FormEvent, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { Input } from '../components/Form/Input';
 import { useGlobal } from '../Context/globalContext';
+import React from 'react';
 
 type UserSubmitForm = {
     email: string;

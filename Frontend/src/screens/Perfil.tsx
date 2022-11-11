@@ -13,6 +13,7 @@ import { Menu } from "../components/Menu";
 import { PaginationComponent } from "../components/PaginationComponent";
 import { useGlobal } from "../Context/globalContext";
 
+import React from 'react';
 
 type link = {
     id: number,

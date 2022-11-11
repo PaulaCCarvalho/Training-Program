@@ -7,6 +7,7 @@ import { CardDesafioProps } from "../components/CardDesafio";
 import Footer from "../components/Footer";
 import { Menu } from "../components/Menu";
 import { useGlobal } from "../Context/globalContext";
+import React from 'react';
 
 
 interface DesafioProps extends CardDesafioProps {

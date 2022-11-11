@@ -1,4 +1,5 @@
 import { createContext, useState, useContext, ReactNode } from 'react';
+import React from 'react';
 
 type GlobalData = {
     isAdmin: boolean;

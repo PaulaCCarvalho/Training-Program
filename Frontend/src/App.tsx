@@ -15,6 +15,7 @@ import LoadingScreen from './screens/LoadingScreen';
 import Perfil from './screens/Perfil';
 import DialogEditPerfil from './components/DialogEditPerfil';
 import ChoiceAvatar from './components/avatars/ChoiceAvatar';
+import React from 'react';
 
 function App() {
     return (

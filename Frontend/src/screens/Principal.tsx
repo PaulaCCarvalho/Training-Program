@@ -9,6 +9,7 @@ import Footer from "../components/Footer";
 import FiltroPesquisa from "../components/FiltroPesquisa";
 import TopRanking from "../components/TopRanking";
 import { PaginationComponent } from "../components/PaginationComponent";
+import React from 'react';
 
 interface Desafio extends CardDesafioProps { }
 

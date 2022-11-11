@@ -2,6 +2,7 @@
 import { createTheme, ThemeProvider } from '@mui/material';
 import Pagination from '@mui/material/Pagination';
 import Stack from '@mui/material/Stack';
+import React from 'react';
 
 
 export function PaginationComponent({page,setPage, count}: {page: number,setPage: Function, count: number}) {
