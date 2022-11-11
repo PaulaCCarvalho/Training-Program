@@ -7,7 +7,6 @@ export default function Footer() {
                 <div className="text-white text-center p-4">
                     <p>Desenvolvido pelo Grupo RAPA</p>
                     <p>Copyright - © 2022</p>
-                
                 </div>
             </footer>
         </>

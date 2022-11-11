@@ -202,7 +202,7 @@ export default function Perfil() {
 
             <div className=" w-[80%] h-full mx-auto flex flex-row text-white gap-5 m-8 justify-center">
 
-                <section className="relative bg-zinc-700 w-[30%] h-full col-start-1 col-end-2 flex flex-col items-center justify-center py-12 rounded-md">
+                <section className="relative bg-zinc-700/70 w-[30%] h-full col-start-1 col-end-2 flex flex-col items-center justify-center py-12 rounded-md">
 
                     {myPerfil && <DialogEditPerfil formik={formikPerfil} membro={membro} setMembro={setMembro} />}
 
@@ -243,7 +243,7 @@ export default function Perfil() {
                 </section>
 
                 <div className="flex flex-col w-[60%] gap-4">
-                    <section className="bg-zinc-700 rounded-md flex flex-row gap-8 justify-center text-center font-black text-xl px-6 py-10">
+                    <section className="bg-zinc-700/70 rounded-md flex flex-row gap-8 justify-center text-center font-black text-xl px-6 py-10">
                         <div className="w-[28%]">
                             <p>Desafios resolvidos</p>
                             <p>12</p>
@@ -266,13 +266,16 @@ export default function Perfil() {
                         </div>
                     </section>
 
-                    <section className=" bg-zinc-700 rounded-md h-full flex flex-col items-center">
+                    <section className="relative bg-zinc-700/25 rounded-md h-full flex flex-col items-center">
                         <p className="text-3xl text-center font-black p-3">Desafios solucionados</p>
 
-                        <div className="h-[85%] p-4">
+                        <div className="h-[85%] p-4 mb-10">
+                            <CardPerfil data={cards} />
+                            <CardPerfil data={cards} />
+                            <CardPerfil data={cards} />
                             <CardPerfil data={cards} />
                         </div>
-                        <div className="p-5">
+                        <div className="p-5 absolute bottom-0">
                             <PaginationComponent page={page} setPage={setPage} count={page} />
                         </div>
 
