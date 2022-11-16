@@ -1,6 +1,6 @@
 import { ChatCircle, ThumbsDown, ThumbsUp } from "phosphor-react";
 import { Link } from "react-router-dom";
-import React from 'react'
+import React from 'react';
 
 export interface CardDesafioProps {
     id: number;
