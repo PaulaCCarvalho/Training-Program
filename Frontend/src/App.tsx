@@ -16,6 +16,7 @@ import Perfil from './screens/Perfil';
 import DialogEditPerfil from './components/DialogEditPerfil';
 import ChoiceAvatar from './components/avatars/ChoiceAvatar';
 import ComentatiosSolucao from './components/ComentariosSolucao';
+import React from 'react'
 
 function App() {
     return (

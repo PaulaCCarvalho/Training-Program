@@ -6,6 +6,7 @@ import { useEffect, useState } from 'react';
 import ReactDOM from 'react-dom';
 import ChoiceAvatar from './avatars/ChoiceAvatar';
 import DialogEditLink from './DialogEditLink';
+import React from 'react';
 
 
 

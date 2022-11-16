@@ -4,6 +4,7 @@ import { Crown, SignOut, UserCircle } from "phosphor-react";
 import { Dispatch, useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { useGlobal } from "../Context/globalContext";
+import React from 'react';
 
 type user = {
     nome: string

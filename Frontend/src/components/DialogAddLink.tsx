@@ -4,6 +4,7 @@ import { validateYupSchema } from 'formik';
 import { Link, X } from "phosphor-react";
 import { useState } from 'react';
 import { createRoot } from 'react-dom/client';
+import React from 'react';
 
 export default function DialogAddLink({ formik }: { formik: any }) {
     const [open, setOpen] = useState(false);

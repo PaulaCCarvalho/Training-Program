@@ -4,6 +4,7 @@ import { ChangeEvent, FormEvent, useState } from 'react';
 import { createRoot } from 'react-dom/client';
 import { Link, useNavigate } from 'react-router-dom';
 import { Input } from '../components/Form/Input';
+import React from 'react';
 
 
 type UserSubmitForm = {

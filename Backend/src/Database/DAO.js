@@ -36,7 +36,9 @@ module.exports = {
                 if (
                     key === 'db'   ||
                     key === 'tags' ||
-                    key === 'imagens'||
+                    key === 'imagens' ||
+                    params[key] === null ||
+                    params[key] === undefined ||
                     (key === 'id' && typeof params[key] !== 'string')
                 ) continue;
                 paramsObj[key] = params[key]

@@ -2,7 +2,7 @@ const ApplicationError = require("./ApplicationError");
 
 class NotFoundError extends ApplicationError{
 
-    constructor(entity){
+    constructor(entity = ''){
         super(`${entity} not found`, 404);
     }
 }
