@@ -1,6 +1,7 @@
 import * as Select from '@radix-ui/react-select';
 import { CaretDown, CaretUp, Check } from 'phosphor-react';
 import { useState } from 'react';
+import React from 'react';
 
 export default function SelectDifficulty({data, formData = 'Dificuldades'}: {data: Function, formData: any} ) {
     const [ difficulty, setDifficulty] = useState(formData.nivel);

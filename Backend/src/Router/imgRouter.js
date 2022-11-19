@@ -5,5 +5,5 @@ const imgController = new ImgController();
 
 
 module.exports = imgRouter
-    .use('/img', express.static('../Database/uploads'));
+    .get('/img/:filename', imgController.download);
     

@@ -47,12 +47,28 @@ class SolutionController {
         }    
     }
 
-    alter(){
-
+    async alter(req, res, next){
+        try {
+            const params = req.body;
+            const solution = new Solution();
+            await solution.alter(params);
+            res.status(204).end();
+        } catch (error) {
+            req.error = error;
+            next()
+        }
     }
 
-    delete(){
-
+    async delete(req, res, next){
+        try{
+            const {id} = req.params;
+            const solution = new Solution();
+            await solution.delete(id)
+            res.status(204).end();
+        }catch(error){
+            req.error = error;
+            next()
+        }
     }
 }
 

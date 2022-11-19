@@ -1,5 +1,5 @@
 const DAO = require("../Database");
-const { NotFoundError } = require("../Error");
+const { NotFoundError, InvalidData } = require("../Error");
 
 class Solution {
 
@@ -18,7 +18,11 @@ class Solution {
     }
 
     async save(){
-        await this.db.add('solutions', this);
+        try {
+            await this.db.add('solutions', this);
+        } catch (error) {
+            throw new InvalidData();
+        }
     }
 
     async find(params){
@@ -32,6 +36,14 @@ class Solution {
         if(solutions.length === 0) throw new NotFoundError('solution');
         const [{num: count}] = await this.db.find('members', page, params, 5, [{table: 'solutions', refTo: 'a', refKey:'id', selfKey: 'member_id'}], false, 'count(a.id) as num');
         return {solutions, count}
+    }
+
+    async alter(params){
+        await this.db.alter('solutions', params);
+    }
+
+    async delete(id){
+        await this.db.destroy('solutions', {id});
     }
 }
 
