@@ -15,8 +15,9 @@ class Like {
 
     async hasLiked(){
         const like = await this.db.find('curtida_solution', 1, {id_members: this.id_members, id_solution: this.id_solution}, 1, false);
-        if(like.length === 0) return false;
-        return true; 
+        if(like.length === 0) return 0;
+        this.id = like[0].id;
+        return like[0].positive; 
     }
 
     async add(){
