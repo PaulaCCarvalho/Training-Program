@@ -42,7 +42,7 @@ export default function BotaoSolucionarDesafio({challenge_id}: {challenge_id: nu
                     setOpenAlert(alertPopup);
                 } else {
                     setOpenAlert(alertPopup),
-                        console.error(error.response.status, error.response.data);
+                    console.error(error.response.status, error.response.data);
                 }
 
             }

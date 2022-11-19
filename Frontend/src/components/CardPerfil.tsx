@@ -152,9 +152,7 @@ const MoreOptions: FC = () => {
                 <div className='flex flex-col'>
                     <EditarSolucao />
 
-                    <button className='hover:bg-indigo-100/10 p-1'>
-                        <p className='font-normal text-sm'>Apagar Solução</p>
-                    </button>
+                    <ApagarSolucao />
                 </div>
             </Popover>
         </ThemeProvider>
@@ -288,8 +286,8 @@ const ApagarSolucao: FC = () => {
     return (
         <>
             <Dialog.Root>
-                <Dialog.Trigger className='hover:bg-indigo-100/10 p-1 px-2'>
-                    <p className='font-normal text-sm'>Editar Solução</p>
+                <Dialog.Trigger className='hover:bg-indigo-100/10 p-1'>
+                    <p className='font-normal text-sm'>Apagar Solução</p>
                 </Dialog.Trigger>
 
                 <Dialog.Portal>
@@ -297,29 +295,26 @@ const ApagarSolucao: FC = () => {
 
                     <Dialog.Content className="fixed bg-[#2A2634] py-8 px-10 text-white top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 rounded-lg w-[480px] shadow-lg shadow-black/25">
                         <Dialog.Title className="relative text-2xl font-black text-center">
-                            Editar solução
+                            Apagar solução
                             <Dialog.Close className='absolute -top-4 -right-7 hover:bg-zinc-700 hover:rounded-full  p-2 '>
                                 <X size={20} />
                             </Dialog.Close>
                         </Dialog.Title>
 
-                        <Dialog.Description className="py-4 text-sm font-light text-justify">
-                            Preencha os campos abaixo para alterar sua solução.
+                        <Dialog.Description className="py-4 text-md font-normal text-justify">
+                            Tem certeza que deseja apagar sua solução? Cuidado! Esta ação será permanente.
                         </Dialog.Description>
-
-
-
 
                         <footer className="mt-4 flex gap-4 justify-between ">
                             <Dialog.Close className="bg-zinc-500 px-5 h-12 rounded-md font-semibold hover:bg-zinc-600 items-center flex">
-                                Cancelar
+                                Não
                             </Dialog.Close>
 
                             <button
-                                type="submit"
+                                type="button"
                                 className="bg-violet-500 px-5 h-12 rounded-md font-semibold flex items-center gap-3 hover:bg-violet-600"
                             >
-                                Salvar
+                                Sim
 
                             </button>
 
