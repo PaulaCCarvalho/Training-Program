@@ -15,7 +15,8 @@ import LoadingScreen from './screens/LoadingScreen';
 import Perfil from './screens/Perfil';
 import DialogEditPerfil from './components/DialogEditPerfil';
 import ChoiceAvatar from './components/avatars/ChoiceAvatar';
-import React from 'react';
+import ComentatiosSolucao from './components/ComentariosSolucao';
+import React from 'react'
 
 function App() {
     return (
@@ -27,10 +28,11 @@ function App() {
                     <Route path="/cadastro" element={<Cadastro />} />
                     <Route path="/ranking" element={<Ranking />} />
                     <Route path="/cadastrar-desafio" element={<CadastrarDesafio />} />
-                    <Route path="/Desafio/:id" element={<Desafio />} />
+                    <Route path="/desafio/:id" element={<Desafio />} />
                     <Route path="/editar-desafio/:id" element={<EditarDesafio />} />
                     <Route path='/perfil/:id' element={<Perfil />}/>  
                     <Route path="/loading" element={<LoadingScreen/>}/>
+                    <Route path="/solucao/:id" element={<ComentatiosSolucao/>}/>
                 </Routes>
             </Router>
         </GlobalContextProvider>

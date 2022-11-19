@@ -1,5 +1,6 @@
 import { ChatCircle, ThumbsDown, ThumbsUp } from "phosphor-react";
-import React from "react";
+import { Link } from "react-router-dom";
+import React from 'react';
 
 export interface CardDesafioProps {
     id: number;
@@ -65,12 +66,12 @@ export function CardPerfil({ data }: { data: any }) {
                         <p className="my-1 text-[0.75rem] font-light text-justify mr-2 border-b-2 border-zinc-500 py-2">Lorem ipsum dolor sit amet consectetur adipisicing elit. Facilis ab hic obcaecati laborum assumenda rem magni
                             perferendis animi dolorum dolorem omnis nesciunt eligendi, id ex laboriosam inventore, accusantium corrupti eum.</p>
                     </div>
+
                     <div className="flex gap-2 items-center">
                         <button className="flex gap-2 items-center hover:bg-zinc-600 p-2 rounded-md" title="Link da Solução">
                             <img src="../../github.svg" alt="logo github" className="w-[1.5vw]" />
                             <p className="font-black text-sm text-neutral-100">GitHub</p>
                         </button>
-
 
                         <button className="hover:bg-zinc-600 p-2 rounded-md" title="Gostei">
                             <ThumbsUp size={20} className="text-indigo-300" />
@@ -82,9 +83,9 @@ export function CardPerfil({ data }: { data: any }) {
                             <ThumbsDown size={20} className="text-indigo-300" />
                         </button>
 
-                        <button className="hover:bg-zinc-600 p-2 rounded-md" title="Ver comentários">
+                        <Link to={`/solucao/${3}`} className="hover:bg-zinc-600 p-2 rounded-md" title="Ver comentários">
                             <ChatCircle size={20} className="text-indigo-300" />
-                        </button>
+                        </Link>
 
                     </div>
 

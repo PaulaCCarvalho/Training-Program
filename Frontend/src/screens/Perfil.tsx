@@ -271,9 +271,7 @@ export default function Perfil() {
 
                         <div className="h-[85%] p-4 mb-10">
                             <CardPerfil data={cards} />
-                            <CardPerfil data={cards} />
-                            <CardPerfil data={cards} />
-                            <CardPerfil data={cards} />
+                            
                         </div>
                         <div className="p-5 absolute bottom-0">
                             <PaginationComponent page={page} setPage={setPage} count={page} />
