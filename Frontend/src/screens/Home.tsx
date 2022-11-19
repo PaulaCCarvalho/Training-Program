@@ -1,6 +1,6 @@
 import axios from "axios";
 import { MagnifyingGlass, Plus } from "phosphor-react";
-import React, { ChangeEvent, useEffect, useState } from "react";
+import React, { ChangeEvent, FC, useEffect, useState } from "react";
 import { Link, Navigate, useNavigate } from "react-router-dom";
 import { CardDesafio, CardDesafioProps } from "../components/CardDesafio";
 import { Menu } from "../components/Menu";
@@ -56,12 +56,12 @@ export default function Home() {
                 setPageCount(Math.ceil(response.data.count / 12));
             })
             .catch((err) => {
-                if(err.response.status === 404){
+                if (err.response.status === 404) {
                     setOpen(true)
-                }else{
+                } else {
                     console.error("ops! ocorreu um erro: " + err.response.data);
                 }
-                
+
             });
     }
 
@@ -72,7 +72,7 @@ export default function Home() {
 
     const handleClose = (event?: React.SyntheticEvent | Event, reason?: string) => {
         if (reason === 'clickaway') {
-          return;
+            return;
         }
         setOpen(false);
     };
@@ -92,7 +92,7 @@ export default function Home() {
 
             <div className="overflow-y-scroll overflow-x-hidden flex w-auto h-[90.3vh] flex-col items-center">
                 <div className="flex justify-between">
-                    <div className=" w-[25vw] h-full bg-zinc-800  ">
+                    <div className=" w-[25vw] h-full bg-zinc-800/80  ">
                         <div className="flex justify-center">
                             <FiltroPesquisa search={search} setSearch={setSearch} setPage={setPage} req={requisicao} />
                         </div>
@@ -101,20 +101,18 @@ export default function Home() {
                             <TopRanking />
                         </div>
                     </div>
-                    <div className=" px-6 py-6 flex flex-col items-center w-[80vw]">
-                        <div className="m-6 mr-28 inline-flex self-end">
+                    <div className=" px-6 py-6 flex flex-col items-center w-[75vw]">
 
-                            {isAdmin ?
-                                <button onClick={() => navigate("/cadastrar-desafio")} className="bg-[#4F545C] text-white px-2 py-2 rounded-3xl hover:bg-slate-100 hover:text-[#4F545C] delay-200">
-                                    <Plus size={32} />
-                                </button>
-                                :
-                                null
-                            }
 
-                        </div>
+                        {isAdmin ?
+                            <ButtomNavigation />
+                            :
+                            null
+                        }
 
-                        <div className="w-[80vw] flex flex-wrap items-center justify-center overflow-auto mb-14">
+
+
+                        <div className="w-[75vw] flex flex-wrap items-center justify-center overflow-auto mb-14">
                             {
                                 cards.map((card) => {
                                     return (
@@ -137,6 +135,34 @@ export default function Home() {
 
                 </div>
                 <Footer />
+            </div>
+
+        </>
+    )
+}
+
+
+const ButtomNavigation: FC = () => {
+    const navigate = useNavigate()
+    return (
+        <>
+            <div className="flex flex-row flex-auto w-[50%] bg-zinc-800/80 items-center  rounded-md shadow-md shadow-black/30">
+                <button className='flex p-2 h-full w-full hover:bg-indigo-200/25 hover:rounded-l-md items-center ' onClick={() => navigate("/cadastrar-desafio")}>
+                    <Plus size={20} className="text-neutral-100 p-1" />
+
+                    <p className="font-black text-[0.75rem] text-neutral-100 items-center ">Aprovar Soluções</p>
+                </button>
+
+                <button className='flex p-2 h-full w-full hover:bg-indigo-200/25 items-center ' onClick={() => navigate("/cadastrar-desafio")}>
+                    <Plus size={20} className="text-neutral-100 p-1"/>
+
+                    <p className="font-black text-[0.75rem] text-neutral-100 items-center ">Adicionar Desafios</p>
+                </button>
+
+                <button className='flex p-2 h-full w-full hover:bg-indigo-200/25 hover:rounded-r-md items-center ' onClick={() => navigate("/cadastrar-desafio")}>
+                    <Plus size={20}  className="text-neutral-100 p-1"/>
+                    <p className="font-black text-[0.75rem] text-neutral-100 ">Adicionar Tags</p>
+                </button>
             </div>
 
         </>

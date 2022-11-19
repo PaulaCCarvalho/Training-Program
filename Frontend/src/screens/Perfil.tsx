@@ -38,7 +38,7 @@ export default function Perfil() {
     const idParam = useParams()
     const [open, setOpen] = useState(false)
     const navigate = useNavigate()
-    const [cards, setCards] = useState({
+    const [cardsSolucoes, setCardsSolucoes] = useState({
         id: 0,
         nome: '',
         descricao: '',
@@ -96,7 +96,7 @@ export default function Perfil() {
 
         axios.get(`http://localhost:3333/api/desafio/3`)
             .then((response) => {
-                setCards(response.data)
+                setCardsSolucoes(response.data)
             })
             .catch(() => console.log('Ops deu ruim!'))
 
@@ -270,7 +270,8 @@ export default function Perfil() {
                         <p className="text-3xl text-center font-black p-3">Desafios solucionados</p>
 
                         <div className="h-[85%] p-4 mb-10">
-                            <CardPerfil data={cards} />
+                            <CardPerfil data={cardsSolucoes
+                } />
                             
                         </div>
                         <div className="p-5 absolute bottom-0">

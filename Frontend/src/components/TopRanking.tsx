@@ -17,7 +17,7 @@ export default function TopRanking() {
 
     return (
 
-        <div className="ml-[45px] my-6 w-64  border-zinc-400  border-solid border-2 rounded-lg">
+        <div className="ml-[45px] my-6 w-60  border-zinc-400  border-solid border-2 rounded-lg">
 
             <div className="flex justify-center text-3xl font-semibold bg-zinc-700 text-white  py-4 rounded-t-lg ">
                 Ranking

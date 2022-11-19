@@ -69,13 +69,13 @@ export default function FiltroPesquisa({ search, setSearch, setPage, req }: { se
 
     return (
 
-        <div className="ml-[45px] my-6 w-64  border-zinc-400 border-solid border-2 rounded-lg">
+        <div className="mx-auto mr-10 my-6 w-60  border-zinc-400 border-solid border-2 rounded-lg">
 
-            <div className="flex justify-center text-3xl font-semibold text-white h-12 py-2 my-1">
+            <div className="flex justify-center text-2xl font-semibold text-white h-12 py-2 my-1">
                 Filtros
             </div>
 
-            <div className="my-1 flex items-start text-white h-20 py-3 px-3 bg-zinc-700">
+            <div className="my-1 flex items-start text-white h-20 py-2 px-3 bg-zinc-700">
                 <FormGroup className="w-60" >
                     <p className="text-md font-medium">Dificuldade:</p>
 
@@ -93,8 +93,8 @@ export default function FiltroPesquisa({ search, setSearch, setPage, req }: { se
                                         '&.Mui-checked': {
                                             color: '#f97316',
                                         },
-                                        '& .MuiSvgIcon-root': { fontSize: 18 },
-                                        marginRight: -0.5,
+                                        '& .MuiSvgIcon-root': { fontSize: 17 },
+                                        marginRight: -0.8,
 
                                     }}
                                 />
@@ -116,8 +116,9 @@ export default function FiltroPesquisa({ search, setSearch, setPage, req }: { se
                                         '&.Mui-checked': {
                                             color: '#f97316',
                                         },
-                                        '& .MuiSvgIcon-root': { fontSize: 18 },
-                                        marginRight: -0.5,
+                                        '& .MuiSvgIcon-root': { fontSize: 17 },
+                                        marginRight: -0.8,
+                                        fontSize: 5
                                     }}
                                 />}
                             label="Médio" />
@@ -135,8 +136,8 @@ export default function FiltroPesquisa({ search, setSearch, setPage, req }: { se
                                         '&.Mui-checked': {
                                             color: '#f97316',
                                         },
-                                        '& .MuiSvgIcon-root': { fontSize: 18 },
-                                        marginRight: -0.5,
+                                        '& .MuiSvgIcon-root': { fontSize: 17 },
+                                        marginRight: -0.8,
                                     }}
                                 />}
                             label="Difícil"
@@ -167,11 +168,11 @@ export default function FiltroPesquisa({ search, setSearch, setPage, req }: { se
                     <SelectTags datas={handleAttributeValue} formData={search} />
                 </div>
 
-            </div>          
+            </div>
 
             <div className="gap-4 mt-1.5  flex flex-col justify-start text-white py-3 px-3 bg-zinc-700 ">
                 <p className="flex justify-start text-md font-medium " > Pesquisa por nome: </p>
-                <input onChange={(event) => { handleChangeInput(event) }} type="text" name="nome" className="bg-zinc-900 py-4 px-4 rounded text-sm placeholder:text-zinc-500 " placeholder="nome do desafio" />
+                <input onChange={(event) => { handleChangeInput(event) }} type="text" name="nome" className="bg-zinc-900 py-3 px-4 rounded text-md placeholder:text-zinc-500 " placeholder="nome do desafio" />
             </div>
 
             <div className="gap-4 mt-1.5 flex flex-col justify-start text-white py-3 px-3  ">

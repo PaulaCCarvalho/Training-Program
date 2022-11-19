@@ -11,6 +11,7 @@ import Footer from "../components/Footer";
 import { Menu } from "../components/Menu";
 import { useGlobal } from "../Context/globalContext";
 import React from 'react';
+import BotaoSolucionarDesafio from "../components/BotaoSolucionarDesafio";
 
 
 interface DesafioProps extends CardDesafioProps {
@@ -41,7 +42,7 @@ export function Desafio() {
     const renderTags = () => {
         return (desafio?.tags.map((tag: { id: number, nome: string }) => {
             return (
-                <p className="upercase text-[0.8rem] text-indigo-300 " title="Tags do desafio">#{tag.nome}</p>
+                <p key={tag.id} className="upercase text-[0.8rem] text-indigo-300 " title="Tags do desafio">#{tag.nome}</p>
 
             )
         }))
@@ -65,7 +66,7 @@ export function Desafio() {
         <>
             <Menu />
 
-            <div className="mt-[2rem] max-w-xl h-auto flex flex-row mx-auto bg-zinc-700/95 text-white rounded-t-md shadow-lg shadow-black/60s xl:max-w-4xl " >
+            <div className="relative mt-[2rem] max-w-xl h-auto flex flex-row mx-auto bg-zinc-700/95 text-white rounded-t-md shadow-lg shadow-black/60s xl:max-w-4xl " >
                 <div className="xl:flex w-full">
                     <div className="xl:shrink-0 relative">
                         <img className="h-[300px] rounded-tl-md w-full object-cover xl:h-full xl:w-[300px] shadow-inner shadow-black" src={/* padrao.includes(desafio?.capa) ?  */'../../imgDesafio.jpg' /* : desafio?.capa */} alt="" />
@@ -74,11 +75,11 @@ export function Desafio() {
                             src={desafio?.nivel ? iconLevel() : '../../default-icon.svg'}
                             alt="" />
                     </div>
-                    <div className="relative flex flex-col p-6">
+                    <div className=" flex flex-col p-6">
                         <div className="uppercase tracking-wide text-lg font-black">{desafio?.nome}</div>
                         <p className="block my-2 text-sm leading-tight font-light text-justify text-white">{desafio?.descricao}</p>
 
-                        <div className="absolute bottom-4">
+                        <div className="my-2">
                             <p className="text-orange-500 my-2 uppercase text-[0.9rem] font-black" title="Tema do desafio">{desafio?.tema}</p>
 
                             <div className="flex flex-wrap w-[100%] gap-1.5">
@@ -87,11 +88,18 @@ export function Desafio() {
                         </div>
                     </div>
                 </div>
+
                 {isAdmin ?
                     <div className="inline-flex justify-end items-start p-3 ">
                         <BotaoDesafio key={desafio?.id} idParam={id} />
                     </div>
-                    : null
+                    :
+
+                    <div className="absolute bottom-0 right-0 p-3 ">
+                        <BotaoSolucionarDesafio challenge_id={Number(id)}/>
+                    </div>
+
+
                 }
             </div>
 
