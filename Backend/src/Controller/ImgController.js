@@ -9,6 +9,7 @@ class ImgController {
             console.log('Start')
             const filePath = path.join(__dirname,'..', 'Database', 'uploads', req.params.filename);
             // res.headers.Content-Type = 'image/jpeg';
+            console.log(res.headers)
             const b = await fs.readFile(filePath);
             res.send(b.toString());
         } catch (error) {

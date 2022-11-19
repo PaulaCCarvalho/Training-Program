@@ -17,7 +17,8 @@ class SolutionController {
     async find(req, res, next){
         try {
             const solution = new Solution();
-            const solutions = await solution.find(req.query);
+            const {page, id, ...params} = req.query;
+            const solutions = await solution.find(params, page, id);
             res.json(solutions);
         } catch (error) {
             req.error = error;

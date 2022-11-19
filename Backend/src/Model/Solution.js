@@ -1,5 +1,6 @@
 const DAO = require("../Database");
 const { NotFoundError, InvalidData } = require("../Error");
+const Like = require("./Like");
 
 class Solution {
 
@@ -25,17 +26,27 @@ class Solution {
         }
     }
 
-    async find(params){
-        const solutions = await this.db.find('solutions', 1, params, 10, false, false);
-        const [{num: count}] = await this.db.find('solutions', 1, params, 10, false, false, 'count(id) as num');
+    async find(params, page = 1, member){
+        const solutions = await this.db.find('solutions', page, params, 10, [{table: 'members', refTo: 'a', refKey:'member_id', selfKey: 'id'}], false, 'a.id, b.nome, b.foto, a.linkCode, a.nota, a.descricao');
+        const [{num: count}] = await this.db.find('solutions', page, params, 1000000000, false, false, 'count(id) as num');
+        const likes = await this.db.find('solutions', page, params, 10, [{table: 'curtida_solution', refTo: 'a', refKey:'id', selfKey: 'id_solution'}], false, 'a.id, SUM(b.positive) as num', undefined, 'a.id', 'a.id');
+        for(let i in solutions){
+            solutions[i].likes = Number(likes[i].num)
+            solutions[i].hasLiked = await (new Like).insert({member, solution: solutions[i].id}).hasLiked();
+        }
         return {count, solutions};
     }
 
     async findByMember(params, page = 1){
-        const solutions = await this.db.find('members', page, params, 5, [{table: 'solutions', refTo: 'a', refKey:'id', selfKey: 'member_id'}], false, 'a.nome, a.foto, b.linkCode, b.nota, b.descricao');
+        const solutions = await this.db.find('members', page, params, 5, [{table: 'solutions', refTo: 'a', refKey:'id', selfKey: 'member_id'}], false, 'b.id, a.nome, a.foto, b.linkCode, b.nota, b.descricao');
         if(solutions.length === 0) throw new NotFoundError('solution');
         const [{num: count}] = await this.db.find('members', page, params, 5, [{table: 'solutions', refTo: 'a', refKey:'id', selfKey: 'member_id'}], false, 'count(a.id) as num');
-        return {solutions, count}
+        const likes = await this.db.find('solutions', page, [], 10, [{table: 'curtida_solution', refTo: 'a', refKey:'id', selfKey: 'id_solution'}], false, 'a.id, SUM(b.positive) as num', undefined, 'a.id', 'a.id');
+        for(let i in solutions){
+            solutions[i].likes = Number(likes[i].num)
+            solutions[i].hasLiked = await (new Like).insert({member: params.id, solution: solutions[i].id}).hasLiked();
+        }
+        return {count, solutions};
     }
 
     async alter(params){

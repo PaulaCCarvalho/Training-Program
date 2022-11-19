@@ -10,6 +10,7 @@ class Like {
         this.id_members = member;
         this.id_solution = solution;
         this.positive = positive;
+        return this;
     }
 
     async hasLiked(){

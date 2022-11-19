@@ -75,7 +75,7 @@ module.exports = {
         })
     },
 
-    find(table, page = 1, params, limit = 10, join = false, distinct = false, retrieve = '*', search) {
+    find(table, page = 1, params, limit = 10, join = false, distinct = false, retrieve = '*', search, groupBy = false, orderBy = false) {
         return new Promise((resolve, reject) => {
             const offset = (page - 1) * limit
             let formatedParams = '';
@@ -96,7 +96,15 @@ module.exports = {
             if(distinct === true){
                 distinctFormated = 'DISTINCT';
             }
-            const sql = `SELECT ${distinctFormated} ${retrieve} FROM ${table} as a ${joinformated} ${formatedParams} LIMIT ${offset},${limit}`;
+            let = groupByFormated = '';
+            if(groupBy){
+                groupByFormated = 'GROUP BY ' + groupBy;
+            }
+            let = orderByFormated = '';
+            if(orderBy){
+                orderByFormated = 'ORDER BY ' + orderBy;
+            }
+            const sql = `SELECT ${distinctFormated} ${retrieve} FROM ${table} as a ${joinformated} ${formatedParams} ${groupByFormated} ${orderByFormated} LIMIT ${offset},${limit}`;
             console.log(sql)
             connection.query(sql, (error, values) => {
                 if (error) {
