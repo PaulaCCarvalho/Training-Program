@@ -1,19 +1,21 @@
-const fs = require('fs');
+const fs = require('fs/promises');
+const path = require('path');
 const DAO = require('../Database');
 
 class ImgController {
 
-    download(req, res, next){
+    async download(req, res, next){
         try {
-            console.log('Aba')
-            res.headers['Content-Type'] = 'image/png'
-            res.sendFile("../Database/uploads/" + req.params.filename);
-            
-            
+            console.log('Start')
+            const filePath = path.join(__dirname,'..', 'Database', 'uploads', req.params.filename);
+            // res.headers.Content-Type = 'image/jpeg';
+            console.log(res.headers)
+            const b = await fs.readFile(filePath);
+            res.send(b.toString());
         } catch (error) {
 
-            req.error = error 
-            next
+            req.error = error; 
+            next();
         }
     }
 

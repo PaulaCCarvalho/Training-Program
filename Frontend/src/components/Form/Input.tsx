@@ -2,6 +2,7 @@ import { InputHTMLAttributes } from "react";
 import React from 'react';
 
 interface InputProps extends InputHTMLAttributes<HTMLInputElement>{data: Function}
+import React from 'react';
 
 export function Input(props: InputProps){
     const {data,...filteredProps} = props
