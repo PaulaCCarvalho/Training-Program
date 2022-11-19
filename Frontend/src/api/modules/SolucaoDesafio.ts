@@ -6,7 +6,8 @@ export interface Solucao{
     nota: number;
     descricao: string;
     curtidas: number;
-    
+    foto: string;
+    nome: string;
 }
 
 
@@ -17,4 +18,6 @@ export const initValuesSolucao = {
     nota: -1,
     descricao: '',
     curtidas: 0,
+    foto: '',
+    nome:''
 }

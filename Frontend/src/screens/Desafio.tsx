@@ -2,7 +2,7 @@ import { Avatar } from "@mui/material";
 import axios from "axios";
 import { ChatCircle, DotsThreeOutline, ThumbsDown, ThumbsUp } from "phosphor-react";
 import { useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
+import { Link, useParams } from "react-router-dom";
 import { BotaoDesafio } from "../components/BotaoDesafio";
 import { CardDesafioProps } from "../components/CardDesafio";
 import { CardPerfil } from "../components/CardPerfil";
@@ -12,6 +12,7 @@ import { Menu } from "../components/Menu";
 import { useGlobal } from "../Context/globalContext";
 import React from 'react';
 import BotaoSolucionarDesafio from "../components/BotaoSolucionarDesafio";
+import { initValuesSolucao } from "../api/modules/SolucaoDesafio";
 
 
 interface DesafioProps extends CardDesafioProps {
@@ -21,6 +22,7 @@ interface DesafioProps extends CardDesafioProps {
 export function Desafio() {
     const { id } = useParams();
     const padrao = ['', null, undefined];
+    const [solucoes, setSolucoes] = useState<Object[]>()
 
     const [desafio, setDesafio] = useState<DesafioProps>();
 
@@ -35,6 +37,19 @@ export function Desafio() {
 
             }
         }
+
+        async function getSolutions() {
+            try {
+                const response = await axios.get(`http://localhost:3333/api/solucao?challenge_id=${id}&id=${localStorage.getItem('id')}`);
+                setSolucoes(response.data.solutions)
+                console.log(response.data)
+            } catch (error: any) {
+                console.error(error.response.status, error.response.data);
+
+            }
+        }
+
+        getSolutions();
         getDesafio();
 
     }, []);
@@ -96,59 +111,66 @@ export function Desafio() {
                     :
 
                     <div className="absolute bottom-0 right-0 p-3 ">
-                        <BotaoSolucionarDesafio challenge_id={Number(id)}/>
+                        <BotaoSolucionarDesafio challenge_id={Number(id)} />
                     </div>
 
 
                 }
             </div>
 
-            <div className="flex flex-col items-center xl:max-w-4xl mx-auto bg-zinc-700/25  rounded-b-md mb-[4rem] h-auto">
+            <div className="flex flex-col items-center p-4 xl:max-w-4xl mx-auto bg-zinc-700/25  rounded-b-md mb-[4rem] h-auto">
                 <p className="text-white text-xl font-black mt-4 justify-center">Soluções</p>
 
-                <div className="m-4 p-2 flex flex-col w-auto bg-zinc-700 text-white rounded-md shadow-md shadow-black/25 h-auto ">
+                {
+                    solucoes?.map((solucao: any) => {
+                        return (
+                            <div key={solucao.id} className="m-4 p-2 flex flex-col w-full bg-zinc-700 text-white rounded-md shadow-md shadow-black/25 h-auto ">
 
-                    <div className=" w-auto mx-2 border-b-[1.5px] border-zinc-500 p-1 pbl-2">
-                        <button className="flex items-center gap-2">
-                            <Avatar alt="Camila Azevedo" src='../../avatars/avatar001.png' sx={{ width: '5vh', height: '5vh', bgcolor: '#C0C0C0' }} />
-                            <p className="text-sm font-black ">Camila Azevedo</p>
-                        </button>
+                                <div className=" w-auto mx-2 border-b-[1.5px] border-zinc-500 p-1 pbl-2">
+                                    <button className="flex items-center gap-2">
+                                        <Avatar alt={solucao.nome} src={solucao.foto} sx={{ width: '5vh', height: '5vh', bgcolor: '#C0C0C0' }} />
+                                        <p className="text-sm font-black ">{solucao.nome}</p>
+                                    </button>
 
-                    </div>
-
-
-                    <p className="my-1 px-3 text-[0.75rem] font-light text-justify py-2">Lorem ipsum dolor sit amet consectetur adipisicing elit. Facilis ab hic obcaecati laborum assumenda rem magni
-                        perferendis animi dolorum dolorem omnis nesciunt eligendi, id ex laboriosam inventore, accusantium corrupti eum.
-                    </p>
-
-                    <div className="flex relative gap-1 items-center px-3">
-                        <button className="flex mr-3 gap-2 items-center bg-zinc-600 hover:bg-slate-600/50 p-2 rounded-md" title="Link da Solução">
-                            <img src="../../github.svg" alt="logo github" className="w-[1.5vw]" />
-                            <p className="font-black text-sm text-neutral-100">GitHub</p>
-                        </button>
+                                </div>
 
 
-                        <button className="hover:bg-zinc-600 p-2 rounded-md" title="Gostei">
-                            <ThumbsUp size={20} className="text-indigo-300" />
-                        </button>
+                                <p className="my-1 px-3 text-[0.75rem] font-light text-justify py-2">{solucao.descricao}
+                                </p>
 
-                        <p className="font-black text-sm text-neutral-100">14</p>
+                                <div className="flex relative gap-1 items-center px-3">
+                                    <a target={"_blank"} href={solucao.linkCode} className="flex mr-3 gap-2 items-center bg-zinc-600 hover:bg-slate-600/50 p-2 rounded-md" title="Link da Solução">
+                                        <img src="../../github.svg" alt="logo github" className="w-[1.5vw]" />
+                                        <p className="font-black text-sm text-neutral-100">GitHub</p>
+                                    </a>
 
-                        <button className="hover:bg-zinc-600 p-2 rounded-md mr-3" title="Não gostei">
-                            <ThumbsDown size={20} className="text-indigo-300" />
-                        </button>
 
-                        <button className="hover:bg-zinc-600 p-2 rounded-md" title="Ver comentários">
-                            <ChatCircle size={20} className="text-indigo-300" />
-                        </button>
+                                    <button className={`hover:bg-zinc-600 p-2 rounded-md ${solucao.hasLiked === 1 && 'bg-zinc-600'}`} title="Gostei">
+                                        <ThumbsUp size={20} className="text-indigo-300" />
+                                    </button>
 
-                        <div className="absolute bottom-1 right-2 flex ml-3 p-2 bg-indigo-500 rounded-md items-center">
-                            <p className="font-black text-[0.75rem] text-neutral-100">Parcialmente Solucionado</p>
-                        </div>
+                                    <p className="font-black text-sm text-neutral-100">{solucao.likes}</p>
 
-                    </div>
+                                    <button className={`hover:bg-zinc-600 p-2 rounded-md mr-3 ${solucao.hasLiked === 1 && 'bg-zinc-600'}`} title="Não gostei">
+                                        <ThumbsDown size={20} className="text-indigo-300" />
+                                    </button>
 
-                </div>
+                                    <Link to={`/solucao/${solucao.id}`} className="hover:bg-zinc-600 p-2 rounded-md" title="Ver comentários">
+                                        <ChatCircle size={20} className="text-indigo-300" />
+                                    </Link>
+
+                                    <div className="absolute bottom-1 right-2 flex ml-3 p-2 bg-indigo-500 rounded-md items-center">
+                                        <p className="font-black text-[0.75rem] text-neutral-100">Parcialmente Solucionado</p>
+                                    </div>
+
+                                </div>
+
+                            </div>
+                        )
+                    })
+                }
+
+
             </div>
 
             <Footer />
