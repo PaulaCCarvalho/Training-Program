@@ -6,10 +6,8 @@ class ImgController {
 
     async download(req, res, next){
         try {
-            console.log('Start')
             const filePath = path.join(__dirname,'..', 'Database', 'uploads', req.params.filename);
-            // res.headers.Content-Type = 'image/jpeg';
-            console.log(res.headers)
+            res.set('Content-Type', 'image/jpeg');
             const b = await fs.readFile(filePath);
             res.send(b.toString());
         } catch (error) {
