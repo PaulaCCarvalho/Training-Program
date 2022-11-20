@@ -42,7 +42,7 @@ export function CardDesafio({ data }: { data: CardDesafioProps }) {
     return (
         <div className="h-[400px] relative m-6 bg-zinc-700/70 w-60  text-white rounded-lg shadow-lg shadow-black/30">
             <div className="relative">
-                <img className="rounded-t-lg  " src={/* padrao.includes(data.capa)? */ '../../imgDesafio.jpg'/* : data.capa  */} alt="" />
+                <img className="rounded-t-lg  " src={data.capa === '' ? '../../imgDesafio.jpg' : 'http://localhost:3333/api/img/' + data.capa} alt="" />
                 <img
                     className="absolute bottom-3 right-3"
                     src={data.nivel ? iconLevel() : '../../default-icon.svg'}

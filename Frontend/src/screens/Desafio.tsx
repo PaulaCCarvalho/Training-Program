@@ -2,7 +2,7 @@ import { Avatar } from "@mui/material";
 import axios from "axios";
 import { ChatCircle, DotsThreeOutline, ThumbsDown, ThumbsUp } from "phosphor-react";
 import { useEffect, useState } from "react";
-import { Link, useParams } from "react-router-dom";
+import { Link, useNavigate, useParams } from "react-router-dom";
 import { BotaoDesafio } from "../components/BotaoDesafio";
 import { CardDesafioProps } from "../components/CardDesafio";
 import { CardPerfil, MoreOptions } from "../components/CardPerfil";
@@ -24,6 +24,7 @@ export function Desafio() {
     const padrao = ['', null, undefined];
     const [solucoes, setSolucoes] = useState<Object[]>([])
     const { isAdmin } = useGlobal()
+    const navigate = useNavigate()
 
     const [desafio, setDesafio] = useState<DesafioProps>();
 
@@ -33,7 +34,10 @@ export function Desafio() {
             try {
                 const response = await axios.get(`http://localhost:3333/api/desafio/${id}`)
                 setDesafio(response.data);
-            } catch (error) {
+            } catch (error: any) {
+                if(error.response.status === 404){
+                    navigate('/not-found')
+                }
                 console.error("ops! ocorreu um erro" + error);
 
             }
@@ -106,7 +110,7 @@ export function Desafio() {
         }
     }
 
-    const lala = (id: number) => {
+    const isMySolution = (id: number) => {
         if (localStorage.getItem('id') === String(id))
             return <MoreOptions />
     }
@@ -167,7 +171,7 @@ export function Desafio() {
                                     </Link>
 
                                     <div className="">
-                                        {lala(solucao.idMember)}
+                                        {isMySolution(solucao.idMember)}
                                     </div>
 
                                 </div>

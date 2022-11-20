@@ -38,17 +38,7 @@ export default function Perfil() {
     const idParam = useParams()
     const [open, setOpen] = useState(false)
     const navigate = useNavigate()
-    const [cardsSolucoes, setCardsSolucoes] = useState({
-        id: 0,
-        nome: '',
-        descricao: '',
-        nivel: '',
-        tema: '',
-        capa: '',
-        availabel: 0,
-        tags: [],
-        imagens: [],
-    })
+    const [cardsSolucoes, setCardsSolucoes] = useState<Object[]>([])
 
 
     const [membro, setMembro] = useState<member>(
@@ -94,11 +84,18 @@ export default function Perfil() {
             })
             .catch(() => console.log('Ops deu ruim!'))
 
-        axios.get(`http://localhost:3333/api/desafio/3`)
-            .then((response) => {
-                setCardsSolucoes(response.data)
-            })
-            .catch(() => console.log('Ops deu ruim!'))
+
+        async function getSolutions() {
+            try {
+                const response = await axios.get(`http://localhost:3333/api/${idParam.id}/solucao`)
+                const solutions = [...response.data.solutions]
+                setCardsSolucoes(solutions)
+
+            } catch (error) {
+                console.log('Ops deu ruim!')
+            }
+        }
+        getSolutions()
 
     }, [isMembro, change])
 
@@ -125,7 +122,6 @@ export default function Perfil() {
     }
 
     const setLinks = (urls: link[]) => {
-        console.log(urls)
         const newMember = membro
         newMember.links = urls;
         setMembro(newMember);
@@ -150,9 +146,6 @@ export default function Perfil() {
             if (values.titulo === '') {
                 values.titulo = values.url.split('//')[1]
             }
-
-            console.log(values)
-
 
             const newMember = membro
             newMember.links.push(values)
@@ -194,6 +187,35 @@ export default function Perfil() {
         localStorage.clear();
         setIsMembro(false);
         navigate('/');
+    }
+    const handleLiked = (isLike: number, idSolution: number) => {
+        try {
+            axios.post(`http://localhost:3333/api/like`, {
+                member: localStorage.getItem('id'),
+                solution: idSolution,
+                positive: isLike,
+            })
+
+            const newSolucoes = [...cardsSolucoes];
+
+            newSolucoes?.forEach((solucao: any) => {
+                if (solucao.id === idSolution) {
+                    if (isLike === solucao.hasLiked) {
+                        solucao.hasLiked = 0;
+                        solucao.likes -= isLike;
+                    } else {
+                        solucao.hasLiked = isLike;
+                        solucao.likes += isLike;
+                    }
+                }
+            })
+
+            setCardsSolucoes(newSolucoes)
+
+
+        } catch (error: any) {
+            console.error(error.response.status, error.response.data);
+        }
     }
 
     return (
@@ -268,13 +290,17 @@ export default function Perfil() {
 
                     <section className="relative bg-zinc-700/25 rounded-md h-full flex flex-col items-center">
                         <p className="text-3xl text-center font-black p-3">Desafios solucionados</p>
-
-                        <div className="h-[85%] p-4 mb-10">
-                            <CardPerfil data={cardsSolucoes
-                } />
+                        <>
+                            {cardsSolucoes.map((solucao: any) => {
+                                return (
+                                    <div key={solucao.id} className="h-[85%] mx-4">
+                                        <CardPerfil handleLiked={handleLiked} data={solucao} />
+                                    </div>
+                                )
+                            })}
                             
-                        </div>
-                        <div className="p-5 absolute bottom-0">
+                            </>
+                        <div className="p-5 self-center">
                             <PaginationComponent page={page} setPage={setPage} count={page} />
                         </div>
 

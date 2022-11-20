@@ -5,19 +5,15 @@ import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import Ranking from './screens/Ranking';
 import Home from './screens/Home';
 import CadastrarDesafio from './screens/CadastrarDesafio';
-import SelectTags from './components/Form/SelectTags';
 import { Desafio } from './screens/Desafio';
-import { BotaoDesafio } from './components/BotaoDesafio';
-import FiltroPesquisa from './components/FiltroPesquisa';
 import EditarDesafio from './screens/EditarDesafio';
 import GlobalContextProvider from './Context/globalContext';
 import LoadingScreen from './screens/LoadingScreen';
 import Perfil from './screens/Perfil';
-import DialogEditPerfil from './components/DialogEditPerfil';
-import ChoiceAvatar from './components/avatars/ChoiceAvatar';
 import ComentatiosSolucao from './components/ComentariosSolucao';
 import React from 'react'
 import { AprovarSolucoes } from './screens/AprovarSolucoes';
+import NotFound from './screens/NotFound';
 
 function App() {
     return (
@@ -35,6 +31,7 @@ function App() {
                     <Route path="/loading" element={<LoadingScreen/>}/>
                     <Route path="/solucao/:id" element={<ComentatiosSolucao/>}/>
                     <Route path="/aprovar-solucoes" element={<AprovarSolucoes/>}/>
+                    <Route path='/*' element={<NotFound/>}/>                 
                 </Routes>
             </Router>
         </GlobalContextProvider>

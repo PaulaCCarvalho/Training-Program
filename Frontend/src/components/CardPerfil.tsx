@@ -1,25 +1,30 @@
 import { ChatCircle, DotsThreeVertical, ThumbsDown, ThumbsUp, X } from "phosphor-react";
 import { Link } from "react-router-dom";
-import React, { FC, useState } from 'react';
+import React, { FC, useEffect, useState } from 'react';
 import { Alert, AlertColor, createTheme, Popover, Snackbar, ThemeProvider } from "@mui/material";
 import * as Dialog from '@radix-ui/react-dialog';
 import { useFormik } from "formik";
 import { initValuesSolucao } from "../api/modules/SolucaoDesafio";
 import axios from "axios";
 
-export interface CardDesafioProps {
-    id: number;
-    nome: string;
-    descricao: string;
-    nivel: string;
-    tema: string;
-    capa: string;
-    availabel: number;
-    tags: [];
-    imagens: [];
-}
 
-export function CardPerfil({ data }: { data: any }) {
+export function CardPerfil({ data, handleLiked }: { data: any, handleLiked: Function }) {
+    const [tags, setTags] = useState([])
+    const [tema, setTema] = useState('')
+    const [capa, setCapa] = useState('')
+
+    useEffect(() => {
+
+        const response = axios.get(`http://localhost:3333/api/desafio/${data.id}`)
+            .then((response) => {
+                setTags(response.data.tags);
+                setTema(response.data.tema);
+                setCapa(response.data.capa);
+            })
+            .catch((error) => {
+                console.error("ops! ocorreu um erro" + error);
+            })
+    },[])
 
     function iconLevel() {
         if (data.nivel === 'facil') {
@@ -35,22 +40,20 @@ export function CardPerfil({ data }: { data: any }) {
     }
 
     const renderTags = () => {
-        return (data.tags.map((tag: { id: number, nome: string }) => {
+        return (tags.map((tag: { id: number, nome: string }) => {
             return (
-                <p className="upercase text-[0.65rem] text-indigo-300 "><i>#{tag.nome}</i></p>
+                <p key={tag.id} className="upercase text-[0.65rem] text-indigo-300 "><i>#{tag.nome}</i></p>
             )
         }))
     }
-
-    const padrao = ['', null, undefined]
 
     return (
         <div className="my-4 flex flex-row w-auto bg-zinc-700 text-white rounded-md shadow-md shadow-black/25  overflow-hidden"  >
             <div className="flex">
                 <div className="shrink-0 relative rounded-l-sm">
-                    <img className="w-full object-cover  xl:h-full xl:w-40" src={/* padrao.includes(desafio?.capa) ?  */'../../imgDesafio.jpg' /* : desafio?.capa */} alt="" />
+                    <img className="w-full object-cover  xl:h-full xl:w-40" src={capa === '' ? '../../imgDesafio.jpg': 'http://localhost:3333/api/img/' + capa} alt="" />
                     <div className='w-full pt-24 pb-2 px-2 bg-desafio-gradient absolute bottom-0 left-0 right-0'>
-                        <p className="uppercase text-orange-200/95 text-sm mt-2">{data.tema}</p>
+                        <p className="uppercase text-orange-200/95 text-sm mt-2">{tema}</p>
 
                         <div className="flex flex-wrap gap-1.5">
                             {renderTags()}
@@ -68,7 +71,7 @@ export function CardPerfil({ data }: { data: any }) {
                             <div className="flex text-center p-1 mx-1 bg-indigo-500 w rounded-md items-center">
                                 <p className="font-black text-[0.75rem] text-neutral-100 ">Parcialmente Solucionado</p>
                             </div>
-                            
+
                             <div className="self-start">
                                 <MoreOptions />
                             </div>
@@ -76,8 +79,7 @@ export function CardPerfil({ data }: { data: any }) {
                     </div>
 
                     <div>
-                        <p className="my-1 text-[0.75rem] font-light text-justify mr-2 border-b-2 border-zinc-500 py-2">Lorem ipsum dolor sit amet consectetur adipisicing elit. Facilis ab hic obcaecati laborum assumenda rem magni
-                            perferendis animi dolorum dolorem omnis nesciunt eligendi, id ex laboriosam inventore, accusantium corrupti eum.</p>
+                        <p className="my-1 text-[0.75rem] font-light text-justify mr-2 border-b-2 border-zinc-500 py-2">{data.descricao}</p>
                     </div>
 
                     <div className="flex gap-2 items-center">
@@ -86,17 +88,17 @@ export function CardPerfil({ data }: { data: any }) {
                             <p className="font-black text-sm text-neutral-100">GitHub</p>
                         </button>
 
-                        <button className="hover:bg-zinc-600 p-2 rounded-md" title="Gostei">
+                        <button onClick={() => handleLiked(1, data.id)} className={`hover:bg-zinc-600 p-2 rounded-md ${data.hasLiked === 1 && 'bg-zinc-600'}`} title="Gostei">
                             <ThumbsUp size={20} className="text-indigo-300" />
                         </button>
 
-                        <p className="font-black text-sm text-neutral-100">14</p>
+                        <p className="font-black text-sm text-neutral-100">{data.likes}</p>
 
-                        <button className="hover:bg-zinc-600 p-2 rounded-md" title="Não gostei">
+                        <button onClick={() => handleLiked(-1, data.id)} className={`hover:bg-zinc-600 p-2 rounded-md mr-3 ${data.hasLiked === -1 && 'bg-zinc-600'}`}title="Não gostei">
                             <ThumbsDown size={20} className="text-indigo-300" />
                         </button>
 
-                        <Link to={`/solucao/${3}`} className="hover:bg-zinc-600 p-2 rounded-md" title="Ver comentários">
+                        <Link to={`/solucao/${data.id}`} className="hover:bg-zinc-600 p-2 rounded-md" title="Ver comentários">
                             <ChatCircle size={20} className="text-indigo-300" />
                         </Link>
 

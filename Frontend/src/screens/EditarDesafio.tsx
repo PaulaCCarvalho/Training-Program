@@ -155,7 +155,7 @@ export default function EditarDesafio() {
                         </div>
 
                         <div className="flex flex-col gap-1">
-                            <label htmlFor="">Imagens</label>
+                            <label htmlFor="">Capa</label>
                             <Input id="capa" type="file" defaultValue={formData.imagens} placeholder="insira imagens do desafio" data={handleAttribute} />
                         </div>
 

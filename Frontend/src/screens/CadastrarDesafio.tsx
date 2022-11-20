@@ -133,7 +133,7 @@ export default function CadastrarDesafio() {
             </div>
 
             <div className="flex flex-col gap-1">
-              <label htmlFor="">Imagens</label>
+              <label htmlFor="">Capa</label>
               <Input id="capa" type="file" name="file" placeholder="insira imagens do desafio" data={handleAttribute} />
             </div>
 

@@ -6,7 +6,7 @@ class ChallengeController {
             const challenge = new Challenge();
             req.body.tags = JSON.parse(req.body.tags)
             console.log(req.body)
-            req.body.capa = req.file.filename;
+            req.body.capa = req.file === undefined ? '' : req.file.filename;
             challenge.insert(req.body);
             await challenge.save();
             res.status(201).send();

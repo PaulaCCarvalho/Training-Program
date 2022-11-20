@@ -38,7 +38,7 @@ export default function Home() {
 
     const [cards, setCards] = useState<Desafio[]>([]);
     const navigate = useNavigate()
-    const [page, setPage] = useState(1)
+    const [page, setPage] = useState<number>(1)
     const [pageCount, setPageCount] = useState(1)
     const { isAdmin } = useGlobal()
     const [open, setOpen] = useState(false);
@@ -158,7 +158,7 @@ const ButtomNavigation: FC = () => {
 
     return (
         <>
-            <div className="flex flex-row flex-auto w-[55%]  bg-zinc-700 items-center rounded-md shadow-md shadow-black/30">
+            <div className="flex flex-row flex-auto w-[55%] h-[10vh] bg-zinc-700 items-center rounded-md shadow-md shadow-black/30">
                 <button className='flex p-2 h-full w-full hover:bg-indigo-200/20 hover:rounded-l-md items-center ' onClick={() => navigate("/aprovar-solucoes")}>
                     <img src="../../solution-white.png" alt="log solução" className='w-[1.7rem]' />
 
