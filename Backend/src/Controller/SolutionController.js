@@ -40,7 +40,7 @@ class SolutionController {
     async findByMember(req, res, next){
         try {
             const solution = new Solution();
-            const solutions  = await solution.findByMember({id: req.params.id}, req.query.page);
+            const solutions  = await solution.findByMember({member_id: req.params.id}, req.query.page, req.query.id);
             res.json(solutions); 
         } catch (error) {
             req.error = error;
