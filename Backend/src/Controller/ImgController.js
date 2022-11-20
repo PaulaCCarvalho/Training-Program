@@ -7,9 +7,7 @@ class ImgController {
     async download(req, res, next){
         try {
             const filePath = path.join(__dirname,'..', 'Database', 'uploads', req.params.filename);
-            res.set('Content-Type', 'image/jpeg');
-            const b = await fs.readFile(filePath);
-            res.send(b.toString());
+            res.sendFile(filePath);
         } catch (error) {
 
             req.error = error; 
