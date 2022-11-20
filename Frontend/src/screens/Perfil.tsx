@@ -5,7 +5,7 @@ import { useFormik } from "formik";
 import { Link, Trash } from "phosphor-react";
 import { useEffect, useState } from "react";
 import { Navigate, useNavigate, useParams } from "react-router-dom";
-import { CardPerfil } from "../components/CardPerfil";
+import { CardPerfil, MoreOptions } from "../components/CardPerfil";
 import DialogAddLink from "../components/DialogAddLink";
 import DialogEditPerfil from "../components/DialogEditPerfil";
 import Footer from "../components/Footer";
@@ -87,8 +87,9 @@ export default function Perfil() {
 
         async function getSolutions() {
             try {
-                const response = await axios.get(`http://localhost:3333/api/${idParam.id}/solucao`)
+                const response = await axios.get(`http://localhost:3333/api/${idParam.id}/solucao?id=${localStorage.getItem('id')}`)
                 const solutions = [...response.data.solutions]
+                console.log('Resposta: ', response.data.solutions)
                 setCardsSolucoes(solutions)
 
             } catch (error) {
@@ -98,6 +99,7 @@ export default function Perfil() {
         getSolutions()
 
     }, [isMembro, change])
+
 
 
 
@@ -291,13 +293,16 @@ export default function Perfil() {
                     <section className="relative bg-zinc-700/25 rounded-md h-full flex flex-col items-center">
                         <p className="text-3xl text-center font-black p-3">Desafios solucionados</p>
                         <>
-                            {cardsSolucoes.map((solucao: any) => {
+                            {cardsSolucoes.length !== 0 &&
+                             cardsSolucoes.map((solucao: any) => {
                                 return (
                                     <div key={solucao.id} className="h-[85%] mx-4">
-                                        <CardPerfil handleLiked={handleLiked} data={solucao} />
+                                        <CardPerfil myPerfil={myPerfil} handleLiked={handleLiked} data={solucao} />
                                     </div>
                                 )
-                            })}
+                            })
+                            
+                            }
                             
                             </>
                         <div className="p-5 self-center">
