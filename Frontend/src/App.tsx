@@ -17,6 +17,7 @@ import DialogEditPerfil from './components/DialogEditPerfil';
 import ChoiceAvatar from './components/avatars/ChoiceAvatar';
 import ComentatiosSolucao from './components/ComentariosSolucao';
 import React from 'react'
+import { AprovarSolucoes } from './screens/AprovarSolucoes';
 
 function App() {
     return (
@@ -33,6 +34,7 @@ function App() {
                     <Route path='/perfil/:id' element={<Perfil />}/>  
                     <Route path="/loading" element={<LoadingScreen/>}/>
                     <Route path="/solucao/:id" element={<ComentatiosSolucao/>}/>
+                    <Route path="/aprovar-solucoes" element={<AprovarSolucoes/>}/>
                 </Routes>
             </Router>
         </GlobalContextProvider>

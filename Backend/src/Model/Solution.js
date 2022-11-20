@@ -27,7 +27,7 @@ class Solution {
     }
 
     async find(params, page = 1, member){
-        const solutions = await this.db.find('solutions', page, params, 10, [{table: 'members', refTo: 'a', refKey:'member_id', selfKey: 'id'}], false, 'a.id, b.nome, b.foto, a.linkCode, a.nota, a.descricao');
+        const solutions = await this.db.find('solutions', page, params, 10, [{table: 'members', refTo: 'a', refKey:'member_id', selfKey: 'id'}], false, 'a.id, b.nome, b.id as idMember, b.foto, a.linkCode, a.nota, a.descricao');
         const [{num: count}] = await this.db.find('solutions', page, params, 1000000000, false, false, 'count(id) as num');
         const likes = await this.db.find('solutions', page, params, 10, [{table: 'curtida_solution', refTo: 'a', refKey:'id', selfKey: 'id_solution'}], false, 'a.id, SUM(b.positive) as num', undefined, 'a.id', 'a.id');
         for(let i in solutions){

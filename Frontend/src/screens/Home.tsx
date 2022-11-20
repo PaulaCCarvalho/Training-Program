@@ -1,5 +1,5 @@
 import axios from "axios";
-import { MagnifyingGlass, Plus } from "phosphor-react";
+import { Hash, MagnifyingGlass, Plus, PlusCircle } from "phosphor-react";
 import React, { ChangeEvent, FC, useEffect, useState } from "react";
 import { Link, Navigate, useNavigate } from "react-router-dom";
 import { CardDesafio, CardDesafioProps } from "../components/CardDesafio";
@@ -10,6 +10,7 @@ import TopRanking from "../components/TopRanking";
 import { PaginationComponent } from "../components/PaginationComponent";
 import { useGlobal } from "../Context/globalContext";
 import { Alert, Snackbar } from "@mui/material";
+import { useFormik } from "formik";
 
 interface Desafio extends CardDesafioProps { }
 
@@ -144,24 +145,35 @@ export default function Home() {
 
 const ButtomNavigation: FC = () => {
     const navigate = useNavigate()
+    const [tags, setTags] = useState(false)
+
+    const formik = useFormik({
+        initialValues: {
+            tag: ''
+        }, 
+        onSubmit: () => {
+
+        }
+    })
+
     return (
         <>
-            <div className="flex flex-row flex-auto w-[50%] bg-zinc-800/80 items-center  rounded-md shadow-md shadow-black/30">
-                <button className='flex p-2 h-full w-full hover:bg-indigo-200/25 hover:rounded-l-md items-center ' onClick={() => navigate("/cadastrar-desafio")}>
-                    <Plus size={20} className="text-neutral-100 p-1" />
+            <div className="flex flex-row flex-auto w-[55%]  bg-zinc-700 items-center rounded-md shadow-md shadow-black/30">
+                <button className='flex p-2 h-full w-full hover:bg-indigo-200/20 hover:rounded-l-md items-center ' onClick={() => navigate("/aprovar-solucoes")}>
+                    <img src="../../solution-white.png" alt="log solução" className='w-[1.7rem]' />
 
-                    <p className="font-black text-[0.75rem] text-neutral-100 items-center ">Aprovar Soluções</p>
+                    <p className="font-black text-sm text-neutral-100 items-center ">Aprovar Soluções</p>
                 </button>
 
                 <button className='flex p-2 h-full w-full hover:bg-indigo-200/25 items-center ' onClick={() => navigate("/cadastrar-desafio")}>
-                    <Plus size={20} className="text-neutral-100 p-1"/>
+                    <PlusCircle size={20} className="text-neutral-100 m-1"/>
 
-                    <p className="font-black text-[0.75rem] text-neutral-100 items-center ">Adicionar Desafios</p>
+                    <p className="font-black text-sm text-neutral-100 items-center ">Adicionar Desafios</p>
                 </button>
 
                 <button className='flex p-2 h-full w-full hover:bg-indigo-200/25 hover:rounded-r-md items-center ' onClick={() => navigate("/cadastrar-desafio")}>
-                    <Plus size={20}  className="text-neutral-100 p-1"/>
-                    <p className="font-black text-[0.75rem] text-neutral-100 ">Adicionar Tags</p>
+                    <Hash size={20}  className="text-neutral-100 m-1"/>
+                    <p className="font-black text-sm text-neutral-100 ">Adicionar Tags</p>
                 </button>
             </div>
 

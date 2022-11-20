@@ -68,9 +68,9 @@ export function CardPerfil({ data }: { data: any }) {
                             <div className="flex text-center p-1 mx-1 bg-indigo-500 w rounded-md items-center">
                                 <p className="font-black text-[0.75rem] text-neutral-100 ">Parcialmente Solucionado</p>
                             </div>
+                            
                             <div className="self-start">
                                 <MoreOptions />
-
                             </div>
                         </div>
                     </div>
@@ -110,7 +110,7 @@ export function CardPerfil({ data }: { data: any }) {
     )
 }
 
-const MoreOptions: FC = () => {
+export const MoreOptions: FC = () => {
     const [anchorEl, setAnchorEl] = useState<HTMLButtonElement | null>(null);
     const open = Boolean(anchorEl);
     const id = open ? "simple-popover" : undefined;
@@ -160,7 +160,7 @@ const MoreOptions: FC = () => {
     )
 }
 
-const EditarSolucao: FC = () => {
+export const EditarSolucao: FC = () => {
     const [openAlert, setOpenAlert] = useState({
         isOpen: false,
         type: 'success',
@@ -282,7 +282,7 @@ const EditarSolucao: FC = () => {
     )
 }
 
-const ApagarSolucao: FC = () => {
+export const ApagarSolucao: FC = () => {
     return (
         <>
             <Dialog.Root>

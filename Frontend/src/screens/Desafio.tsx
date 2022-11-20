@@ -5,7 +5,7 @@ import { useEffect, useState } from "react";
 import { Link, useParams } from "react-router-dom";
 import { BotaoDesafio } from "../components/BotaoDesafio";
 import { CardDesafioProps } from "../components/CardDesafio";
-import { CardPerfil } from "../components/CardPerfil";
+import { CardPerfil, MoreOptions } from "../components/CardPerfil";
 import ComentatiosSolucao from "../components/ComentariosSolucao";
 import Footer from "../components/Footer";
 import { Menu } from "../components/Menu";
@@ -22,7 +22,8 @@ interface DesafioProps extends CardDesafioProps {
 export function Desafio() {
     const { id } = useParams();
     const padrao = ['', null, undefined];
-    const [solucoes, setSolucoes] = useState<Object[]>()
+    const [solucoes, setSolucoes] = useState<Object[]>([])
+    const { isAdmin } = useGlobal()
 
     const [desafio, setDesafio] = useState<DesafioProps>();
 
@@ -42,7 +43,6 @@ export function Desafio() {
             try {
                 const response = await axios.get(`http://localhost:3333/api/solucao?challenge_id=${id}&id=${localStorage.getItem('id')}`);
                 setSolucoes(response.data.solutions)
-                console.log(response.data)
             } catch (error: any) {
                 console.error(error.response.status, error.response.data);
 
@@ -76,7 +76,41 @@ export function Desafio() {
         }
     }
 
-    const { isAdmin } = useGlobal()
+    const handleLiked = (isLike: number, idSolution: number) => {
+        try {
+            axios.post(`http://localhost:3333/api/like`, {
+                member: localStorage.getItem('id'),
+                solution: idSolution,
+                positive: isLike,
+            })
+
+            const newSolucoes = [...solucoes];
+
+            newSolucoes?.forEach((solucao: any) => {
+                if (solucao.id === idSolution) {
+                    if (isLike === solucao.hasLiked) {
+                        solucao.hasLiked = 0;
+                        solucao.likes -= isLike;
+                    } else {
+                        solucao.hasLiked = isLike;
+                        solucao.likes += isLike;
+                    }
+                }
+            })
+
+            setSolucoes(newSolucoes)
+
+
+        } catch (error: any) {
+            console.error(error.response.status, error.response.data);
+        }
+    }
+
+    const lala = (id: number) => {
+        if (localStorage.getItem('id') === String(id))
+            return <MoreOptions />
+    }
+
     return (
         <>
             <Menu />
@@ -126,14 +160,17 @@ export function Desafio() {
                         return (
                             <div key={solucao.id} className="m-4 p-2 flex flex-col w-full bg-zinc-700 text-white rounded-md shadow-md shadow-black/25 h-auto ">
 
-                                <div className=" w-auto mx-2 border-b-[1.5px] border-zinc-500 p-1 pbl-2">
-                                    <button className="flex items-center gap-2">
+                                <div className="flex justify-between w-auto mx-2 border-b-[1.5px] border-zinc-500 p-1 pbl-2 ">
+                                    <Link to={`/perfil/${solucao.idMember}`} className="flex items-center gap-2">
                                         <Avatar alt={solucao.nome} src={solucao.foto} sx={{ width: '5vh', height: '5vh', bgcolor: '#C0C0C0' }} />
                                         <p className="text-sm font-black ">{solucao.nome}</p>
-                                    </button>
+                                    </Link>
+
+                                    <div className="">
+                                        {lala(solucao.idMember)}
+                                    </div>
 
                                 </div>
-
 
                                 <p className="my-1 px-3 text-[0.75rem] font-light text-justify py-2">{solucao.descricao}
                                 </p>
@@ -145,13 +182,13 @@ export function Desafio() {
                                     </a>
 
 
-                                    <button className={`hover:bg-zinc-600 p-2 rounded-md ${solucao.hasLiked === 1 && 'bg-zinc-600'}`} title="Gostei">
+                                    <button onClick={() => handleLiked(1, solucao.id)} className={`hover:bg-zinc-600 p-2 rounded-md ${solucao.hasLiked === 1 && 'bg-zinc-600'}`} title="Gostei">
                                         <ThumbsUp size={20} className="text-indigo-300" />
                                     </button>
 
                                     <p className="font-black text-sm text-neutral-100">{solucao.likes}</p>
 
-                                    <button className={`hover:bg-zinc-600 p-2 rounded-md mr-3 ${solucao.hasLiked === 1 && 'bg-zinc-600'}`} title="Não gostei">
+                                    <button onClick={() => handleLiked(-1, solucao.id)} className={`hover:bg-zinc-600 p-2 rounded-md mr-3 ${solucao.hasLiked === -1 && 'bg-zinc-600'}`} title="Não gostei">
                                         <ThumbsDown size={20} className="text-indigo-300" />
                                     </button>
 
