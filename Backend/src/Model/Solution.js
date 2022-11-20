@@ -47,7 +47,7 @@ class Solution {
             solutions[i].likes = Number(likes[i]?.num)
             solutions[i].hasLiked = await (new Like).insert({member: id, solution: solutions[i].id}).hasLiked();
         }
-        return {count, solutions};
+        return {count, solutions, likes};
     }
 
     async alter(params){

@@ -115,6 +115,22 @@ export function Desafio() {
             return <MoreOptions />
     }
 
+    const handleNota = (nota: number) => {
+
+        switch (nota){
+            
+            case 0:
+                return ['Solução errada', 'bg-red-500'];
+            case 1:
+                return ['Solução parcial','bg-orange-500'];
+            case 2:
+                return ['Solução correta','bg-lime-600' ];
+            default:
+                return ['Não avaliado','bg-indigo-500'];
+        }
+    }
+
+
     return (
         <>
             <Menu />
@@ -161,6 +177,7 @@ export function Desafio() {
 
                 {
                     solucoes?.map((solucao: any) => {
+                        const [nota, corNota] = handleNota(solucao.nota);
                         return (
                             <div key={solucao.id} className="m-4 p-2 flex flex-col w-full bg-zinc-700 text-white rounded-md shadow-md shadow-black/25 h-auto ">
 
@@ -199,9 +216,10 @@ export function Desafio() {
                                     <Link to={`/solucao/${solucao.id}`} className="hover:bg-zinc-600 p-2 rounded-md" title="Ver comentários">
                                         <ChatCircle size={20} className="text-indigo-300" />
                                     </Link>
+   
 
-                                    <div className="absolute bottom-1 right-2 flex ml-3 p-2 bg-indigo-500 rounded-md items-center">
-                                        <p className="font-black text-[0.75rem] text-neutral-100">Parcialmente Solucionado</p>
+                                    <div className={`absolute bottom-1 right-2 flex ml-3 p-2 bg-indigo-500 rounded-md items-center ${corNota}`}>
+                                        <p className="font-black text-[0.75rem] text-neutral-100">{nota}</p>
                                     </div>
 
                                 </div>

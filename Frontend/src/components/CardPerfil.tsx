@@ -8,10 +8,11 @@ import { initValuesSolucao } from "../api/modules/SolucaoDesafio";
 import axios from "axios";
 
 
-export function CardPerfil({ data, handleLiked }: { data: any, handleLiked: Function }) {
+export function CardPerfil({ data, handleLiked, myPerfil }: { data: any, handleLiked: Function, myPerfil: boolean }) {
     const [tags, setTags] = useState([])
     const [tema, setTema] = useState('')
     const [capa, setCapa] = useState('')
+    
 
     useEffect(() => {
 
@@ -47,6 +48,25 @@ export function CardPerfil({ data, handleLiked }: { data: any, handleLiked: Func
         }))
     }
 
+    console.log(data)
+
+    const handleNota = (nota: number) => {
+
+        switch (nota){
+            
+            case 0:
+                return ['Solução errada', 'bg-red-500'];
+            case 1:
+                return ['Solução parcial','bg-orange-500'];
+            case 2:
+                return ['Solução correta','bg-lime-600' ];
+            default:
+                return ['Não avaliado','bg-indigo-500'];
+        }
+    }
+
+    const [nota, corNota] = handleNota(data.nota);
+
     return (
         <div className="my-4 flex flex-row w-auto bg-zinc-700 text-white rounded-md shadow-md shadow-black/25  overflow-hidden"  >
             <div className="flex">
@@ -68,12 +88,12 @@ export function CardPerfil({ data, handleLiked }: { data: any, handleLiked: Func
                             <p className="text-orange-200/95" >Solução</p>
                         </div>
                         <div className="flex flex-row h-[50%]">
-                            <div className="flex text-center p-1 mx-1 bg-indigo-500 w rounded-md items-center">
-                                <p className="font-black text-[0.75rem] text-neutral-100 ">Parcialmente Solucionado</p>
+                            <div className={`flex text-center p-1 mx-1  w rounded-md items-center ${corNota}`}>
+                                <p className="font-black text-[0.75rem] text-neutral-100 ">{nota}</p>
                             </div>
 
                             <div className="self-start">
-                                <MoreOptions />
+                                {myPerfil && <MoreOptions/>}
                             </div>
                         </div>
                     </div>
