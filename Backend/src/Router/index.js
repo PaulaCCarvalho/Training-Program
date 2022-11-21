@@ -6,6 +6,7 @@ const tagRouter = require("./tagRouter");
 const imgRouter = require("./imgRouter");
 const solutionRouter = require('./solutionRouter');
 const likeRouter = require('./likeRouter');
+const commentRouter = require("./commentRouter");
 
 const router = Router();
 router
@@ -15,6 +16,7 @@ router
 .use('/api', solutionRouter)
 .use('/api', likeRouter)
 .use('/api', imgRouter)
+.use('/api', commentRouter)
 .use(ErrorHandler);
 
 module.exports = router;
