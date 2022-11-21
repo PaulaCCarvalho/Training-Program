@@ -32,7 +32,7 @@ class Solution {
         const likes = await this.db.find('solutions', page, params, 10, [{table: 'curtida_solution', refTo: 'a', refKey:'id', selfKey: 'id_solution'}], false, 'a.id, SUM(b.positive) as num', undefined, 'a.id', 'a.id');
         for(let i in solutions){
             solutions[i].likes = Number(likes[i].num)
-            solutions[i].hasLiked = await (new Like).insert({member, ref: solutions[i].id}).hasLiked();
+            solutions[i].hasLiked = Number(await (new Like).insert({member, ref: solutions[i].id}).hasLiked());
         }
         return {count, solutions};
     }
@@ -46,7 +46,7 @@ class Solution {
         const likes = await this.db.find('solutions', page, params, 10, [{table: 'curtida_solution', refTo: 'a', refKey:'id', selfKey: 'id_solution'}], false, 'a.id, SUM(b.positive) as num', undefined, 'a.id', 'a.id');
         for(let i in solutions){
             solutions[i].likes = Number(likes[i]?.num)
-            solutions[i].hasLiked = await (new Like).insert({member: id, ref: solutions[i].id}).hasLiked();
+            solutions[i].hasLiked = Number(await (new Like).insert({member: id, ref: solutions[i].id}).hasLiked());
         }
         return {count, solutions, likes};
     }
