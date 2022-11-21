@@ -187,7 +187,7 @@ export default function Perfil() {
         try {
             axios.post(`http://localhost:3333/api/like`, {
                 member: localStorage.getItem('id'),
-                solution: idSolution,
+                ref: idSolution,
                 positive: isLike,
             })
 
@@ -200,7 +200,7 @@ export default function Perfil() {
                         solucao.likes -= isLike;
                     } else {
                         solucao.hasLiked = isLike;
-                        solucao.likes += isLike;
+                        solucao.likes += 2*isLike;
                     }
                 }
             })
@@ -290,7 +290,7 @@ export default function Perfil() {
                                 cardsSolucoes.map((solucao: any) => {
                                     return (
                                         <div key={solucao.id} className="h-[85%] mx-4">
-                                            <CardPerfil myPerfil={myPerfil} handleLiked={handleLiked} data={solucao} />
+                                            <CardPerfil myPerfil={myPerfil} update={update} handleLiked={handleLiked} data={solucao} />
                                         </div>
                                     )
                                 })

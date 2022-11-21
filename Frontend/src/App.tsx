@@ -10,7 +10,7 @@ import EditarDesafio from './screens/EditarDesafio';
 import GlobalContextProvider from './Context/globalContext';
 import LoadingScreen from './screens/LoadingScreen';
 import Perfil from './screens/Perfil';
-import ComentatiosSolucao from './components/ComentariosSolucao';
+import ComentariosSolucao from './components/ComentariosSolucao';
 import React from 'react'
 import { AprovarSolucoes } from './screens/AprovarSolucoes';
 import NotFound from './screens/NotFound';
@@ -29,7 +29,7 @@ function App() {
                     <Route path="/editar-desafio/:id" element={<EditarDesafio />} />
                     <Route path='/perfil/:id' element={<Perfil />}/>  
                     <Route path="/loading" element={<LoadingScreen/>}/>
-                    <Route path="/solucao/:id" element={<ComentatiosSolucao/>}/>
+                    <Route path="/solucao/:id" element={<ComentariosSolucao/>}/>
                     <Route path="/aprovar-solucoes" element={<AprovarSolucoes/>}/>
                     <Route path='/*' element={<NotFound/>}/>                 
                 </Routes>

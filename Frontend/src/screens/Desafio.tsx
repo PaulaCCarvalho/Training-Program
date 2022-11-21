@@ -6,7 +6,7 @@ import { Link, useNavigate, useParams } from "react-router-dom";
 import { BotaoDesafio } from "../components/BotaoDesafio";
 import { CardDesafioProps } from "../components/CardDesafio";
 import { CardPerfil, MoreOptions } from "../components/CardPerfil";
-import ComentatiosSolucao from "../components/ComentariosSolucao";
+import ComentariosSolucao from "../components/ComentariosSolucao";
 import Footer from "../components/Footer";
 import { Menu } from "../components/Menu";
 import { useGlobal } from "../Context/globalContext";
@@ -20,11 +20,11 @@ interface DesafioProps extends CardDesafioProps {
 }
 
 export function Desafio() {
+    const {update, change} = useGlobal()
     const { id } = useParams();
     const [solucoes, setSolucoes] = useState<Object[]>([])
     const { isAdmin } = useGlobal()
     const navigate = useNavigate()
-    const [change, setChange] = useState(0)
 
     const [desafio, setDesafio] = useState<DesafioProps>();
 
@@ -58,10 +58,6 @@ export function Desafio() {
 
     }, [change]);
 
-    const update = () => {
-        setChange(change + 1);
-    }
-
     const renderTags = () => {
         return (desafio?.tags.map((tag: { id: number, nome: string }) => {
             return (
@@ -84,30 +80,16 @@ export function Desafio() {
         }
     }
 
-    const handleLiked = (isLike: number, idSolution: number) => {
+    const handleLiked = async(isLike: number, idSolution: number) => {
         try {
-            axios.post(`http://localhost:3333/api/like`, {
+            await axios.post(`http://localhost:3333/api/like`, {
                 member: localStorage.getItem('id'),
-                solution: idSolution,
+                ref: idSolution,
                 positive: isLike,
             })
+            
 
-            const newSolucoes = [...solucoes];
-
-            newSolucoes?.forEach((solucao: any) => {
-                if (solucao.id === idSolution) {
-                    if (isLike === solucao.hasLiked) {
-                        solucao.hasLiked = 0;
-                        solucao.likes -= isLike;
-                    } else {
-                        solucao.hasLiked = isLike;
-                        solucao.likes += isLike;
-                    }
-                }
-            })
-
-            setSolucoes(newSolucoes)
-
+           update();
 
         } catch (error: any) {
             console.error(error.response.status, error.response.data);
@@ -207,14 +189,14 @@ export function Desafio() {
                                     </a>
 
 
-                                    <button onClick={() => handleLiked(1, solucao.id)} className={`hover:bg-zinc-600 p-2 rounded-md ${solucao.hasLiked === 1 && 'bg-zinc-600'}`} title="Gostei">
-                                        <ThumbsUp size={20} className="text-indigo-300" />
+                                    <button onClick={() => handleLiked(1, solucao.id)} className={`hover:bg-zinc-600 p-2 rounded-md`} title="Gostei">
+                                        <ThumbsUp size={20} className="text-indigo-300" weight={solucao.hasLiked === 1 ? "fill" : 'regular' } />
                                     </button>
 
                                     <p className="font-black text-sm text-neutral-100">{solucao.likes}</p>
 
-                                    <button onClick={() => handleLiked(-1, solucao.id)} className={`hover:bg-zinc-600 p-2 rounded-md mr-3 ${solucao.hasLiked === -1 && 'bg-zinc-600'}`} title="Não gostei">
-                                        <ThumbsDown size={20} className="text-indigo-300" />
+                                    <button onClick={() => handleLiked(-1, solucao.id)} className={`hover:bg-zinc-600 p-2 rounded-md mr-3`} title="Não gostei">
+                                        <ThumbsDown size={20} className="text-indigo-300"  weight={solucao.hasLiked === -1 ? "fill" : 'regular' }/>
                                     </button>
 
                                     <Link to={`/solucao/${solucao.id}`} className="hover:bg-zinc-600 p-2 rounded-md" title="Ver comentários">
