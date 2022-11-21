@@ -30,8 +30,10 @@ class Solution {
         const solutions = await this.db.find('solutions', page, params, 10, [{table: 'members', refTo: 'a', refKey:'member_id', selfKey: 'id'}], false, 'a.id, b.nome, b.id as idMember, a.challenge_id, b.foto, a.linkCode, a.nota, a.descricao');
         const [{num: count}] = await this.db.find('solutions', 1, params, 1000000000, false, false, 'count(id) as num');
         const likes = await this.db.find('solutions', page, params, 10, [{table: 'curtida_solution', refTo: 'a', refKey:'id', selfKey: 'id_solution'}], false, 'a.id, SUM(b.positive) as num', undefined, 'a.id', 'a.id');
+        const comments = await this.db.find('solutions', page, params, 10, [{table: 'comments', refTo: 'a', refKey:'id', selfKey: 'id_solution'}], false, 'a.id, count(b.id) as num', undefined, 'a.id', 'a.id');
         for(let i in solutions){
-            solutions[i].likes = Number(likes[i].num)
+            solutions[i].likes = Number(likes[i].num);
+            solutions[i].comments = Number(comments[i]?.num);
             solutions[i].hasLiked = Number(await (new Like).insert({member, ref: solutions[i].id}).hasLiked());
         }
         return {count, solutions};
@@ -44,11 +46,13 @@ class Solution {
         const [{num: count}] = await this.db.find('solutions', 1, params, 10000, [], false, 'count(a.id) as num');
         // const [{num: count}] = await this.db.find('solutions', page, params, 5, [{table: 'solutions', refTo: 'a', refKey:'id', selfKey: 'member_id'}], false, 'count(a.id) as num');
         const likes = await this.db.find('solutions', page, params, 10, [{table: 'curtida_solution', refTo: 'a', refKey:'id', selfKey: 'id_solution'}], false, 'a.id, SUM(b.positive) as num', undefined, 'a.id', 'a.id');
+        const comments = await this.db.find('solutions', page, params, 10, [{table: 'comments', refTo: 'a', refKey:'id', selfKey: 'id_solution'}], false, 'a.id, count(b.id) as num', undefined, 'a.id', 'a.id');
         for(let i in solutions){
-            solutions[i].likes = Number(likes[i]?.num)
+            solutions[i].likes = Number(likes[i]?.num);
+            solutions[i].comments = Number(comments[i]?.num);
             solutions[i].hasLiked = Number(await (new Like).insert({member: id, ref: solutions[i].id}).hasLiked());
         }
-        return {count, solutions, likes};
+        return {count, solutions};
     }
 
     async alter(params){
