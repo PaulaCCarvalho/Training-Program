@@ -90,9 +90,9 @@ export function Menu() {
                     {isMembro &&
                         <div className="flex items-center text-lg gap-4">
                             <p>Bem-vindo(a), {user.nome.split(' ', 1)}! </p>
-                            <Link to={'/perfil/' + id}>
+                            <button onClick={() => navigate('/perfil/' + id)}>
                                 <Avatar alt={user.nome} src={user.foto} sx={{ width: '6.5vh', height: '6.5vh', bgcolor: '#C0C0C0' }} />
-                            </Link>
+                            </button>
 
                             <div onClick={handleLogout} className="flex rounded-md px-3 py-1 hover:bg-zinc-600">
                                 <SignOut size={24} />

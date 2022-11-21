@@ -21,10 +21,10 @@ interface DesafioProps extends CardDesafioProps {
 
 export function Desafio() {
     const { id } = useParams();
-    const padrao = ['', null, undefined];
     const [solucoes, setSolucoes] = useState<Object[]>([])
     const { isAdmin } = useGlobal()
     const navigate = useNavigate()
+    const [change, setChange] = useState(0)
 
     const [desafio, setDesafio] = useState<DesafioProps>();
 
@@ -56,7 +56,11 @@ export function Desafio() {
         getSolutions();
         getDesafio();
 
-    }, []);
+    }, [change]);
+
+    const update = () => {
+        setChange(change + 1);
+    }
 
     const renderTags = () => {
         return (desafio?.tags.map((tag: { id: number, nome: string }) => {
@@ -110,9 +114,9 @@ export function Desafio() {
         }
     }
 
-    const isMySolution = (id: number) => {
-        if (localStorage.getItem('id') === String(id))
-            return <MoreOptions />
+    const isMySolution = (solucao: any) => {
+        if (localStorage.getItem('id') === String(solucao.idMember))
+            return <MoreOptions solucao={solucao} update={update} challenge_id={id}/>
     }
 
     const handleNota = (nota: number) => {
@@ -165,7 +169,7 @@ export function Desafio() {
                     :
 
                     <div className="absolute bottom-0 right-0 p-3 ">
-                        <BotaoSolucionarDesafio challenge_id={Number(id)} />
+                        <BotaoSolucionarDesafio update={update} challenge_id={Number(id)} />
                     </div>
 
 
@@ -188,7 +192,7 @@ export function Desafio() {
                                     </Link>
 
                                     <div className="">
-                                        {isMySolution(solucao.idMember)}
+                                        {isMySolution(solucao)}
                                     </div>
 
                                 </div>

@@ -32,7 +32,8 @@ type member = {
 
 export default function Perfil() {
     const { isMembro, update, change, setIsMembro } = useGlobal()
-    const [page, setPage] = useState(1)
+    const [page, setPage] = useState<number>(1);
+    const [count, setCount] = useState(1);
     const [myPerfil, setMyPerfil] = useState(false)
     const id = localStorage.getItem('id');
     const idParam = useParams()
@@ -87,18 +88,18 @@ export default function Perfil() {
 
         async function getSolutions() {
             try {
-                const response = await axios.get(`http://localhost:3333/api/${idParam.id}/solucao?id=${localStorage.getItem('id')}`)
+                const response = await axios.get(`http://localhost:3333/api/${idParam.id}/solucao?id=${localStorage.getItem('id')}&page=${page}`)
                 const solutions = [...response.data.solutions]
-                console.log('Resposta: ', response.data.solutions)
                 setCardsSolucoes(solutions)
-
+                setCount(response.data.count)
+                
             } catch (error) {
                 console.log('Ops deu ruim!')
             }
         }
         getSolutions()
 
-    }, [isMembro, change])
+    }, [isMembro, change, idParam, page])
 
 
 
@@ -154,14 +155,6 @@ export default function Perfil() {
             setMembro(newMember);
             await handleRequest(newMember);
 
-
-            // const elements = document.querySelectorAll('input')
-
-            // elements.forEach(element => {
-            //     element.value = ""
-            // });
-
-            //formikLink.values.titulo = ''
             formikLink.resetForm({
                 values: {
                     id: 0,
@@ -270,7 +263,7 @@ export default function Perfil() {
                     <section className="bg-zinc-700/70 rounded-md flex flex-row gap-8 justify-center text-center font-black text-xl px-6 py-10">
                         <div className="w-[28%]">
                             <p>Desafios resolvidos</p>
-                            <p>12</p>
+                            <p>{count}</p>
                         </div>
 
                         <div className="w-[28%]">
@@ -294,20 +287,21 @@ export default function Perfil() {
                         <p className="text-3xl text-center font-black p-3">Desafios solucionados</p>
                         <>
                             {cardsSolucoes.length !== 0 &&
-                             cardsSolucoes.map((solucao: any) => {
-                                return (
-                                    <div key={solucao.id} className="h-[85%] mx-4">
-                                        <CardPerfil myPerfil={myPerfil} handleLiked={handleLiked} data={solucao} />
-                                    </div>
-                                )
-                            })
-                            
+                                cardsSolucoes.map((solucao: any) => {
+                                    return (
+                                        <div key={solucao.id} className="h-[85%] mx-4">
+                                            <CardPerfil myPerfil={myPerfil} handleLiked={handleLiked} data={solucao} />
+                                        </div>
+                                    )
+                                })
                             }
-                            
-                            </>
-                        <div className="p-5 self-center">
-                            <PaginationComponent page={page} setPage={setPage} count={page} />
-                        </div>
+
+                        </>
+                        {cardsSolucoes.length !== 0 &&
+                            <div className="p-5 self-center">
+                                <PaginationComponent page={page} setPage={setPage} count={Math.ceil(count/ 10)} />
+                            </div>
+                        }
 
                     </section>
 

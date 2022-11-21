@@ -9,7 +9,7 @@ import FiltroPesquisa from "../components/FiltroPesquisa";
 import TopRanking from "../components/TopRanking";
 import { PaginationComponent } from "../components/PaginationComponent";
 import { useGlobal } from "../Context/globalContext";
-import { Alert, Snackbar } from "@mui/material";
+import { Alert, AlertColor, Snackbar } from "@mui/material";
 import { useFormik } from "formik";
 
 interface Desafio extends CardDesafioProps { }
@@ -41,7 +41,11 @@ export default function Home() {
     const [page, setPage] = useState<number>(1)
     const [pageCount, setPageCount] = useState(1)
     const { isAdmin } = useGlobal()
-    const [open, setOpen] = useState(false);
+    const [open, setOpen] = useState({
+        isOpen: false,
+        type: 'success',
+        msg: 'Solução adicionada com sucesso!'
+    });
 
     function requisicao() {
         axios.get(`http://localhost:3333/api/desafio?page=${page}`, {
@@ -57,8 +61,13 @@ export default function Home() {
                 setPageCount(Math.ceil(response.data.count / 12));
             })
             .catch((err) => {
+                
                 if (err.response.status === 404) {
-                    setOpen(true)
+                    setOpen({
+                        isOpen: true,
+                        type: 'error',
+                        msg: 'Nenhum desafio encontrado'
+                    })
                 } else {
                     console.error("ops! ocorreu um erro: " + err.response.data);
                 }
@@ -75,7 +84,11 @@ export default function Home() {
         if (reason === 'clickaway') {
             return;
         }
-        setOpen(false);
+        setOpen({
+            isOpen: false,
+            type: 'sucess',
+            msg: ''
+        });
     };
 
     function formatTags() {
@@ -128,9 +141,9 @@ export default function Home() {
                         <PaginationComponent page={page} setPage={setPage} count={pageCount} />
                     </div>
 
-                    <Snackbar open={open} autoHideDuration={3000} onClose={handleClose} anchorOrigin={{ vertical: 'top', horizontal: 'left' }} >
-                        <Alert onClose={handleClose} severity="error" sx={{ width: '100%' }}>
-                            Nenhum desafio encontrado!
+                    <Snackbar open={open.isOpen} autoHideDuration={3000} onClose={handleClose} anchorOrigin={{ vertical: 'top', horizontal: 'left' }} >
+                        <Alert onClose={handleClose} severity={open.type as AlertColor} sx={{ width: '100%' }}>
+                            {open.msg}
                         </Alert>
                     </Snackbar>
 
@@ -150,7 +163,7 @@ const ButtomNavigation: FC = () => {
     const formik = useFormik({
         initialValues: {
             tag: ''
-        }, 
+        },
         onSubmit: () => {
 
         }
@@ -166,16 +179,34 @@ const ButtomNavigation: FC = () => {
                 </button>
 
                 <button className='flex p-2 h-full w-full hover:bg-indigo-200/25 items-center ' onClick={() => navigate("/cadastrar-desafio")}>
-                    <PlusCircle size={20} className="text-neutral-100 m-1"/>
+                    <PlusCircle size={20} className="text-neutral-100 m-1" />
 
                     <p className="font-black text-sm text-neutral-100 items-center ">Adicionar Desafios</p>
                 </button>
 
-                <button className='flex p-2 h-full w-full hover:bg-indigo-200/25 hover:rounded-r-md items-center ' onClick={() => navigate("/cadastrar-desafio")}>
-                    <Hash size={20}  className="text-neutral-100 m-1"/>
+                <button className={`flex p-2 h-full w-full hover:bg-indigo-200/25 hover:rounded-r-md items-center ${tags && 'bg-indigo-200/25 hover:bg-indigo-300/25'}`} onClick={() => setTags(!tags)}>
+                    <Hash size={20} className="text-neutral-100 m-1" />
                     <p className="font-black text-sm text-neutral-100 ">Adicionar Tags</p>
                 </button>
             </div>
+
+            {tags &&
+                <div className='bg-zinc-700 w-full rounded-b-md p-2 px-5 flex justify-between text-white '>
+                    <input
+                        id="comentario"
+                        name="comentario"
+                        type="text"
+                        placeholder="Adicionar comentário"
+                        onChange={formik.handleChange}
+                        required
+                        className="bg-zinc-900 py-2 px-4 rounded-3xl text-sm placeholder:text-zinc-400 w-[80%] placeholder:px"
+                    />
+
+                    <button className='p-1 px-4 bg-indigo-500 rounded-md items-center gap-2 flex'>
+                        <p className='pl-1 font-black text-sm'>Cadastrar tag</p>
+                    </button>
+                </div>
+            }
 
         </>
     )
