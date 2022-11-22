@@ -237,8 +237,8 @@ const ButtomNavigation: FC = () => {
 
             {tags &&
 
-                <div className="flex flex-col ">
-                    <form onSubmit={formik.handleSubmit} className='bg-zinc-700 w-full  p-2 px-5 flex justify-between gap-4 text-white '>
+                <div className="flex flex-col h-auto">
+                    <form onSubmit={formik.handleSubmit} className='bg-zinc-700 w-full py-5 px-5 flex justify-between gap-4 text-white '>
                         <input
                             id="nome"
                             name="nome"
@@ -246,7 +246,7 @@ const ButtomNavigation: FC = () => {
                             placeholder="Adicionar tag"
                             onChange={formik.handleChange}
                             required
-                            className="bg-zinc-900 py-2 px-4 rounded-3xl text-sm placeholder:text-zinc-400  placeholder:px"
+                            className="bg-zinc-900 py-2 px-4 rounded-3xl text-sm placeholder:text-zinc-400 w-[25rem] placeholder:px"
                         />
 
                         <button type="submit" className='p-1 px-4 bg-indigo-500 hover:bg-indigo-600 rounded-md items-center gap-2 flex'>
@@ -254,7 +254,7 @@ const ButtomNavigation: FC = () => {
                         </button>
                     </form>
 
-                    <div className="flex flex-wrap bg-zinc-700 w-[45vw]  p-2 px-5 justify-between gap-1 rounded-b-md ">
+                    <div className="flex flex-wrap bg-zinc-700 w-[45vw] p-5  gap-3 rounded-b-md ">
                         {reqTags.map((tag: any) => {
                             return (
                                 <div key={tag.id} className="flex border-[1px] bg-zinc-800/25 border-zinc-500 rounded-full gap-1 py-1 px-2">
