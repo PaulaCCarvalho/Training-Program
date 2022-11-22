@@ -1,5 +1,5 @@
 import axios from "axios";
-import { Hash, MagnifyingGlass, Plus, PlusCircle } from "phosphor-react";
+import { Hash, MagnifyingGlass, Plus, PlusCircle, Trash } from "phosphor-react";
 import React, { ChangeEvent, FC, useEffect, useState } from "react";
 import { Link, Navigate, useNavigate } from "react-router-dom";
 import { CardDesafio, CardDesafioProps } from "../components/CardDesafio";
@@ -61,7 +61,7 @@ export default function Home() {
                 setPageCount(Math.ceil(response.data.count / 12));
             })
             .catch((err) => {
-                
+
                 if (err.response.status === 404) {
                     setOpen({
                         isOpen: true,
@@ -116,13 +116,14 @@ export default function Home() {
                         </div>
                     </div>
                     <div className=" px-6 py-6 flex flex-col items-center w-[75vw]">
+                        <div className="min-h-[7rem]">
+                            {isAdmin ?
+                                <ButtomNavigation />
+                                :
+                                null
+                            }
+                        </div>
 
-
-                        {isAdmin ?
-                            <ButtomNavigation />
-                            :
-                            null
-                        }
 
 
 
@@ -157,22 +158,66 @@ export default function Home() {
 
 
 const ButtomNavigation: FC = () => {
+    const { change, update } = useGlobal()
     const navigate = useNavigate()
     const [tags, setTags] = useState(false)
+    const [reqTags, setReqTags] = useState<Object[]>([])
+
+    useEffect(() => {
+
+
+        async function getTags() {
+            try {
+                const response = await axios.get('http://localhost:3333/api/tags')
+                setReqTags(response.data)
+
+            } catch (error) {
+                console.error("ops! ocorreu um erro" + error);
+            }
+        }
+
+        getTags();
+    }, [change])
+
 
     const formik = useFormik({
         initialValues: {
-            tag: ''
+            nome: ''
         },
-        onSubmit: () => {
+        onSubmit: async (values) => {
+            try {
+                await axios.post('http://localhost:3333/api/tags', {
+                    nome: values.nome
+                })
+
+            } catch (error) {
+                console.error("ops! ocorreu um erro" + error);
+                
+            }
+            
+            const input = document.getElementById('nome') as HTMLInputElement;
+            input.value = ''
+            
+            update()
 
         }
     })
+    const handleDelete = async (idTag: number) => {
+        try {
+            await axios.delete('http://localhost:3333/api/tags/' + idTag)
+
+            update()
+        } catch (error) {
+            console.error("ops! ocorreu um erro" + error);
+
+        }
+    }
 
     return (
-        <>
-            <div className="flex flex-row flex-auto w-[55%] h-[10vh] bg-zinc-700 items-center rounded-md shadow-md shadow-black/30">
-                <button className='flex p-2 h-full w-full hover:bg-indigo-200/20 hover:rounded-l-md items-center ' onClick={() => navigate("/aprovar-solucoes")}>
+        <div className="">
+
+            <div className={`flex flex-row flex-auto w-auto bg-zinc-700 items-center  shadow-md shadow-black/30 ${tags ? 'rounded-t-md' : 'rounded-md'}`}>
+                <button className='flex p-2 h-full w-full hover:bg-indigo-200/25 hover:rounded-l-md items-center ' onClick={() => navigate("/aprovar-solucoes")}>
                     <img src="../../solution-white.png" alt="log solução" className='w-[1.7rem]' />
 
                     <p className="font-black text-sm text-neutral-100 items-center ">Aprovar Soluções</p>
@@ -184,30 +229,47 @@ const ButtomNavigation: FC = () => {
                     <p className="font-black text-sm text-neutral-100 items-center ">Adicionar Desafios</p>
                 </button>
 
-                <button className={`flex p-2 h-full w-full hover:bg-indigo-200/25 hover:rounded-r-md items-center ${tags && 'bg-indigo-200/25 hover:bg-indigo-300/25'}`} onClick={() => setTags(!tags)}>
+                <button className={`flex p-2 h-full w-full hover:bg-indigo-200/25  rounded-r-md items-center ${tags ? 'bg-indigo-200/25 rounded-r-md hover:bg-indigo-300/25' : 'hover:py-[0.88em]'}`} onClick={() => setTags(!tags)}>
                     <Hash size={20} className="text-neutral-100 m-1" />
                     <p className="font-black text-sm text-neutral-100 ">Adicionar Tags</p>
                 </button>
             </div>
 
             {tags &&
-                <div className='bg-zinc-700 w-full rounded-b-md p-2 px-5 flex justify-between text-white '>
-                    <input
-                        id="comentario"
-                        name="comentario"
-                        type="text"
-                        placeholder="Adicionar comentário"
-                        onChange={formik.handleChange}
-                        required
-                        className="bg-zinc-900 py-2 px-4 rounded-3xl text-sm placeholder:text-zinc-400 w-[80%] placeholder:px"
-                    />
 
-                    <button className='p-1 px-4 bg-indigo-500 rounded-md items-center gap-2 flex'>
-                        <p className='pl-1 font-black text-sm'>Cadastrar tag</p>
-                    </button>
+                <div className="flex flex-col ">
+                    <form onSubmit={formik.handleSubmit} className='bg-zinc-700 w-full  p-2 px-5 flex justify-between gap-4 text-white '>
+                        <input
+                            id="nome"
+                            name="nome"
+                            type="text"
+                            placeholder="Adicionar tag"
+                            onChange={formik.handleChange}
+                            required
+                            className="bg-zinc-900 py-2 px-4 rounded-3xl text-sm placeholder:text-zinc-400  placeholder:px"
+                        />
+
+                        <button type="submit" className='p-1 px-4 bg-indigo-500 hover:bg-indigo-600 rounded-md items-center gap-2 flex'>
+                            <p className='pl-1 font-black text-sm'>Adicionar tag</p>
+                        </button>
+                    </form>
+
+                    <div className="flex flex-wrap bg-zinc-700 w-[45vw]  p-2 px-5 justify-between gap-1 rounded-b-md ">
+                        {reqTags.map((tag: any) => {
+                            return (
+                                <div key={tag.id} className="flex border-[1px] bg-zinc-800/25 border-zinc-500 rounded-full gap-1 py-1 px-2">
+                                    <p className="text-white text-sm">{tag.nome}</p>
+                                    <button onClick={() => handleDelete(tag.id)}>
+                                        <Trash size={15} className='text-red-500' />
+                                    </button>
+                                </div>)
+
+                        })}
+                    </div>
+
                 </div>
             }
 
-        </>
+        </div>
     )
 }

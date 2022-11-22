@@ -202,6 +202,9 @@ export function Desafio() {
                                     <Link to={`/solucao/${solucao.id}`} className="hover:bg-zinc-600 p-2 rounded-md" title="Ver comentários">
                                         <ChatCircle size={20} className="text-indigo-300" />
                                     </Link>
+
+                                    <p className="font-black text-sm text-neutral-100">{solucao.comments}</p>
+
    
 
                                     <div className={`absolute bottom-1 right-2 flex ml-3 p-2 bg-indigo-500 rounded-md items-center ${corNota}`}>

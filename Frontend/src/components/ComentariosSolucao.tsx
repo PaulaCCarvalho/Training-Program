@@ -39,8 +39,13 @@ export default function ComentariosSolucao() {
             } catch (error: any) {
                 console.log(error.response)
             }
-
-        }
+            
+            const input = document.getElementById('body') as HTMLInputElement ;
+            input.value = ''
+              
+        }, 
+        
+       
     })
 
     useEffect(() => {
@@ -137,6 +142,24 @@ export default function ComentariosSolucao() {
         return false;
 
     }
+
+    const handleLikedComment = async(isLike: number, idComment: number) => {
+        try {
+            await axios.post(`http://localhost:3333/api/like`, {
+                member: localStorage.getItem('id'),
+                ref: idComment,
+                positive: isLike,
+                type: 'comment'
+            })
+            
+
+           update();
+
+        } catch (error: any) {
+            console.error(error.response.status, error.response.data);
+        }
+    }
+
     return (
 
         <>
@@ -202,7 +225,7 @@ export default function ComentariosSolucao() {
                         <div key={comment.id} className='relative flex items-center gap-1 w-full border-y-[1px] px-3 py-2 border-zinc-800 justify-between'>
                             <div className="p-2 flex items-center  gap-2">
                                 <Link to={`/perfil/${comment.idMember}`}>
-                                    <Avatar alt={'Carla Martins'} src='' sx={{ width: '7vh', height: '7vh', bgcolor: '#C0C0C0' }} />
+                                    <Avatar alt={comment.nome} src={comment.foto} sx={{ width: '7vh', height: '7vh', bgcolor: '#C0C0C0' }} />
                                 </Link>
                                 <div className='p-2  flex flex-col'>
                                     <Link to={`/perfil/${comment.idMember}`} className="font-black text-[0.85em] text-indigo-300">{comment.nome}</Link>
@@ -214,8 +237,8 @@ export default function ComentariosSolucao() {
 
 
                             <div className='flex flex-col p-2 items-center '>
-                                <button className="p-[6px]" title="Curtir">
-                                    <Heart size={35} className="text-indigo-300 bg-indigo-100/10 hover:bg-indigo-200/20 rounded-full p-2 shadow-md shadow-black/25" weight={comment.hasLiked === 1 ? 'duotone' : 'regular'} />
+                                <button onClick={() => handleLikedComment(1, comment.id)} className="p-[6px]" title="Curtir">
+                                    <Heart size={35} className="text-indigo-300 bg-indigo-100/10 hover:bg-indigo-200/20 rounded-full p-2 shadow-md shadow-black/25" weight={comment.hasLiked === 1 ? 'fill' : 'regular'} />
                                 </button>
 
                                 <p className="font-black text-[0.6em] text-neutral-100">{comment.likes}</p>

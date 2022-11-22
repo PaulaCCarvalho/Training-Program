@@ -10,6 +10,7 @@ export interface Solucao{
     nome: string;
     hasLiked: number | boolean;
     id: number;
+    comments: number
 }
 
 export interface SolutionComment {
@@ -45,4 +46,5 @@ export const initValuesSolucao = {
     nome:'',
     id: 0,
     hasLiked: false,
+    comments: 0
 }

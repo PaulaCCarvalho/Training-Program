@@ -83,7 +83,12 @@ export default function EditarDesafio() {
         }
         formData.tags = tags
         try {
-            await axios.put(`http://localhost:3333/api/desafio/${formData.id}`, formData)
+            await axios.put(`http://localhost:3333/api/desafio/${formData.id}`, formData, {
+                headers: {
+                    Authorization: `Bearer ${localStorage.getItem('token')}`
+                }
+            })
+
             setTimeout(() => {
                 navigate(`/desafio/${formData.id}`);
             }, 3000);

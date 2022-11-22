@@ -50,7 +50,7 @@ class Challenge {
             'a.id AS id, a.nome AS nome, a.descricao AS descricao, a.nivel AS nivel, a.tema AS tema, a.capa AS capa', 
             search
         );
-        console.log("CHAAAAAAA:",challenges)
+    
         if(challenges.length === 0) throw new NotFoundError('Challenge')
         for (const challenge of challenges) {
             const tags = await this.db.find(

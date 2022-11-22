@@ -83,7 +83,7 @@ export function CardPerfil({ data, handleLiked, myPerfil, update }: { data: any,
                 <div className="flex-col p-2 w-[40vw]">
                     <div className="flex justify-between">
                         <div className="flex flex-col">
-                            <Link to={`/desafio/${data.challenge_id}`} className="uppercase tracking-wide text-md text-white font-medium my-1">{data.nome}</Link>
+                            <Link to={`/desafio/${data.idDesafio}`} className="uppercase tracking-wide text-md text-white font-medium my-1">{data.nome}</Link>
                             <p className="text-orange-200/95" >Solução</p>
                         </div>
                         <div className="flex flex-row h-[50%]">
@@ -120,6 +120,9 @@ export function CardPerfil({ data, handleLiked, myPerfil, update }: { data: any,
                         <Link to={`/solucao/${data.id}`} className="hover:bg-zinc-600 p-2 rounded-md" title="Ver comentários">
                             <ChatCircle size={20} className="text-indigo-300" />
                         </Link>
+
+                        <p className="font-black text-sm text-neutral-100">{data.comments}</p>
+
 
                     </div>
 
