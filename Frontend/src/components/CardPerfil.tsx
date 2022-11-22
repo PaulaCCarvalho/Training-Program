@@ -1,17 +1,18 @@
 import { ChatCircle, DotsThreeVertical, ThumbsDown, ThumbsUp, X } from "phosphor-react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import React, { FC, useEffect, useState } from 'react';
 import { Alert, AlertColor, createTheme, Popover, Snackbar, ThemeProvider } from "@mui/material";
 import * as Dialog from '@radix-ui/react-dialog';
 import { useFormik } from "formik";
-import { initValuesSolucao } from "../api/modules/SolucaoDesafio";
+import { initValuesSolucao, Solucao } from "../api/modules/SolucaoDesafio";
 import axios from "axios";
 
 
-export function CardPerfil({ data, handleLiked, myPerfil }: { data: any, handleLiked: Function, myPerfil: boolean }) {
+export function CardPerfil({ data, handleLiked, myPerfil, update }: { data: any, handleLiked: Function, myPerfil: boolean, update: Function }) {
     const [tags, setTags] = useState([])
     const [tema, setTema] = useState('')
     const [capa, setCapa] = useState('')
+    const navigate = useNavigate()
 
 
     useEffect(() => {
@@ -48,8 +49,6 @@ export function CardPerfil({ data, handleLiked, myPerfil }: { data: any, handleL
         }))
     }
 
-    console.log(data)
-
     const handleNota = (nota: number) => {
 
         switch (nota) {
@@ -84,7 +83,7 @@ export function CardPerfil({ data, handleLiked, myPerfil }: { data: any, handleL
                 <div className="flex-col p-2 w-[40vw]">
                     <div className="flex justify-between">
                         <div className="flex flex-col">
-                            <a href="https://google.com" className="uppercase tracking-wide text-md text-white font-medium my-1">{data.nome}</a>
+                            <Link to={`/desafio/${data.challenge_id}`} className="uppercase tracking-wide text-md text-white font-medium my-1">{data.nome}</Link>
                             <p className="text-orange-200/95" >Solução</p>
                         </div>
                         <div className="flex flex-row h-[50%]">
@@ -93,7 +92,7 @@ export function CardPerfil({ data, handleLiked, myPerfil }: { data: any, handleL
                             </div>
 
                             <div className="self-start">
-                                {myPerfil && <MoreOptions solucao={data} />}
+                                {myPerfil && <MoreOptions solucao={data} update={update} />}
                             </div>
                         </div>
                     </div>
@@ -108,14 +107,14 @@ export function CardPerfil({ data, handleLiked, myPerfil }: { data: any, handleL
                             <p className="font-black text-sm text-neutral-100">GitHub</p>
                         </button>
 
-                        <button onClick={() => handleLiked(1, data.id)} className={`hover:bg-zinc-600 p-2 rounded-md ${data.hasLiked === 1 && 'bg-zinc-600'}`} title="Gostei">
-                            <ThumbsUp size={20} className="text-indigo-300" />
+                        <button onClick={() => handleLiked(1, data.id)} className={`hover:bg-zinc-600 p-2 rounded-md `} title="Gostei">
+                            <ThumbsUp size={20} className="text-indigo-300" weight={data.hasLiked === 1 ? "fill" : 'regular' }/>
                         </button>
 
                         <p className="font-black text-sm text-neutral-100">{data.likes}</p>
 
-                        <button onClick={() => handleLiked(-1, data.id)} className={`hover:bg-zinc-600 p-2 rounded-md mr-3 ${data.hasLiked === -1 && 'bg-zinc-600'}`} title="Não gostei">
-                            <ThumbsDown size={20} className="text-indigo-300" />
+                        <button onClick={() => handleLiked(-1, data.id)} className={`hover:bg-zinc-600 p-2 rounded-md mr-3`} title="Não gostei">
+                            <ThumbsDown size={20} className="text-indigo-300" weight={data.hasLiked === -1 ? "fill" : 'regular' }/>
                         </button>
 
                         <Link to={`/solucao/${data.id}`} className="hover:bg-zinc-600 p-2 rounded-md" title="Ver comentários">
@@ -130,7 +129,7 @@ export function CardPerfil({ data, handleLiked, myPerfil }: { data: any, handleL
     )
 }
 
-export const MoreOptions = ({ solucao, update, challenge_id }: { solucao: any, update?: Function, challenge_id?: any }) => {
+export const MoreOptions = ({ solucao, update, challenge_id }: { solucao: any | Solucao, update?: Function, challenge_id?: any }) => {
     const [anchorEl, setAnchorEl] = useState<HTMLButtonElement | null>(null);
     const open = Boolean(anchorEl);
     const id = open ? "simple-popover" : undefined;

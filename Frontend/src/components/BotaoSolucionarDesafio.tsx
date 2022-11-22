@@ -8,7 +8,7 @@ import axios from "axios";
 
 
 
-export default function BotaoSolucionarDesafio({ challenge_id, update }: { challenge_id: number, update: Function}) {
+export default function BotaoSolucionarDesafio({ challenge_id, update }: { challenge_id: number, update: Function }) {
     const [openAlert, setOpenAlert] = useState({
         isOpen: false,
         type: 'success',
@@ -19,24 +19,24 @@ export default function BotaoSolucionarDesafio({ challenge_id, update }: { chall
 
     const formik = useFormik({
         initialValues: initValuesSolucao,
-        onSubmit: (values) => {
+        onSubmit: async(values) => {
             values.challenge_id = challenge_id;
-            values.member_id = Number(localStorage.getItem('id'))
+            values.idMember = Number(localStorage.getItem('id'))
             try {
-                axios.post(`http://localhost:3333/api/solucao`, {
+                await axios.post(`http://localhost:3333/api/solucao`, {
                     linkCode: values.linkCode,
                     descricao: values.descricao,
                     challenge_id: values.challenge_id,
-                    member_id: values.member_id
+                    member_id: values.idMember
                 })
 
-                update();
-
+                
                 const alertPopup = {
                     isOpen: true,
                     type: 'success',
                     msg: 'Solução adicionada com sucesso!'
                 }
+                update();
                 setOpenAlert(alertPopup);
                 setOpen(false)
 
@@ -65,13 +65,15 @@ export default function BotaoSolucionarDesafio({ challenge_id, update }: { chall
 
     return (
         <>
-            {open &&
 
-                <><Dialog.Root>
-                    <Dialog.Trigger className="bg-indigo-500 flex rounded-md items-center gap-2 hover:bg-indigo-600 p-2">
-                        <img src="../../solution-white.png" alt="log solução" className='w-[1.7rem]' />
-                        <p className="font-black text-sm text-neutral-100">Solucionar Desafio</p>
-                    </Dialog.Trigger>
+
+            <><Dialog.Root>
+                <Dialog.Trigger  onClick={() => setOpen(true)} className="bg-indigo-500 flex rounded-md items-center gap-2 hover:bg-indigo-600 p-2">
+                    <img src="../../solution-white.png" alt="log solução" className='w-[1.7rem]' />
+                    <p className="font-black text-sm text-neutral-100">Solucionar Desafio</p>
+                </Dialog.Trigger>
+
+                {open &&
 
                     <Dialog.Portal>
                         <Dialog.Overlay className="bg-black/70 inset-0 fixed " />
@@ -127,12 +129,14 @@ export default function BotaoSolucionarDesafio({ challenge_id, update }: { chall
                             </form>
                         </Dialog.Content>
                     </Dialog.Portal>
-                </Dialog.Root><Snackbar open={openAlert.isOpen} autoHideDuration={4000} onClose={handleClose} anchorOrigin={{ vertical: 'top', horizontal: 'right' }}>
-                        <Alert onClose={handleClose} severity={openAlert.type as AlertColor} sx={{ width: '100%' }}>
-                            {openAlert.msg}
-                        </Alert>
-                    </Snackbar></>
-            }
+                }
+            </Dialog.Root>
+                <Snackbar open={openAlert.isOpen} autoHideDuration={4000} onClose={handleClose} anchorOrigin={{ vertical: 'top', horizontal: 'right' }}>
+                    <Alert onClose={handleClose} severity={openAlert.type as AlertColor} sx={{ width: '100%' }}>
+                        {openAlert.msg}
+                    </Alert>
+                </Snackbar></>
+
         </>
 
 
