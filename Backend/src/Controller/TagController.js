@@ -36,6 +36,17 @@ class TagController {
         }
     }
 
+    async delete(req, res, next){
+        try {
+            const tag = new Tag();
+            await tag.delete(req.params.id);
+            res.status(204).end();
+        } catch (error) {
+            req.error = error;
+            next();
+        }
+    }
+
 }
 
 module.exports = TagController;

@@ -7,5 +7,6 @@ tagRouter
     .get('/tags', tagController.find)
     .get('/tags/:id', tagController.findOne)
     .post('/tags', tagController.add)
+    .delete('/tags/:id', tagController.delete)
 
 module.exports = tagRouter;

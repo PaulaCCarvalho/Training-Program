@@ -11,8 +11,12 @@ class Tag {
         this.nome = nome;
     }
 
-    find(page, params){
-        return this.db.find('tags', page, {}, 30, false, false) 
+    async find(page, params){
+        return await this.db.find('tags', page, {}, 30, false, false) 
+    }
+
+    async delete(id){
+        await this.db.destroy('tags', {id});
     }
 
     async save(){
