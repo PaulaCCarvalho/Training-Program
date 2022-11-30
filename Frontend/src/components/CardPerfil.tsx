@@ -65,6 +65,7 @@ export function CardPerfil({ data, handleLiked, myPerfil, update }: { data: any,
     }
 
     const [nota, corNota] = handleNota(data.nota);
+    const hoverButton = localStorage.getItem('id') !== null ? 'hover:bg-zinc-600 p-2 rounded-md': ''
 
     return (
         <div className="my-4 flex flex-row w-auto bg-zinc-700 text-white rounded-md shadow-md shadow-black/25  overflow-hidden"  >
@@ -107,13 +108,21 @@ export function CardPerfil({ data, handleLiked, myPerfil, update }: { data: any,
                             <p className="font-black text-sm text-neutral-100">GitHub</p>
                         </button>
 
-                        <button onClick={() => handleLiked(1, data.id)} className={`hover:bg-zinc-600 p-2 rounded-md `} title="Gostei">
+                        <button 
+                            onClick={() => handleLiked(1, data.id)} 
+                            className={hoverButton} 
+                            disabled={localStorage.getItem('id') === null}
+                            title="Gostei">
                             <ThumbsUp size={20} className="text-indigo-300" weight={data.hasLiked === 1 ? "fill" : 'regular' }/>
                         </button>
 
                         <p className="font-black text-sm text-neutral-100">{data.likes}</p>
 
-                        <button onClick={() => handleLiked(-1, data.id)} className={`hover:bg-zinc-600 p-2 rounded-md mr-3`} title="Não gostei">
+                        <button 
+                            onClick={() => handleLiked(-1, data.id)} 
+                            className={`${hoverButton} mr-3`} 
+                            disabled={localStorage.getItem('id') === null}
+                            title="Não gostei">
                             <ThumbsDown size={20} className="text-indigo-300" weight={data.hasLiked === -1 ? "fill" : 'regular' }/>
                         </button>
 

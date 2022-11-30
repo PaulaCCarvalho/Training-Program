@@ -160,6 +160,9 @@ export default function ComentariosSolucao() {
         }
     }
 
+    const hover = localStorage.getItem('id') !== null ? 'hover:bg-indigo-200/20' : ''
+    const hoverButton = localStorage.getItem('id') !== null ? 'hover:bg-zinc-600 p-2 rounded-md' : ''
+
     return (
 
         <>
@@ -202,16 +205,24 @@ export default function ComentariosSolucao() {
                                     <img src="../../github.svg" alt="logo github" className="w-[1.5vw]" />
                                     <p className="font-black text-sm text-neutral-100">GitHub</p>
                                 </a>
-
-                                <button onClick={() => handleLikedSolucao(1, card.id)} className="hover:bg-zinc-600 p-2 rounded-md" title="Gostei">
+{/* 
+                                <button 
+                                    onClick={() => handleLikedSolucao(1, card.id)}
+                                    className={hoverButton} 
+                                    disabled
+                                    title="Gostei">
                                     <ThumbsUp size={20} className="text-indigo-300" weight={card.hasLiked === 1 ? "fill" : 'regular'} />
                                 </button>
 
                                 <p className="font-black text-sm text-neutral-100">{card.likes}</p>
 
-                                <button onClick={() => handleLikedSolucao(-1, card.id)} className="hover:bg-zinc-600 p-2 rounded-md" title="Não gostei">
+                                <button 
+                                    onClick={() => handleLikedSolucao(-1, card.id)}
+                                    // className={hoverButton} 
+                                    disabled
+                                    title="Não gostei">
                                     <ThumbsDown size={20} className="text-indigo-300" weight={card.hasLiked === -1 ? "fill" : 'regular'} />
-                                </button>
+                                </button> */}
 
                             </div>
 
@@ -237,8 +248,12 @@ export default function ComentariosSolucao() {
 
 
                             <div className='flex flex-col p-2 items-center '>
-                                <button onClick={() => handleLikedComment(1, comment.id)} className="p-[6px]" title="Curtir">
-                                    <Heart size={35} className="text-indigo-300 bg-indigo-100/10 hover:bg-indigo-200/20 rounded-full p-2 shadow-md shadow-black/25" weight={comment.hasLiked === 1 ? 'fill' : 'regular'} />
+                                <button 
+                                    onClick={() => handleLikedComment(1, comment.id)} 
+                                    className="p-[6px]" 
+                                    disabled={localStorage.getItem('id') === null}
+                                    title="Curtir">
+                                    <Heart size={35} className={`text-indigo-300 bg-indigo-100/10 ${hover} rounded-full p-2 shadow-md shadow-black/25`} weight={comment.hasLiked === 1 ? 'fill' : 'regular'} />
                                 </button>
 
                                 <p className="font-black text-[0.6em] text-neutral-100">{comment.likes}</p>

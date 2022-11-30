@@ -191,21 +191,7 @@ export default function Perfil() {
                 positive: isLike,
             })
 
-            const newSolucoes = [...cardsSolucoes];
-
-            newSolucoes?.forEach((solucao: any) => {
-                if (solucao.id === idSolution) {
-                    if (isLike === solucao.hasLiked) {
-                        solucao.hasLiked = 0;
-                        solucao.likes -= isLike;
-                    } else {
-                        solucao.hasLiked = isLike;
-                        solucao.likes += 2*isLike;
-                    }
-                }
-            })
-
-            setCardsSolucoes(newSolucoes)
+            update()
 
 
         } catch (error: any) {

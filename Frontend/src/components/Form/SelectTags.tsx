@@ -5,6 +5,7 @@ import { CheckSquare, Square } from 'phosphor-react';
 import { ThemeProvider, createTheme } from '@mui/material/styles'
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
+import { useGlobal } from '../../Context/globalContext';
 
 
 interface TagsProp {
@@ -16,6 +17,7 @@ export default function SelectTags({ datas, formData }: { datas: Function, formD
 
     const [tag, setTag] = useState<TagsProp[]>([]);
     const [data, setData] = useState<TagsProp[]>(formData.tags);
+    const {change} = useGlobal()
     
 
     useEffect(() => {
@@ -32,7 +34,7 @@ export default function SelectTags({ datas, formData }: { datas: Function, formD
 
         getTags();
 
-    }, []);
+    }, [change]);
 
     const darkTheme = createTheme({
         palette: {
