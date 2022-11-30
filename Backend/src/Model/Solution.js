@@ -27,7 +27,7 @@ class Solution {
     }
 
     async find(params, page = 1, member){
-        const solutions = await this.db.find('solutions', page, params, 10, [{table: 'members', refTo: 'a', refKey:'member_id', selfKey: 'id'}], false, 'a.id, b.nome, b.id as idMember, a.challenge_id, b.foto, a.linkCode, a.nota, a.descricao');
+        const solutions = await this.db.find('solutions', page, params, 100000, [{table: 'members', refTo: 'a', refKey:'member_id', selfKey: 'id'}], false, 'a.id, b.nome, b.id as idMember, a.challenge_id, b.foto, a.linkCode, a.nota, a.descricao');
         const [{num: count}] = await this.db.find('solutions', 1, params, 1000000000, false, false, 'count(id) as num');
         const likes = await this.db.find('solutions', page, params, 10, [{table: 'curtida_solution', refTo: 'a', refKey:'id', selfKey: 'id_solution'}], false, 'a.id, SUM(b.positive) as num', undefined, 'a.id', 'a.id');
         const comments = await this.db.find('solutions', page, params, 10, [{table: 'comments', refTo: 'a', refKey:'id', selfKey: 'id_solution'}], false, 'a.id, count(b.id) as num', undefined, 'a.id', 'a.id');
@@ -40,7 +40,7 @@ class Solution {
     }
 
     async findByMember(params, page = 1, id = -1){
-        const solutions = await this.db.find('solutions', page, params, 10, [{table: 'members', refTo: 'a', refKey:'member_id', selfKey: 'id'}, {table: 'challenges', refTo: 'a', refKey:'challenge_id', selfKey: 'id'}], false, 'a.id, c.nome,c.id as idDesafio, b.id as idMember, b.foto, a.linkCode, a.nota, a.descricao');
+        const solutions = await this.db.find('solutions', page, params, 100000, [{table: 'members', refTo: 'a', refKey:'member_id', selfKey: 'id'}, {table: 'challenges', refTo: 'a', refKey:'challenge_id', selfKey: 'id'}], false, 'a.id, c.nome,c.id as idDesafio, b.id as idMember, b.foto, a.linkCode, a.nota, a.descricao');
         console.log('SOLKDJDJJFJDFDF: ',solutions)
         if(solutions.length === 0) throw new NotFoundError('solution');
         const [{num: count}] = await this.db.find('solutions', 1, params, 10000, [], false, 'count(a.id) as num');

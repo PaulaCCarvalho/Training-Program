@@ -20,7 +20,7 @@ class Tag {
     }
 
     async save(){
-        this.db.add('tags', this);
+        await this.db.add('tags', this);
     }
 }
 
