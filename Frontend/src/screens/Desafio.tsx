@@ -125,7 +125,7 @@ export function Desafio() {
             <div className="relative mt-[2rem] max-w-xl h-auto flex flex-row mx-auto bg-zinc-700/95 text-white rounded-t-md shadow-lg shadow-black/60s xl:max-w-4xl " >
                 <div className="xl:flex w-full">
                     <div className="xl:shrink-0 relative">
-                        <img className="h-[300px] rounded-tl-md w-full object-cover xl:h-full xl:w-[300px] shadow-inner shadow-black" src={/* padrao.includes(desafio?.capa) ?  */'../../imgDesafio.jpg' /* : desafio?.capa */} alt="" />
+                        <img className="h-[300px] rounded-tl-md w-full object-cover xl:h-full xl:w-[300px] shadow-inner shadow-black" src={desafio?.capa === '' ? '../../imgDesafio.jpg' : 'http://localhost:3333/api/img/' + desafio?.capa} alt="" />
                         <img
                             className="absolute bottom-3 right-3"
                             src={desafio?.nivel ? iconLevel() : '../../default-icon.svg'}

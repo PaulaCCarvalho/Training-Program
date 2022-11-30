@@ -24,7 +24,7 @@ class Comment {
     }
 
     async find(params, page = 1, member){
-        const comments = await this.db.find('comments', page, params, 10, [{table: 'members', refTo: 'a', refKey:'id_member', selfKey: 'id'}], false, 'a.id, a.body, b.nome, b.id as idMember, b.foto');
+        const comments = await this.db.find('comments', page, params, 10000000, [{table: 'members', refTo: 'a', refKey:'id_member', selfKey: 'id'}], false, 'a.id, a.body, b.nome, b.id as idMember, b.foto');
         const [{num: count}] = await this.db.find('comments', 1, params, 1000000000, false, false, 'count(id) as num');
         const likes = await this.db.find('comments', page, params, 10, [{table: 'curtida_comment', refTo: 'a', refKey:'id', selfKey: 'id_comment'}], false, 'a.id, SUM(b.positive) as num', undefined, 'a.id', 'a.id');
         for(let i in comments){
