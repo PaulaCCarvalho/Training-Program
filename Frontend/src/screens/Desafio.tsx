@@ -116,6 +116,7 @@ export function Desafio() {
         }
     }
 
+    const buttonClass = localStorage.getItem('id') !== null ? 'hover:bg-zinc-600 p-2 rounded-md' : 'p-2 rounded-md';
 
     return (
         <>
@@ -151,7 +152,7 @@ export function Desafio() {
                     :
 
                     <div className="absolute bottom-0 right-0 p-3 ">
-                        <BotaoSolucionarDesafio update={update} challenge_id={Number(id)} />
+                        {localStorage.getItem('id') !== null && <BotaoSolucionarDesafio update={update} challenge_id={Number(id)} />}
                     </div>
 
 
@@ -189,13 +190,18 @@ export function Desafio() {
                                     </a>
 
 
-                                    <button onClick={() => handleLiked(1, solucao.id)} className={`hover:bg-zinc-600 p-2 rounded-md`} title="Gostei">
+                                    <button 
+                                        onClick={() => handleLiked(1, solucao.id)} 
+                                        className={buttonClass}
+                                        disabled={localStorage.getItem('id') === null}
+             
+                                        title="Gostei">
                                         <ThumbsUp size={20} className="text-indigo-300" weight={solucao.hasLiked === 1 ? "fill" : 'regular' } />
                                     </button>
 
                                     <p className="font-black text-sm text-neutral-100">{solucao.likes}</p>
 
-                                    <button onClick={() => handleLiked(-1, solucao.id)} className={`hover:bg-zinc-600 p-2 rounded-md mr-3`} title="Não gostei">
+                                    <button onClick={() => handleLiked(-1, solucao.id)} className={buttonClass} disabled={localStorage.getItem('id') === null} title="Não gostei">
                                         <ThumbsDown size={20} className="text-indigo-300"  weight={solucao.hasLiked === -1 ? "fill" : 'regular' }/>
                                     </button>
 

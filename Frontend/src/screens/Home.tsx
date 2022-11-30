@@ -86,7 +86,7 @@ export default function Home() {
         }
         setOpen({
             isOpen: false,
-            type: 'sucess',
+            type: 'success',
             msg: ''
         });
     };

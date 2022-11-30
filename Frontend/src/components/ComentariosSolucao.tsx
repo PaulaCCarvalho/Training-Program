@@ -39,13 +39,13 @@ export default function ComentariosSolucao() {
             } catch (error: any) {
                 console.log(error.response)
             }
-            
-            const input = document.getElementById('body') as HTMLInputElement ;
+
+            const input = document.getElementById('body') as HTMLInputElement;
             input.value = ''
-              
-        }, 
-        
-       
+
+        },
+
+
     })
 
     useEffect(() => {
@@ -143,7 +143,7 @@ export default function ComentariosSolucao() {
 
     }
 
-    const handleLikedComment = async(isLike: number, idComment: number) => {
+    const handleLikedComment = async (isLike: number, idComment: number) => {
         try {
             await axios.post(`http://localhost:3333/api/like`, {
                 member: localStorage.getItem('id'),
@@ -151,9 +151,9 @@ export default function ComentariosSolucao() {
                 positive: isLike,
                 type: 'comment'
             })
-            
 
-           update();
+
+            update();
 
         } catch (error: any) {
             console.error(error.response.status, error.response.data);
@@ -253,23 +253,24 @@ export default function ComentariosSolucao() {
                     )
                 })}
 
+                {localStorage.getItem('id') !== null &&
+                    <form onSubmit={formik.handleSubmit} className='bg-zinc-700 w-full rounded-b-md p-2 px-5 flex justify-between text-white '>
+                        <input
+                            id="body"
+                            name="body"
+                            type="text"
+                            placeholder="Adicionar comentário"
+                            onChange={formik.handleChange}
+                            required
+                            className="bg-zinc-900 py-2 px-4 rounded-3xl text-sm placeholder:text-zinc-400 w-[80%] placeholder:px"
+                        />
 
-                <form onSubmit={formik.handleSubmit} className='bg-zinc-700 w-full rounded-b-md p-2 px-5 flex justify-between text-white '>
-                    <input
-                        id="body"
-                        name="body"
-                        type="text"
-                        placeholder="Adicionar comentário"
-                        onChange={formik.handleChange}
-                        required
-                        className="bg-zinc-900 py-2 px-4 rounded-3xl text-sm placeholder:text-zinc-400 w-[80%] placeholder:px"
-                    />
-
-                    <button className='p-1 px-4 bg-indigo-500 rounded-md items-center gap-2 flex' type='submit'>
-                        <p className='pl-1 font-black text-sm'>Enviar</p>
-                        <PaperPlaneTilt size={20} />
-                    </button>
-                </form>
+                        <button className='p-1 px-4 bg-indigo-500 rounded-md items-center gap-2 flex' type='submit'>
+                            <p className='pl-1 font-black text-sm'>Enviar</p>
+                            <PaperPlaneTilt size={20} />
+                        </button>
+                    </form>
+                }
             </div>
             <Footer />
         </>
