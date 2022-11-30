@@ -1,5 +1,6 @@
 import { Avatar } from "@mui/material"
 import { useEffect, useState } from "react"
+import React from 'react';
 
 export default function ChoiceAvatar({setAvatar, membro,setMembro}: {setAvatar: Function, membro: any, setMembro: Function}) {
     const [choiceAvatar, setChoiceAvatar] = useState<string>()

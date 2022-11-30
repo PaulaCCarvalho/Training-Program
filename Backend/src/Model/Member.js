@@ -18,6 +18,8 @@ class Member {
         try {
             await this.db.add('members', this);
         } catch (error) {
+
+            console.log(error)
             if(error.errno == 1062)
                 throw new ConflictError();
             else 

@@ -68,7 +68,7 @@ export function Menu() {
                         </Link>
 
                         <Link to="/ranking" className="hover:bg-zinc-600 px-4 py-1 rounded-md">
-                            Ranking
+                            Perfis
                         </Link>
                     </div>
 
