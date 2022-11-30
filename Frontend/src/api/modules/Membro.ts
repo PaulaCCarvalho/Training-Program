@@ -5,6 +5,7 @@ export interface MembroProps{
     bio: string,
     links: Array<LinkProps>,
     email: string,
+    isAdm: boolean
     foto: string,
 
 }

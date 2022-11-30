@@ -33,6 +33,7 @@ export default function Ranking() {
             <div className='flex  min-h-[77vh]'>
                 <div className='bg-zinc-800/70 mx-auto w-[45vw] self-center  m-16 p-4 rounded-md shadow-lg flex flex-col gap-3 shadow-black/25'>
                     {membros.map((membro: MembroProps) => {
+                        if(membro.isAdm) return '';
                         return (
 
                             <div key={membro.id} className='relative flex items-center gap-1 w-full border-y-[1px] px-3 py-2 border-zinc-800 bg-zinc-700/25 rounded-md justify-between'>
