@@ -39,7 +39,7 @@ class Member {
                 {table: 'challenges', refTo: 'b', refKey:'challenge_id', selfKey: 'id'}
             ],
             false,
-            'a.id, a.nome, a.email, a.isAdm, a.bio, a.foto, sum( IF( b.nota is NULL, 0, IF( ((b.nota) * c.nivel * 10) < 0, 0, (b.nota) * c.nivel * 10) ) ) as pontuacao',
+            'a.id, a.nome, a.email, a.isAdm, a.bio, a.foto, sum( IF( b.nota is NULL, 0, IF( ((b.nota) * c.nivel * 10) < 0, 0, (b.nota) * c.nivel * 10) ) ) as pontuacao, count(b.id) as numSolutions',
             search,
             'a.id',
             'pontuacao DESC'
