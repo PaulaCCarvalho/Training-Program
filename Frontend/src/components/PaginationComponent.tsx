@@ -5,7 +5,7 @@ import Stack from '@mui/material/Stack';
 import React from 'react';
 
 
-export function PaginationComponent({page,setPage, count}: {page: number,setPage: Function, count: number}) {
+export function PaginationComponent({page=1,setPage=(()=>{}), count=1}: {page: number,setPage: Function, count: number}) {
     const darkTheme = createTheme({
         palette: {
             mode: 'dark',

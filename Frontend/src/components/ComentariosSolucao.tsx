@@ -1,6 +1,6 @@
 
 import axios from 'axios'
-import { DotsThreeVertical, Heart, PaperPlaneRight, PaperPlaneTilt, ThumbsDown, ThumbsUp, X } from 'phosphor-react'
+import { DotsThreeVertical, Heart, PaperPlaneRight, PaperPlaneTilt, ThumbsDown, ThumbsUp, Trash, X } from 'phosphor-react'
 import { FC, useEffect, useState } from 'react'
 import { Link, useNavigate, useParams } from 'react-router-dom'
 import { Menu } from './Menu'
@@ -18,10 +18,11 @@ import * as Dialog from '@radix-ui/react-dialog';
 export default function ComentariosSolucao() {
     const idParam = useParams()
     const navigate = useNavigate()
-    const { change, update } = useGlobal()
+    const { change, update, isAdmin } = useGlobal()
     const [desafio, setDesafio] = useState<Desafio>(initValuesDesafio);
     const [card, setCard] = useState<Solucao>(initValuesSolucao);
     const [comments, setComments] = useState<SolutionComment[]>([])
+    const [deleteComment, setDeletecomment] = useState(false)
     const formik = useFormik({
         initialValues: initValueSolutionComment,
         onSubmit: async (values) => {
@@ -160,8 +161,8 @@ export default function ComentariosSolucao() {
         }
     }
 
+
     const hover = localStorage.getItem('id') !== null ? 'hover:bg-indigo-200/20' : ''
-    const hoverButton = localStorage.getItem('id') !== null ? 'hover:bg-zinc-600 p-2 rounded-md' : ''
 
     return (
 
@@ -205,24 +206,6 @@ export default function ComentariosSolucao() {
                                     <img src="../../github.svg" alt="logo github" className="w-[1.5vw]" />
                                     <p className="font-black text-sm text-neutral-100">GitHub</p>
                                 </a>
-{/* 
-                                <button 
-                                    onClick={() => handleLikedSolucao(1, card.id)}
-                                    className={hoverButton} 
-                                    disabled
-                                    title="Gostei">
-                                    <ThumbsUp size={20} className="text-indigo-300" weight={card.hasLiked === 1 ? "fill" : 'regular'} />
-                                </button>
-
-                                <p className="font-black text-sm text-neutral-100">{card.likes}</p>
-
-                                <button 
-                                    onClick={() => handleLikedSolucao(-1, card.id)}
-                                    // className={hoverButton} 
-                                    disabled
-                                    title="Não gostei">
-                                    <ThumbsDown size={20} className="text-indigo-300" weight={card.hasLiked === -1 ? "fill" : 'regular'} />
-                                </button> */}
 
                             </div>
 
@@ -246,23 +229,34 @@ export default function ComentariosSolucao() {
                             </div>
 
 
-
+                            
                             <div className='flex flex-col p-2 items-center '>
-                                <button 
-                                    onClick={() => handleLikedComment(1, comment.id)} 
-                                    className="p-[6px]" 
-                                    disabled={localStorage.getItem('id') === null}
-                                    title="Curtir">
-                                    <Heart size={35} className={`text-indigo-300 bg-indigo-100/10 ${hover} rounded-full p-2 shadow-md shadow-black/25`} weight={comment.hasLiked === 1 ? 'fill' : 'regular'} />
-                                </button>
+                                {isAdmin ? (
+                                    <ApagarComentario comment={comment} update={update} />
+                                )
+                                    :
+                                    (<>
+                                        <button
+                                            onClick={() => handleLikedComment(1, comment.id)}
+                                            className="p-[6px]"
+                                            disabled={localStorage.getItem('id') === null}
+                                            title="Curtir">
+                                            <Heart size={35} className={`text-indigo-300 bg-indigo-100/10 ${hover} rounded-full p-2 shadow-md shadow-black/25`} weight={comment.hasLiked === 1 ? 'fill' : 'regular'} />
+                                        </button>
+                                        <p className="font-black text-[0.6em] text-neutral-100">{comment.likes}</p>
+                                    </>
+                                    )
+                                }
 
-                                <p className="font-black text-[0.6em] text-neutral-100">{comment.likes}</p>
+
                             </div>
 
                             <div className='absolute top-0 right-0 '>
                                 {isMyPerfil(comment.idMember) && <MoreOptionsComment comment={comment} update={update} idSolution={card.id} />}
                             </div>
                         </div>
+
+                        
 
 
                     )
@@ -287,6 +281,8 @@ export default function ComentariosSolucao() {
                     </form>
                 }
             </div>
+
+            
             <Footer />
         </>
     )
@@ -467,6 +463,7 @@ export const ApagarComentario = ({ comment, update }: { comment: any, update?: F
         msg: 'Comentário deletado com sucesso!'
     });
     const [close, setClose] = useState(false);
+    const {isAdmin} = useGlobal()
 
 
     const handleClose = (event?: React.SyntheticEvent | Event, reason?: string) => {
@@ -505,8 +502,12 @@ export const ApagarComentario = ({ comment, update }: { comment: any, update?: F
         <>
 
             <Dialog.Root>
-                <Dialog.Trigger className='hover:bg-indigo-100/10 p-1'>
+                <Dialog.Trigger className={`${!isAdmin && "hover:bg-indigo-100/10 p-1"}`}>
+                    {isAdmin ?
+                        <Trash size={35} className={`text-red-500 bg-red-200/30 hover:bg-red-300/40 rounded-full p-2 shadow-md shadow-black/25`} weight={'duotone'} />
+                    :
                     <p className='font-normal text-sm'>Apagar Comentário</p>
+                    }
                 </Dialog.Trigger>
                 {!close &&
                     <Dialog.Portal>
@@ -521,7 +522,7 @@ export const ApagarComentario = ({ comment, update }: { comment: any, update?: F
                             </Dialog.Title>
 
                             <Dialog.Description className="py-4 text-md font-normal text-justify">
-                                Tem certeza que deseja apagar seu comentário? Cuidado! Esta ação será permanente.
+                                Tem certeza que deseja apagar este comentário? Cuidado! Esta ação será permanente.
                             </Dialog.Description>
 
                             <footer className="mt-4 flex gap-4 justify-between ">

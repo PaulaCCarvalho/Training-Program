@@ -41,8 +41,7 @@ class Solution {
 
     async findByMember(params, page = 1, id = -1){
         const solutions = await this.db.find('solutions', page, params, 100000, [{table: 'members', refTo: 'a', refKey:'member_id', selfKey: 'id'}, {table: 'challenges', refTo: 'a', refKey:'challenge_id', selfKey: 'id'}], false, 'a.id, c.nome,c.id as idDesafio, b.id as idMember, b.foto, a.linkCode, a.nota, a.descricao');
-        console.log('SOLKDJDJJFJDFDF: ',solutions)
-        if(solutions.length === 0) throw new NotFoundError('solution');
+        if(solutions.length === 0) return {count: 0, solutions: []};
         const [{num: count}] = await this.db.find('solutions', 1, params, 10000, [], false, 'count(a.id) as num');
         // const [{num: count}] = await this.db.find('solutions', page, params, 5, [{table: 'solutions', refTo: 'a', refKey:'id', selfKey: 'member_id'}], false, 'count(a.id) as num');
         const likes = await this.db.find('solutions', page, params, 10, [{table: 'curtida_solution', refTo: 'a', refKey:'id', selfKey: 'id_solution'}], false, 'a.id, SUM(b.positive) as num', undefined, 'a.id', 'a.id');

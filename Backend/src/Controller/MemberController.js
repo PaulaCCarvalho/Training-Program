@@ -28,7 +28,8 @@ class MemberController {
     async find(req, res, next) {
         try {
             const member = new Member();
-            const members = await member.find(req.body, req.query.page, req.query.search, req.query.id);
+            const {page, search, id, ...params} = req.query; 
+            const members = await member.find(params, page, search, id);
             res.json(members);
         } catch (error) {
             req.error = error;

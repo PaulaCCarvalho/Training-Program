@@ -1,5 +1,4 @@
 import { Avatar } from "@mui/material";
-import * as Dialog from '@radix-ui/react-dialog';
 import axios from "axios";
 import { useFormik } from "formik";
 import { Link, Trash } from "phosphor-react";
@@ -14,6 +13,7 @@ import { PaginationComponent } from "../components/PaginationComponent";
 import { useGlobal } from "../Context/globalContext";
 
 import React from 'react';
+import { initialvalueMyRanking, RankingProps } from "../api/modules/Ranking";
 
 type link = {
     id: number,
@@ -31,7 +31,7 @@ type member = {
 }
 
 export default function Perfil() {
-    const { isMembro, update, change, setIsMembro } = useGlobal()
+    const { isMembro, update, change, setIsMembro, isAdmin } = useGlobal()
     const [page, setPage] = useState<number>(1);
     const [count, setCount] = useState(1);
     const [myPerfil, setMyPerfil] = useState(false)
@@ -42,27 +42,27 @@ export default function Perfil() {
     const [cardsSolucoes, setCardsSolucoes] = useState<Object[]>([])
 
 
-    const [membro, setMembro] = useState<member>(
-        {
-            id: 0,
-            nome: "Carregando...",
-            bio: `Carregando...`,
-            links: [],
-            email: "Carregando...",
-            foto: ''
-        }
-    )
+    const [membro, setMembro] = useState<RankingProps>(initialvalueMyRanking)
 
     const formikPerfil = useFormik({
         initialValues: {
             nome: membro.nome,
-            bio: membro.bio,
+            bio: membro.bio ?? '',
             email: membro.email,
         },
         onSubmit: async (valuesPerfil) => {
 
 
-            const updatedMember = { ...valuesPerfil, links: membro.links, id: membro.id, foto: membro.foto };
+            const updatedMember = {
+                ...valuesPerfil,
+                links: membro.links,
+                id: membro.id,
+                foto: membro.foto,
+                ranking: membro.ranking,
+                numSolutions: membro.numSolutions,
+                pontuacao: membro.pontuacao,
+                isAdm: membro.isAdm
+            };
 
             setMembro(updatedMember)
             await handleRequest(updatedMember)
@@ -79,11 +79,18 @@ export default function Perfil() {
             setMyPerfil(false);
         }
 
-        axios.get(`http://localhost:3333/api/usuario/${idParam.id}`)
-            .then(({ data: membro }) => {
-                setMembro(membro)
-            })
-            .catch(() => console.log('Ops deu ruim!'))
+        async function member() {
+            try {
+                const response = await axios.get(`http://localhost:3333/api/usuario?id=${idParam.id}`)
+                setMembro(response.data.curMember)
+                console.log(response.data.curMember)
+
+            } catch (error) {
+                console.log(error)
+            }
+        }
+
+        member()
 
 
         async function getSolutions() {
@@ -92,7 +99,7 @@ export default function Perfil() {
                 const solutions = [...response.data.solutions]
                 setCardsSolucoes(solutions)
                 setCount(response.data.count)
-                
+
             } catch (error) {
                 console.log('Ops deu ruim!')
             }
@@ -105,10 +112,20 @@ export default function Perfil() {
 
 
     const handleRequest = async (updatedMember: member) => {
+
+        console.log("TURN AROUND")
         const token = localStorage.getItem("token");
         try {
             const response = await axios.put(`http://localhost:3333/api/usuario`,
-                updatedMember,
+                {
+                    id: updatedMember.id,
+                    nome: updatedMember.nome,
+                    bio: updatedMember.bio,
+                    links: updatedMember.links,
+                    email: updatedMember.email,
+                    foto: updatedMember.foto,
+                    isAdm: 0
+                },
                 {
                     headers: {
                         Authorization: 'Bearer ' + token
@@ -167,8 +184,15 @@ export default function Perfil() {
         enableReinitialize: true,
     });
     const handleRemove = async () => {
+        let idPerfil = ''
+        if (isAdmin) {
+            idPerfil = idParam.id ? idParam.id : '0'
+        } else {
+            idPerfil = id ? id : '0'
+        }
+
         try {
-            await axios.delete('http://localhost:3333/api/usuario/' + id,
+            await axios.delete('http://localhost:3333/api/usuario/' + idPerfil,
                 {
                     headers: {
                         Authorization: 'Bearer ' + localStorage.getItem('token')
@@ -234,11 +258,11 @@ export default function Perfil() {
                     }
 
                     {myPerfil && <DialogAddLink formik={formikLink} />}
-                    {myPerfil &&
+                    {(myPerfil || isAdmin) &&
                         (
                             <button onClick={() => setOpen(true)} title='Adicionar um novo link' className="bg-zinc-900 hover:bg-zinc-800 py-3 px-6 flex items-center transition text-md gap-2 rounded-lg font-bold my-1 justify-center text-red-400">
                                 <Trash size={24} />
-                                Excluir meu perfil
+                                Excluir {!isAdmin && 'meu'} perfil
                             </button>
                         )
                     }
@@ -254,13 +278,13 @@ export default function Perfil() {
 
                         <div className="w-[28%]">
                             <p>Posição no ranking</p>
-                            <p>1025°</p>
+                            <p>{membro.ranking}°</p>
                         </div>
 
                         <div className=" flex flex-col items-center w-[28%] ">
-                            <p>Pontuação total</p>
+                            <p className="max-w-[100px]">Pontuação total</p>
                             <div className="flex items-center bottom-0 ">
-                                <p>5420</p>
+                                <p>{membro.pontuacao}</p>
                                 <img
                                     src="/duck.png"
                                     alt="logo pontuação"
@@ -285,7 +309,7 @@ export default function Perfil() {
                         </>
                         {cardsSolucoes.length !== 0 &&
                             <div className="p-5 self-center">
-                                <PaginationComponent page={page} setPage={setPage} count={Math.ceil(count/ 10)} />
+                                <PaginationComponent page={page} setPage={setPage} count={Math.ceil(count / 10)} />
                             </div>
                         }
 

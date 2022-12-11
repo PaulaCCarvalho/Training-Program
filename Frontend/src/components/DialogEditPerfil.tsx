@@ -45,7 +45,6 @@ export default function DialogEditPerfil({ formik, membro, setMembro }: { formik
     });
 
     useEffect(() => {
-        console.log("dep")
     }, [membro])
 
     const handleContinueEditing = () => {

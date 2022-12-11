@@ -6,10 +6,13 @@ import { Avatar } from "@mui/material";
 import axios from "axios";
 import { PaginationComponent } from "../components/PaginationComponent";
 import { useFormik } from "formik";
+import { Link } from "react-router-dom";
+
 
 export default function Ranking() {
     const [infoTable, setInfoTable] = useState<RankingProps[]>([])
     const [myRanking, setMyRanking] = useState<RankingProps>(initialvalueMyRanking)
+    const [pageCount, setPageCount] = useState(1)
     const myId = Number(localStorage.getItem('id'))
     const [page, setPage] = useState(1)
 
@@ -17,8 +20,16 @@ export default function Ranking() {
         initialValues: {
             nome: ''
         },
-        onSubmit: (values) => {
-            console.log(values)
+        onSubmit: async(values) => {
+            try {
+                const response = await axios.get(`http://localhost:3333/api/usuario?page=${page}&id=${myId}&isAdm=${0}&search=${values.nome} `)
+                setMyRanking(response.data.curMember)
+                setInfoTable(response.data.members)
+                setPageCount(Math.ceil(response.data.count / 10))
+
+            } catch (error: any) {
+                console.log(error)
+            }
         }
     })
 
@@ -26,10 +37,11 @@ export default function Ranking() {
 
         async function allMembers() {
             try {
-                const response = await axios.get(`http://localhost:3333/api/usuario?page=${page}&id=${myId}`)
+                const response = await axios.get(`http://localhost:3333/api/usuario?page=${page}&id=${myId}&isAdm=${0}`)
                 setMyRanking(response.data.curMember)
                 setInfoTable(response.data.members)
-                console.log(response.data.members)
+                setPageCount(Math.ceil(response.data.count / 10))
+
             } catch (error) {
                 console.log(error)
             }
@@ -37,16 +49,7 @@ export default function Ranking() {
 
         allMembers()
 
-        
-        console.log(infoTable.filter((member) => {
-            console.log('MyId', myId, 'Member.id', member.id)
-            return (
-                member.id === myId
-            )
-        }))
-        
-
-    }, [])
+    }, [page])
 
 
 
@@ -68,13 +71,13 @@ export default function Ranking() {
 
                         <button className='p-1 px-4 bg-indigo-500 rounded-md items-center gap-2 flex' type='submit'>
                             <p className='pl-1 font-black text-sm'>Pesquisar</p>
-                            
+
                         </button>
                     </form>
 
                     <table className="table-auto text-white">
                         <thead >
-                            <tr className="bg-zinc-700/90 h-10">
+                            <tr className="bg-zinc-700/90 h-10 ">
                                 <th>#</th>
                                 <th>Usuário</th>
                                 <th>N° Soluções</th>
@@ -84,7 +87,9 @@ export default function Ranking() {
 
                         <tbody className="" >
                             <>
-                                {
+                                {infoTable.length === 0 ?
+                                    <p>Saudades perfis!</p>
+                                    : 
                                     infoTable.map((data: RankingProps) => {
                                         return (
                                             <tr key={data.id} className={`${(data.ranking % 2) === 0 && 'bg-zinc-700/30'} ${data.id === myId && 'bg-slate-700 border-collapse border border-slate-600'} h-16`}>
@@ -96,12 +101,14 @@ export default function Ranking() {
                                 }
                             </>
                             <>
-                                {
-                                    (infoTable.filter((member) => member.id === myId).length === 0) && (
-                                        <tr key={myRanking.id} className={`bg-slate-700 border-collapse border border-slate-600 h-16`}>
-                                            <RowTable rowData={myRanking} isMyRanking={true} />
-                                        </tr>
-                                    )
+                                {(myId !== 0 &&
+                                    myRanking.id &&
+                                    (infoTable.filter((member) => member.id === myId).length === 0)) ?
+                                    (<tr key={myRanking.id} className={`bg-slate-700 border-collapse border border-slate-600 h-16`}>
+                                        <RowTable rowData={myRanking} isMyRanking={true} />
+                                    </tr>)
+
+                                    : null
                                 }
 
                             </>
@@ -111,7 +118,7 @@ export default function Ranking() {
                     </table>
 
                     <div className="flex justify-center">
-                        <PaginationComponent page={1} setPage={() => { }} count={1} />
+                        <PaginationComponent page={page} setPage={setPage} count={pageCount} />
                     </div>
                 </div>
             </div>
@@ -126,13 +133,13 @@ const RowTable = ({ rowData, isMyRanking }: { rowData: RankingProps, isMyRanking
         <>
             <td className="text-center align-middle">{rowData.ranking}°</td>
             <td className="text-center align-center">
-                <div className="flex items-center justify-start px-4">
+                <Link to={`/perfil/${rowData.id}`} className="flex items-center justify-start px-4">
                     <Avatar alt={rowData.nome} src={rowData.foto} sx={{ width: '6vh', height: '6vh', bgcolor: '#C0C0C0' }} />
                     <p className="ml-2">{isMyRanking ? 'Você' : rowData.nome}</p>
-                </div>
+                </Link>
             </td>
             <td className="text-center align-center">
-                {rowData.solucoes}
+                {rowData.numSolutions}
             </td>
             <td className="text-center align-center">
                 <div className="flex items-center justify-center w-full">
@@ -140,7 +147,7 @@ const RowTable = ({ rowData, isMyRanking }: { rowData: RankingProps, isMyRanking
                     <img
                         src="/duck.png"
                         alt="logo pontuação"
-                        className="w-10" />
+                        className="w-7" />
                 </div>
             </td>
         </>

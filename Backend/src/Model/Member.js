@@ -31,7 +31,7 @@ class Member {
         const offset = (page - 1) * 10;  
         const members = await this.db.find(
             'members',
-            page,
+            1,
             params,
             100000,
             [
@@ -56,11 +56,14 @@ class Member {
         for(const [i, member] of members.entries()){
             if(member.id == id) {
                 curMember = {...member};
+                curMember.links =  await this.db.find('links', 1, {member_id: members[i].id}, 10);
                 curMember.ranking = i + 1;
                 break;
             } 
         }
-        return {curMember, members};
+
+        console.log("TURN AROUND: ",curMember)
+        return {curMember, members: retMem, count: members.length};
     }
 
     async alter(params, links = []){

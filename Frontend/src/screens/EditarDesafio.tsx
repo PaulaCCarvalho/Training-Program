@@ -13,7 +13,7 @@ type UserSubmitForm = {
     nome: string;
     descricao: string;
     tema: string;
-    imagens: string;
+    capa: string;
     nivel: string;
     tags: Tag[] | string[] | number[];
 
@@ -25,7 +25,7 @@ type Tag = {
 }
 
 export default function EditarDesafio() {
-    //const [selectFile, setSelectFile] = useState<File>({}: Blob);
+    const [selectFile, setSelectFile] = useState<any>();
     const { id } = useParams()
 
 
@@ -36,7 +36,7 @@ export default function EditarDesafio() {
         nome: '',
         descricao: '',
         tema: '',
-        imagens: '',
+        capa: '',
         nivel: '',
         tags: []
     });
@@ -52,16 +52,17 @@ export default function EditarDesafio() {
             });
     }, []);
 
-    const handleAttribute = (attribute: string, event: ChangeEvent<{ value: any }>) => {
+    const handleAttribute = (attribute: string, event: ChangeEvent<{ value: any, files: any }>) => {
         const newFormData = formData;
         if (attribute === "descricao" ||
             attribute === "nome" ||
             attribute === "tema" ||
-            attribute === "imagens" ||
             attribute === "nivel" ||
             attribute === "tags") {
             newFormData[attribute] = event.target.value;
             setFormData(newFormData)
+        } else if (attribute === "capa") {
+            setSelectFile(event.target.files[0]);
         }
     }
 
@@ -75,6 +76,14 @@ export default function EditarDesafio() {
     }
 
     const handleClick = async () => {
+        const data = new FormData()
+
+        data.append('nome', formData.nome);
+        data.append('descricao', formData.descricao);
+        data.append('tema', formData.tema);
+        data.append('nivel', formData.nivel);
+        data.append('capa', selectFile);
+
         const tags = []
         for (let tag of formData.tags) {
             if (typeof tag !== 'string' && typeof tag !== 'number') {
@@ -82,8 +91,9 @@ export default function EditarDesafio() {
             }
         }
         formData.tags = tags
+        data.append('tags', JSON.stringify(formData.tags));
         try {
-            await axios.put(`http://localhost:3333/api/desafio/${formData.id}`, formData, {
+            await axios.put(`http://localhost:3333/api/desafio/${formData.id}`, data, {
                 headers: {
                     Authorization: `Bearer ${localStorage.getItem('token')}`
                 }
@@ -102,29 +112,8 @@ export default function EditarDesafio() {
 
 
     }
-    /*     const onSubmit = (data: UserSubmitForm) => {
-            console.log("Passei aqui!")
-            console.log(JSON.stringify(data, null, 2))
-    
-            //onFileUpload();
-        } */
 
-    const onFileChange = (e: any) => {
-        /*setSelectFile(e.target.files[0]);*/
-    }
 
-    const onFileUpload = () => {
-        /*     const formData = new FormData();
-        
-            formData.append(
-              "myFile",
-              selectFile,
-            )
-        
-            const url = URL.createObjectURL(selectFile)
-            console.log(url); */
-
-    }
     return (
         <>
             <Menu />
@@ -149,7 +138,7 @@ export default function EditarDesafio() {
                                 rows={5}
                                 cols={5}
                                 placeholder="Descreva o desafio"
-                                onChange={(event) => handleAttribute("descricao", event)}
+                                onChange={(event: ChangeEvent) => handleAttribute("descricao", event)}
                                 defaultValue={formData.descricao}
                             />
                         </div>
@@ -161,7 +150,7 @@ export default function EditarDesafio() {
 
                         <div className="flex flex-col gap-1">
                             <label htmlFor="">Capa</label>
-                            <Input id="capa" type="file" defaultValue={formData.imagens} placeholder="insira imagens do desafio" data={handleAttribute} />
+                            <Input id="capa" type="file" defaultValue={formData.capa} placeholder="insira imagens do desafio" data={handleAttribute} />
                         </div>
 
                         <div className="flex items-end gap-3 ">
