@@ -29,7 +29,7 @@ class Member {
 
     async find(params = {}, page = 1, search, id) {
         const offset = (page - 1) * 10;  
-        const members = await this.db.find(
+        let members = await this.db.find(
             'members',
             1,
             params,
@@ -40,12 +40,16 @@ class Member {
             ],
             false,
             'a.id, a.nome, a.email, a.isAdm, a.bio, a.foto, sum( IF( b.nota is NULL, 0, IF( ((b.nota) * c.nivel * 10) < 0, 0, (b.nota) * c.nivel * 10) ) ) as pontuacao, count(b.id) as numSolutions',
-            search,
+            undefined,
             'a.id',
             'pontuacao DESC'
         );
         if(members.length === 0) throw new NotFoundError('member');
         const retMem = [];
+        const re = new RegExp(search, 'i');
+        if(search){
+            members = members.filter( member => re.test(member.nome))
+        }
         for(let i = offset; (i < offset + 10) && (i < members.length); i++)
         {
             members[i].ranking = i + 1;
