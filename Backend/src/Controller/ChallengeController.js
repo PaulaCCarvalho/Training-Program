@@ -46,6 +46,8 @@ class ChallengeController {
     async alter(req, res, next){
         try{
             const challenge = new Challenge();
+            req.body.tags = JSON.parse(req.body.tags)
+            req.body.capa = req.file === undefined ? '' : req.file.filename;
             challenge.insert({...req.body, id: req.params.id})
             await challenge.alter()
             res.status(204).send()

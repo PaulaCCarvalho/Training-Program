@@ -22,7 +22,7 @@ challengeRouter
     .post('/desafio', verifyToken, upload.single('capa'), challengeController.add)
     .get('/desafio/:id', challengeController.findOne)
     .get('/desafio', challengeController.find)
-    .put('/desafio/:id', verifyToken, challengeController.alter)
+    .put('/desafio/:id', verifyToken, upload.single('capa'), challengeController.alter)
     .delete('/desafio/:id', verifyToken, challengeController.delete)
 
 module.exports = challengeRouter;

@@ -65,7 +65,6 @@ export default function Ranking() {
                             type="text"
                             placeholder="Nome do membro"
                             onChange={formik.handleChange}
-                            required
                             className="bg-zinc-900 py-2 px-4 rounded-3xl text-sm placeholder:text-zinc-400 w-[80%] placeholder:px"
                         />
 
