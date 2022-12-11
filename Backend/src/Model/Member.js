@@ -27,11 +27,26 @@ class Member {
         }
     }
 
-    async find(params = {}) {
-        const members = await this.db.find('members', 1, params, 10);
+    async find(params = {}, page = 1, search) {
+        const offset = (page - 1) * 10;  
+        const members = await this.db.find(
+            'members',
+            page,
+            params,
+            10,
+            [
+                {table: 'solutions', refTo: 'a', refKey:'id', selfKey: 'member_id'},
+                {table: 'challenges', refTo: 'b', refKey:'challenge_id', selfKey: 'id'}
+            ],
+            false,
+            'a.id, a.nome, a.email, a.isAdm, a.bio, a.foto, sum( IF( b.nota is NULL, 0, IF( ((b.nota) * c.nivel * 10) < 0, 0, (b.nota) * c.nivel * 10) ) ) as pontuacao',
+            search,
+            'a.id',
+            'pontuacao DESC'
+        );
         if(members.length === 0) throw new NotFoundError('member');
-        for(const member of members){
-            delete member.senha;
+        for(const [i, member] of members.entries()){
+            member.ranking = offset + i + 1;
             member.links = await this.db.find('links', 1, {member_id: member.id}, 10);
         }
         return members;
