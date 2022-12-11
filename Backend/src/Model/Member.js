@@ -47,12 +47,14 @@ class Member {
         if(members.length === 0) throw new NotFoundError('member');
         const retMem = [];
         const re = new RegExp(search, 'i');
+        for(let i = 0; i < members.length; i++)
+        {
+            members[i].ranking = i + 1;
+        }
         if(search){
             members = members.filter( member => re.test(member.nome))
         }
-        for(let i = offset; (i < offset + 10) && (i < members.length); i++)
-        {
-            members[i].ranking = i + 1;
+        for(let i = offset; (i < offset + 10) && (i < members.length); i++){
             members[i].links = await this.db.find('links', 1, {member_id: members[i].id}, 10);
             retMem.push(members[i]);
         }
