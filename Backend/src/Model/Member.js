@@ -46,7 +46,7 @@ class Member {
         );
         if(members.length === 0) throw new NotFoundError('member');
         const retMem = [];
-        for(let i = offset; i < offset + 10; i++)
+        for(let i = offset; (i < offset + 10) && (i < members.length); i++)
         {
             members[i].ranking = i + 1;
             members[i].links = await this.db.find('links', 1, {member_id: members[i].id}, 10);

@@ -39,8 +39,8 @@ class MemberController {
     async findOne(req, res, next) {
         try {
             const member = new Member();
-            const memberResp = await member.find(req.params)
-            const {senha, ...memberformated} = memberResp[0]
+            const { members: memberResp }= await member.find(req.params)
+            const {...memberformated} = memberResp[0]
             res.json(memberformated);
         } catch (error) {
             req.error = error;
